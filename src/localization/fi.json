@@ -9,6 +9,9 @@
   },
 
   "adminScreen": {
+    "title": "Vastaukset",
+    "viewAllReplies": "Näytä kaikki vastaukset",
+    "exportXlsx": "Vie xlsx-muodossa",
     "openReply": "Avaa"
   },
 

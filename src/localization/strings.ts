@@ -15,6 +15,9 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   adminScreen: {
+    title: string;
+    viewAllReplies: string;
+    exportXlsx: string;
     openReply: string;
   };
 

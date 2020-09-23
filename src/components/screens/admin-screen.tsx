@@ -7,7 +7,7 @@ import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/admin-screen";
 
 import { History } from "history";
-import { WithStyles, withStyles, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Typography } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -103,9 +103,17 @@ export class AdminScreen extends React.Component<Props, State> {
    */
   public render = () => {
     const { metaform } = this.state;
+    const { classes } = this.props;
 
     return (
       <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || !metaform } error={ this.state.error } clearError={ this.clearError }>
+        <div className={ classes.topBar }>
+          <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
+          <div className={ classes.topBarButton }>
+            <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.viewAllReplies }</Button>
+            <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.exportXlsx }</Button>
+          </div>
+        </div>
         { this.renderReplies(metaform) }
       </AdminLayout>
     );

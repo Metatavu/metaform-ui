@@ -9,6 +9,9 @@
   },
 
   "adminScreen": {
+    "title": "Replies",
+    "viewAllReplies": "View all replies",
+    "exportXlsx": "Export XLSX",
     "openReply": "Open"
   },
 
