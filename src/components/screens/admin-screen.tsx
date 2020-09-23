@@ -111,7 +111,7 @@ export class AdminScreen extends React.Component<Props, State> {
           <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
           <div className={ classes.topBarButton }>
             <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.viewAllReplies }</Button>
-            <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.exportXlsx }</Button>
+            <Button disabled variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>
           </div>
         </div>
         { this.renderReplies(metaform) }
@@ -270,6 +270,13 @@ export class AdminScreen extends React.Component<Props, State> {
    */
   private onReplyOpenClick = (reply: Reply) => {
     this.props.history.push(`/admin/replies/${reply.id}`);
+  }
+
+  /**
+   * Event handler for XLSX export button click
+   */
+  private onExportXlsxClick = async () => {
+    // TODO: Add support for exporting XLSX files
   }
 
 }
