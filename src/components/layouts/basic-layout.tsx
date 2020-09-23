@@ -51,7 +51,7 @@ class BasicLayout extends React.Component<Props, State> {
   public render() {
     const { classes } = this.props;
 
-    if (this.props.loading) {
+    if (!this.props.error && this.props.loading) {
       return this.renderLoader();
     }
 

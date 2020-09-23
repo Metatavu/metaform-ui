@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/admin-screen";
+import BasicLayout from "../layouts/basic-layout";
 
 import { History } from "history";
-import { WithStyles, withStyles, CircularProgress, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Button } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,6 +36,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
+  error?: string | Error | Response;
   loading: boolean;
   replies: Reply[];
   metaform?: Metaform;
@@ -57,54 +59,56 @@ export class AdminScreen extends React.Component<Props, State> {
       replies: []
     };
   }
-
+  
   /**
    * Component did mount life cycle event
    */
-  public componentWillMount = async () => {
-    this.setState({
-      loading: true
-    });
+  public componentDidMount = async () => {
+    try {
+      this.setState({
+        loading: true
+      });
 
-    const repliesApi = Api.getRepliesApi(this.props.adminToken);
-    const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
 
-    const metaform = await metaformsApi.findMetaform({
-      realmId: Config.getRealm(),
-      metaformId: Config.getMetaformId()
-    });
-
-    const [ replies ] = await Promise.all([
-      repliesApi.listReplies({
-        metaformId: Config.getMetaformId(),
+      const metaform = await metaformsApi.findMetaform({
         realmId: Config.getRealm(),
-        fields: this.getFieldNames(metaform)
-      })
-    ]);
+        metaformId: Config.getMetaformId()
+      });
 
-    this.setState({
-      loading: false,
-      replies: replies,
-      metaform: metaform
-    });    
+      const [ replies ] = await Promise.all([
+        repliesApi.listReplies({
+          metaformId: Config.getMetaformId(),
+          realmId: Config.getRealm(),
+          fields: this.getFieldNames(metaform)
+        })
+      ]);
+
+      this.setState({
+        loading: false,
+        replies: replies,
+        metaform: metaform
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
-
+  
   /**
    * Component render method
    */
   public render = () => {
-    const { classes, history, keycloak } = this.props;
     const { metaform } = this.state;
 
-    if (this.state.loading || !metaform) {
-      return (
-        <div className={ classes.loader }>
-          <CircularProgress size={ 50 } color="secondary"></CircularProgress>
-        </div>
-      );
-    }
-
-    return this.renderReplies(metaform);
+    return (
+      <BasicLayout loading={ this.state.loading || !metaform } error={ this.state.error } clearError={ this.clearError }>
+        { this.renderReplies(metaform) }
+      </BasicLayout>
+    );
   }
 
   /**
@@ -112,7 +116,11 @@ export class AdminScreen extends React.Component<Props, State> {
    * 
    * @param metaform metaform
    */
-  private renderReplies = (metaform: Metaform) => {
+  private renderReplies = (metaform?: Metaform) => {
+    if (!metaform) {
+      return
+    }
+
     const fields = this.getFields(metaform);
     const { classes } = this.props;
 
@@ -133,9 +141,7 @@ export class AdminScreen extends React.Component<Props, State> {
     return (
       <TableHead>
         <TableRow>
-          {
-            fields.map(field => <TableCell> { field.title } </TableCell> )
-          }
+          { fields.map(field => <TableCell> { field.title } </TableCell> ) }
           <TableCell align="right"/>
         </TableRow>
       </TableHead>
@@ -164,9 +170,7 @@ export class AdminScreen extends React.Component<Props, State> {
   private renderReply = (fields: MetaformField[], reply: Reply) => {
     return (
       <TableRow>
-        {
-          fields.map(field => this.renderReplyData(field, reply))
-        }
+        { fields.map(field => this.renderReplyData(field, reply)) }
         <TableCell align="right">
           <Button variant="contained" color="primary" onClick={ () => this.onReplyOpenClick(reply) }>
             { strings.adminScreen.openReply }
@@ -184,6 +188,15 @@ export class AdminScreen extends React.Component<Props, State> {
    */
   private renderReplyData = (field: MetaformField, reply: Reply) => {
     return <TableCell> { this.getDisplayReplyData(field, reply) } </TableCell>
+  }
+
+  /**
+   * Clears error
+   */
+  private clearError = () => {
+    this.setState({ 
+      error: undefined 
+    });
   }
 
   /**

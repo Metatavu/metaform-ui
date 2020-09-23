@@ -62,22 +62,29 @@ export class FormScreen extends React.Component<Props, State> {
   /**
    * Component did mount life cycle event
    */
-  public componentWillMount = async () => {
-    this.setState({
-      loading: true
-    });
+  public componentDidMount = async () => {
+    try {
+      this.setState({
+        loading: true
+      });
 
-    const metaformsApi = Api.getMetaformsApi(this.props.anonymousToken);
+      const metaformsApi = Api.getMetaformsApi(this.props.anonymousToken);
 
-    const metaform = await metaformsApi.findMetaform({
-      realmId: Config.getRealm(),
-      metaformId: Config.getMetaformId()
-    });
-    
-    this.setState({
-      metaform: metaform,
-      loading: false
-    });    
+      const metaform = await metaformsApi.findMetaform({
+        realmId: Config.getRealm(),
+        metaformId: Config.getMetaformId()
+      });
+      
+      this.setState({
+        metaform: metaform,
+        loading: false
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
   /**
@@ -155,10 +162,8 @@ export class FormScreen extends React.Component<Props, State> {
 
   /**
    * Method for submitting form
-   *
-   * @param source submit input info
    */
-  private onSubmit = async (source: Metaform) =>  {
+  private onSubmit = async () =>  {
     const { formValues, metaform } = this.state;
 
     if (!metaform || !metaform.id) {
