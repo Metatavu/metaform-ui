@@ -12,6 +12,11 @@
     "openReply": "Avaa"
   },
 
+  "adminReplyScreen": {
+    "savingReply": "Tallennetaan muutoksia...",
+    "replySaved": "Muutokset tallennettu onnistuneesti!"
+  },
+
   "errorDialog": {
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",

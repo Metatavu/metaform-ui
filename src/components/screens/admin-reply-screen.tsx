@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-screen";
+import BasicLayout, { SnackbarMessage } from "../layouts/basic-layout";
 
 import { History } from "history";
 import { WithStyles, withStyles, CircularProgress } from "@material-ui/core";
@@ -15,6 +16,7 @@ import { Metaform, Reply } from "../../generated/client";
 import Form from "../generic/form";
 import { FieldValue } from "metaform-react";
 import Config from "../../config";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -31,7 +33,9 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   metaform?: Metaform;
-  reply?: Reply,
+  reply?: Reply;
+  snackbarMessage?: SnackbarMessage;
+  error?: string | Error | Response;
   loading: boolean;
   saving: boolean;
   formValues: Dictionary<string | number | null>;
@@ -59,47 +63,55 @@ export class AdminReplyScreen extends React.Component<Props, State> {
   /**
    * Component did mount life cycle event
    */
-  public componentWillMount = async () => {
-    this.setState({
-      loading: true
-    });
+  public componentDidMount = async () => {
+    try {
+      this.setState({
+        loading: true
+      });
 
-    const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
-    const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.adminToken);
 
-    const [ metaform, reply ] = await Promise.all([
-      metaformsApi.findMetaform({
-        realmId: Config.getRealm(),
-        metaformId: Config.getMetaformId()
-      }),
-      repliesApi.findReply({
-        realmId: Config.getRealm(),
-        metaformId: Config.getMetaformId(),
-        replyId: this.props.replyId
-      })
-    ]);
-  
-    this.setState({
-      metaform: metaform,
-      reply: reply,
-      formValues: reply.data as any,
-      loading: false
-    });    
+      const [ metaform, reply ] = await Promise.all([
+        metaformsApi.findMetaform({
+          realmId: Config.getRealm(),
+          metaformId: Config.getMetaformId()
+        }),
+        repliesApi.findReply({
+          realmId: Config.getRealm(),
+          metaformId: Config.getMetaformId(),
+          replyId: this.props.replyId
+        })
+      ]);
+    
+      this.setState({
+        metaform: metaform,
+        reply: reply,
+        formValues: reply.data as any,
+        loading: false
+      });    
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
   /**
    * Component render method
    */
   public render = () => {
-    const { classes } = this.props;
-    const { metaform } = this.state;
+    return (
+      <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.adminReplyScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+        { this.renderForm(this.state.metaform) }
+      </BasicLayout>
+    );
+  }
 
-    if (this.state.loading || this.state.saving || !metaform) {
-      return (
-        <div className={ classes.loader }>
-          <CircularProgress size={ 50 } color="secondary"></CircularProgress>
-        </div>
-      );
+  private renderForm = (metaform?: Metaform) => {
+    if (!metaform) {
+      return null;
     }
 
     return (
@@ -137,6 +149,24 @@ export class AdminReplyScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Clears error
+   */
+  private clearError = () => {
+    this.setState({ 
+      error: undefined 
+    });
+  }
+
+  /**
+   * Clears snackbar message
+   */
+  private clearSnackbar = () => {
+    this.setState({ 
+      snackbarMessage: undefined 
+    });
+  }
+
+  /**
    * Method for submitting form
    *
    * @param source submit input info
@@ -168,15 +198,18 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         replyId: reply.id
       });
 
-      // TODO: Notfication about success
       this.setState({
         saving: false,
         reply: updatedReply,
-        formValues: updatedReply.data as any
+        formValues: updatedReply.data as any,
+        snackbarMessage: {
+          message: strings.adminReplyScreen.replySaved,
+          severity: "success"
+        }
       });
     } catch (e) {
-      // TODO: Handle errors!
       this.setState({
+        error: e,
         saving: false
       });
     };

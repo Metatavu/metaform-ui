@@ -12,6 +12,11 @@
     "openReply": "Open"
   },
 
+  "adminReplyScreen": {
+    "savingReply": "Saving changing...",
+    "replySaved": "Changed saved successfully"
+  },
+
   "errorDialog": {
     "title": "Whoops! Something went wrong",
     "reloadPage": "Try reloading the page.",

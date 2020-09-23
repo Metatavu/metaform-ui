@@ -18,6 +18,11 @@ export interface IStrings extends LocalizedStringsMethods {
     openReply: string;
   };
 
+  adminReplyScreen: {
+    savingReply: string;
+    replySaved: string;
+  };
+
   errorDialog: {
     title: string;
     reloadPage: string;
