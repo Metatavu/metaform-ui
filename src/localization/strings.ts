@@ -5,10 +5,19 @@ import LocalizedStrings, { LocalizedStringsMethods } from "localized-strings";
  */
 export interface IStrings extends LocalizedStringsMethods {
 
+  generic: {
+    loading: string;
+  };
+
+  formScreen: {
+    savingReply: string;
+    replySaved: string;
+  };
+
   adminScreen: {
     openReply: string;
   };
-  
+
   errorDialog: {
     title: string;
     reloadPage: string;

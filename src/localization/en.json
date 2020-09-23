@@ -1,4 +1,12 @@
 {
+  "generic": {
+    "loading": "Loading..."
+  },
+
+  "formScreen": {
+    "savingReply": "Saving your reply...",
+    "replySaved": "Reply saved successfully"
+  },
 
   "adminScreen": {
     "openReply": "Open"

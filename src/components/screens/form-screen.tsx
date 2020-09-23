@@ -6,7 +6,9 @@ import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-screen";
 
 import { History } from "history";
-import { WithStyles, withStyles, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/core";
+import BasicLayout, { SnackbarMessage } from "../layouts/basic-layout";
+
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
@@ -15,6 +17,7 @@ import { Metaform } from "../../generated/client";
 import { FieldValue } from "metaform-react";
 import Form from "../generic/form";
 import Config from "../../config";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -29,6 +32,8 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
+  snackbarMessage?: SnackbarMessage;
+  error?: string | Error | Response;
   loading: boolean;
   saving: boolean;
   metaform?: Metaform;
@@ -79,15 +84,21 @@ export class FormScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes, history, keycloak } = this.props;
+    return (
+      <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+        { this.renderForm() }
+      </BasicLayout>
+    );
+  }
+
+  /**
+   * Renders the form
+   */
+  private renderForm = () => {
     const { metaform } = this.state;
 
-    if (this.state.loading || this.state.saving || !metaform) {
-      return (
-        <div className={ classes.loader }>
-          <CircularProgress size={ 50 } color="secondary"></CircularProgress>
-        </div>
-      );
+    if (!metaform) {
+      return null
     }
 
     return (
@@ -125,6 +136,24 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Clears error
+   */
+  private clearError = () => {
+    this.setState({ 
+      error: undefined 
+    });
+  }
+
+  /**
+   * Clears snackbar message
+   */
+  private clearSnackbar = () => {
+    this.setState({ 
+      snackbarMessage: undefined 
+    });
+  }
+
+  /**
    * Method for submitting form
    *
    * @param source submit input info
@@ -151,14 +180,17 @@ export class FormScreen extends React.Component<Props, State> {
         }
       });
 
-      // TODO: Notfication about success
       this.setState({
-        saving: false
+        saving: false,
+        snackbarMessage: {
+          message: strings.formScreen.replySaved,
+          severity: "success"
+        }
       });
     } catch (e) {
-      // TODO: Handle errors!
       this.setState({
-        saving: false
+        saving: false,
+        error: e
       });
     };
 

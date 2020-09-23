@@ -1,4 +1,13 @@
 {
+  "generic": {
+    "loading": "Ladataan..."
+  },
+
+  "formScreen": {
+    "savingReply": "Tallennetaan vastausta...",
+    "replySaved": "Vastaus tallennettu onnistuneesti!"
+  },
+
   "adminScreen": {
     "openReply": "Avaa"
   },

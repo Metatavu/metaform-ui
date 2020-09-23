@@ -8,7 +8,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
  * Interface representing component properties
  */
 interface Props {
-  error: string | Error;
+  error?: string | Error | Response;
   onClose: () => void;
 }
 
@@ -16,7 +16,7 @@ interface Props {
  * Interface representing component state
  */
 interface State {
-
+  errorMessage?: string;
 }
 
 /**
@@ -32,6 +32,15 @@ export default class ErrorDialog extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { };
+  }
+
+  /**
+   * Component did mount life cycle event
+   */
+  public componentDidMount = async () => {
+    this.setState({
+      errorMessage: await this.getErrorMessage()
+    });
   }
 
   /** 
@@ -53,7 +62,7 @@ export default class ErrorDialog extends React.Component<Props, State> {
               { strings.formatString(strings.errorDialog.url, this.getURL()) }<br/>
               { strings.errorDialog.errorMessage }<br/>
               <br/>
-              <pre style={{ fontSize: "10px" }}>{ this.getErrorMessage() }</pre>
+              <pre style={{ fontSize: "10px" }}>{  this.state.errorMessage || "" }</pre>
             </p>
           </DialogContentText>
         </DialogContent>
@@ -92,10 +101,12 @@ export default class ErrorDialog extends React.Component<Props, State> {
    * 
    * @returns an error message
    */
-  private getErrorMessage = () => {
+  private getErrorMessage = async (): Promise<string> => {
     if (this.props.error instanceof Error) {
       return this.props.error.message || "";
-    } else {
+    } else if (this.props.error instanceof Response) {
+      return await this.props.error.text()
+    } else {
       return this.props.error || "";
     }
   }
