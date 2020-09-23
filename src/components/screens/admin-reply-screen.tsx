@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-screen";
-import BasicLayout, { SnackbarMessage } from "../layouts/basic-layout";
+import AdminLayout from "../layouts/admin-layout";
+import { SnackbarMessage } from "../layouts/basic-layout";
 
 import { History } from "history";
-import { WithStyles, withStyles, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
@@ -103,9 +104,9 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    */
   public render = () => {
     return (
-      <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.adminReplyScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+      <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.adminReplyScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
         { this.renderForm(this.state.metaform) }
-      </BasicLayout>
+      </AdminLayout>
     );
   }
 

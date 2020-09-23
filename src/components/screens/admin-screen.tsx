@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/admin-screen";
-import BasicLayout from "../layouts/basic-layout";
 
 import { History } from "history";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
@@ -21,6 +20,7 @@ import strings from "../../localization/strings";
 import Api from "../../api/api";
 import { Metaform, Reply, MetaformField, MetaformFieldType } from "../../generated/client";
 import Config from "../../config";
+import AdminLayout from "../layouts/admin-layout";
 
 
 /**
@@ -105,9 +105,9 @@ export class AdminScreen extends React.Component<Props, State> {
     const { metaform } = this.state;
 
     return (
-      <BasicLayout loading={ this.state.loading || !metaform } error={ this.state.error } clearError={ this.clearError }>
+      <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || !metaform } error={ this.state.error } clearError={ this.clearError }>
         { this.renderReplies(metaform) }
-      </BasicLayout>
+      </AdminLayout>
     );
   }
 

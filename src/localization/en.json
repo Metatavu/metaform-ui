@@ -17,6 +17,12 @@
     "replySaved": "Changed saved successfully"
   },
 
+  "adminLayout": {
+    "replies": "Replies",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+
   "errorDialog": {
     "title": "Whoops! Something went wrong",
     "reloadPage": "Try reloading the page.",

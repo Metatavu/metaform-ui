@@ -23,6 +23,12 @@ export interface IStrings extends LocalizedStringsMethods {
     replySaved: string;
   };
 
+  adminLayout: {
+    replies: string;
+    profile: string;
+    logout: string;
+  },
+
   errorDialog: {
     title: string;
     reloadPage: string;

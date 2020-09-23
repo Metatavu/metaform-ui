@@ -17,6 +17,12 @@
     "replySaved": "Muutokset tallennettu onnistuneesti!"
   },
 
+  "adminLayout": {
+    "replies": "Vastaukset",
+    "profile": "Käyttäjätili",
+    "logout": "Kirjaudu ulos"
+  },
+
   "errorDialog": {
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",
