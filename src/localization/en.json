@@ -16,6 +16,8 @@
   },
 
   "adminReplyScreen": {
+    "title": "Reply",
+    "exportPdf": "Download PDF",
     "savingReply": "Saving changing...",
     "replySaved": "Changed saved successfully"
   },

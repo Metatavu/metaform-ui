@@ -3,12 +3,12 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
-import styles from "../../styles/form-screen";
+import styles from "../../styles/admin-reply-screen";
 import AdminLayout from "../layouts/admin-layout";
 import { SnackbarMessage } from "../layouts/basic-layout";
 
 import { History } from "history";
-import { WithStyles, withStyles } from "@material-ui/core";
+import { WithStyles, withStyles, Typography, Button } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
@@ -103,9 +103,19 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
+    const { classes } = this.props;
+
     return (
       <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.adminReplyScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
-        { this.renderForm(this.state.metaform) }
+        <div className={ classes.topBar }>
+          <Typography className={ classes.title } variant="h2">{ strings.adminReplyScreen.title }</Typography>
+          <div className={ classes.topBarButton }>
+            <Button color="primary" variant="contained" className={ classes.topBarButton } onClick={ this.onExportPdfClick }>{ strings.adminReplyScreen.exportPdf }</Button>
+          </div>
+        </div>
+        <div className={ classes.formContainer }>
+          { this.renderForm(this.state.metaform) }
+        </div>
       </AdminLayout>
     );
   }
@@ -165,6 +175,45 @@ export class AdminReplyScreen extends React.Component<Props, State> {
     this.setState({ 
       snackbarMessage: undefined 
     });
+  }
+
+  /**
+   * Event handler for PDF export button click
+   */
+  private onExportPdfClick = async () => {
+    try {
+      this.setState({
+        loading: true
+      });
+
+      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+
+      const pdf = await repliesApi.replyExport({
+        realmId: Config.getRealm(),
+        metaformId: Config.getMetaformId(),
+        replyId: this.props.replyId,
+        format: "PDF"
+      });
+
+      const downloadLink = document.createElement("a");
+      const downloadUrl = window.URL.createObjectURL(pdf);
+      document.body.appendChild(downloadLink);
+      
+      downloadLink.href = downloadUrl;
+      downloadLink.download = "reply.pdf"; 
+      downloadLink.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      downloadLink.remove();
+
+      this.setState({
+        loading: false
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
   /**

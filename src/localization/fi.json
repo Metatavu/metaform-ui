@@ -16,6 +16,8 @@
   },
 
   "adminReplyScreen": {
+    "title": "Vastaus",
+    "exportPdf": "Lataa PDF",
     "savingReply": "Tallennetaan muutoksia...",
     "replySaved": "Muutokset tallennettu onnistuneesti!"
   },

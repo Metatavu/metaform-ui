@@ -22,6 +22,8 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   adminReplyScreen: {
+    title: string;
+    exportPdf: string;
     savingReply: string;
     replySaved: string;
   };
