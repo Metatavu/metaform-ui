@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import styles from "../../styles/form-screen";
+import styles from "../../styles/form";
 
 import { WithStyles, withStyles, Icon } from "@material-ui/core";
 import { Metaform } from "../../generated/client";
@@ -47,19 +47,21 @@ export class Form extends React.Component<Props, State> {
     const { classes, metaform } = this.props;
 
     return (
-      <MetaformComponent
-        form={ metaform as any } 
-        contexts={ this.props.contexts }
-        formReadOnly={ false }
-        getFieldValue={ this.props.getFieldValue }
-        setFieldValue={ this.props.setFieldValue }
-        datePicker={ this.renderDatePicker }
-        datetimePicker={ this.renderDatetimePicker }
-        uploadFile={ this.uploadFile }
-        setAutocompleteOptions={ this.setAutocompleteOptions }
-        renderIcon={ this.renderIcon }        
-        onSubmit={ this.props.onSubmit }
-      />
+      <div className={ classes.formContainer }>
+        <MetaformComponent
+          form={ metaform } 
+          contexts={ this.props.contexts }
+          formReadOnly={ false }
+          getFieldValue={ this.props.getFieldValue }
+          setFieldValue={ this.props.setFieldValue }
+          datePicker={ this.renderDatePicker }
+          datetimePicker={ this.renderDatetimePicker }
+          uploadFile={ this.uploadFile }
+          setAutocompleteOptions={ this.setAutocompleteOptions }
+          renderIcon={ this.renderIcon }        
+          onSubmit={ this.props.onSubmit }
+        />
+      </div>
     );
   }
 
