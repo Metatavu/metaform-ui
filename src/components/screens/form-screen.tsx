@@ -91,9 +91,13 @@ export class FormScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
+    const { classes } = this.props;
+
     return (
       <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
-        { this.renderForm() }
+        <div className={ classes.root }>
+          { this.renderForm() }
+        </div>
       </BasicLayout>
     );
   }
