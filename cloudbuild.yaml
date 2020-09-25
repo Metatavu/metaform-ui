@@ -1,5 +1,5 @@
 steps:
 - name: 'node'
   entrypoint: 'bash'
-  args:
-  - ./deploy/deply.js
+  args:  
+  - node ./deploy/deply.js
