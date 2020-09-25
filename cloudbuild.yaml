@@ -3,4 +3,4 @@ steps:
   entrypoint: 'bash'
   args:
   - -c
-  - pwd
+  - pwd && ls
