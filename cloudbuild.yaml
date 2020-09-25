@@ -19,9 +19,8 @@ steps:
     echo "[default]" >> ~/.aws/credentials && \
     echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials && \
     echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials && \
-    cat ~/.aws/credentials && \
     echo "[default]" >> ~/.aws/config && \
-    echo "region = ${AWS_DEFAULT_REGION}" >> ~/.aws/config && \
+    echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && \
     npm install && \
     cp .env.perheneuvo .env && \ 
     npm run build && \
