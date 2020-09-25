@@ -3,4 +3,4 @@ steps:
   entrypoint: 'bash'
   args:
   - '-c'
-  - node deploy/deply.js
+  - echo $_DEPLOYMENTS && node deploy/deply.js
