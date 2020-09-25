@@ -3,4 +3,6 @@ steps:
   entrypoint: 'bash'
   args:
   - -c
-  - pwd && ls
+  - pwd && ls && chmod a+x deploy/deply.js && ./deploy/deply.js
+
+
