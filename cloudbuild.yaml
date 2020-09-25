@@ -1,5 +1,6 @@
 steps:
 - name: 'node'
-  entrypoint: 'node'
+  entrypoint: 'bash'
   args:
-  - deploy/deply.js
+  - -c
+  - pwd
