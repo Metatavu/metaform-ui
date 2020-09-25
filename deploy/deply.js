@@ -20,6 +20,8 @@ const execCommand = async (command, args, opts) => {
 }
 
 (process.env._DEPLOYMENTS || "").split(' ').map(async deplyment => {
+  console.log(`Deploying ${deplyment}`);
+
   try {
     const childEnv = {
       PATH: process.env.PATH,
