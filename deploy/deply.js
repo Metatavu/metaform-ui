@@ -19,6 +19,8 @@ const execCommand = async (command, args, opts) => {
   });
 }
 
+console.log("Deployments", process.env._DEPLOYMENTS);
+
 (process.env._DEPLOYMENTS || "").split(' ').map(async deplyment => {
   console.log(`Deploying ${deplyment}`);
 
