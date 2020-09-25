@@ -24,5 +24,5 @@ steps:
     npm install && \
     cp .env.perheneuvo .env && \ 
     npm run build && \
-    /usr/local/bin/aws s3 cp --recursive ./build s3://${_PERHENEUVO_S3_BUCKET} && \
+    /usr/local/bin/aws s3 cp --recursive ./build s3://${_PERHENEUVO_S3_BUCKET} --acl public-read && \
     /usr/local/bin/aws cloudfront create-invalidation --distribution-id ${_PERHENEUVO_CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"
