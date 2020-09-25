@@ -14,7 +14,7 @@ steps:
     curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" && \
     unzip awscli-bundle.zip && \
     sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws && \
-
+    /usr/local/bin/aws  --version && \
     mkdir -p ~/.aws && \
     echo "[default]" >> ~/.aws/credentials && \
     echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials && \
