@@ -11,10 +11,9 @@ steps:
     echo "[default]" >> ~/.aws/config && \
     echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && \
     curl -o /usr/local/bin/aws https://raw.githubusercontent.com/mesosphere/aws-cli/master/aws.sh && chmod a+x /usr/local/bin/aws && \
-    echo "Deploying $_DEPLOYMENTS" && \
     for d in $_DEPLOYMENTS; do \
       echo "Deploying $d"; \
-      var="_${d}_S3_BUCKET"; echo ${!var}; \
+      var="_${d}_S3_BUCKET"; echo $var; echo ${!var}; \
       var="_${d}_ENV"; echo ${!var} > .env; \
       cat .env; \
     done
