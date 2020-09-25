@@ -12,6 +12,7 @@ steps:
     echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials && \
     echo "[default]" >> ~/.aws/config \
     echo "region = ${AWS_DEFAULT_REGION}" >> ~/.aws/config \
+    npm install && \
     cp .env.perheneuvo .env && \ 
     npm run build && \
     aws s3 cp --recursive ./build s3://${_PERHENEUVO_S3_BUCKET} && \
