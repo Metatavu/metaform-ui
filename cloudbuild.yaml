@@ -1,6 +1,5 @@
 steps:
 - name: 'node'
-  entrypoint: 'bash'
+  entrypoint: 'node'
   args:
-  - '-c'
-  - echo $_DEPLOYMENTS && node deploy/deply.js
+  - deploy/deply.js
