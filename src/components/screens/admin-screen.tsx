@@ -21,6 +21,7 @@ import Api from "../../api/api";
 import { Metaform, Reply, MetaformField, MetaformFieldType } from "../../generated/client";
 import Config from "../../config";
 import AdminLayout from "../layouts/admin-layout";
+import Utils from "../../utils";
 
 
 /**
@@ -111,7 +112,7 @@ export class AdminScreen extends React.Component<Props, State> {
           <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
           <div className={ classes.topBarButton }>
             <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.viewAllReplies }</Button>
-            <Button disabled variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>
+            <Button variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>
           </div>
         </div>
         { this.renderReplies(metaform) }
@@ -276,7 +277,30 @@ export class AdminScreen extends React.Component<Props, State> {
    * Event handler for XLSX export button click
    */
   private onExportXlsxClick = async () => {
-    // TODO: Add support for exporting XLSX files
+    try {
+      this.setState({
+        loading: true
+      });
+
+      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+
+      const data = await repliesApi._export({
+        format: "XLSX",
+        realmId: Config.getRealm(),
+        metaformId: Config.getMetaformId()
+      });
+
+      Utils.downloadBlob(data, "replies.xlsx");
+
+      this.setState({
+        loading: false
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
 }

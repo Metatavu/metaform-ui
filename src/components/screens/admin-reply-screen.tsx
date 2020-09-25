@@ -18,6 +18,7 @@ import Form from "../generic/form";
 import { FieldValue } from "metaform-react";
 import Config from "../../config";
 import strings from "../../localization/strings";
+import Utils from "../../utils";
 
 /**
  * Component props
@@ -195,15 +196,8 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         format: "PDF"
       });
 
-      const downloadLink = document.createElement("a");
-      const downloadUrl = window.URL.createObjectURL(pdf);
-      document.body.appendChild(downloadLink);
-      
-      downloadLink.href = downloadUrl;
-      downloadLink.download = "reply.pdf"; 
-      downloadLink.click();
-      window.URL.revokeObjectURL(downloadUrl);
-      downloadLink.remove();
+
+      Utils.downloadBlob(pdf, "reply.pdf");
 
       this.setState({
         loading: false
@@ -238,7 +232,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
       await repliesApi.updateReply({
         realmId: Config.getRealm(),
         metaformId: Config.getMetaformId(),
-        reply: { ... reply, data: formValues as any },
+        reply: { ...reply, data: formValues as any },
         replyId: reply.id
       });
 

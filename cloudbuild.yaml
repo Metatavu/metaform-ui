@@ -1,20 +1,5 @@
 steps:
 - name: 'node'
-  entrypoint: 'bash'
+  entrypoint: 'node'
   args:
-  - '-c'
-  - |
-    mkdir -p ~/.aws/ && \
-    echo "[default]" >> ~/.aws/credentials && \
-    echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials && \
-    echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials && \
-    echo "[default]" >> ~/.aws/config && \
-    echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && \
-    curl -o /usr/local/bin/aws https://raw.githubusercontent.com/mesosphere/aws-cli/master/aws.sh && chmod a+x /usr/local/bin/aws && \
-    for d in $_DEPLOYMENTS; do \
-      echo "Deploying $d"; \
-      var="_${d}_S3_BUCKET"; echo "X${var}X"; echo ${!var}; \
-      var="_${d}_CLOUDFRONT_DISTRIBUTION_ID"; echo "X${var}X"; echo ${!var}; \
-      var="_${d}_ENV"; echo ${!var} > .env; \
-      cat .env; \
-    done
+  - deploy/deply.js
