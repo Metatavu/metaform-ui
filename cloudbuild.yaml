@@ -3,4 +3,4 @@ steps:
   entrypoint: 'bash'
   args:
   - '-c'
-  - deploy/deply.js
+  - node deploy/deply.js
