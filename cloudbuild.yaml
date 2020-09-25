@@ -1,8 +1,18 @@
 steps:
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=metaform-ui-perheneuvo-env --format='get(payload.data)' | tr '_-' '/+' | base64 -d > .env.perheneuvo" ]  
 - name: 'node'
   entrypoint: 'bash'
   args:
   - -c
-  - export && chmod a+x deploy/deply.js && ./deploy/deply.js
-
-
+  - |
+    echo "[default]" >> ~/.aws/credentials && \
+    echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials && \
+    echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials && \
+    echo "[default]" >> ~/.aws/config \
+    echo "region = ${AWS_DEFAULT_REGION}" >> ~/.aws/config \
+    cp .env.perheneuvo .env && \ 
+    npm run build && \
+    aws s3 cp --recursive ./build s3://${_PERHENEUVO_S3_BUCKET} && \
+    aws cloudfront create-invalidation --distribution-id ${_PERHENEUVO_CLOUDFRONT_DISTRIBUTION_ID}
