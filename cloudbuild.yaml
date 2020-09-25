@@ -14,6 +14,7 @@ steps:
     for d in $_DEPLOYMENTS; do \
       echo "Deploying $d"; \
       var="_${d}_S3_BUCKET"; echo "X$var;X" echo ${!var}; \
+      var="_${d}_CLOUDFRONT_DISTRIBUTION_ID"; echo "X$var;X" echo ${!var}; \
       var="_${d}_ENV"; echo ${!var} > .env; \
       cat .env; \
     done
