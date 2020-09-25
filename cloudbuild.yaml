@@ -13,6 +13,8 @@ steps:
     curl -o /usr/local/bin/aws https://raw.githubusercontent.com/mesosphere/aws-cli/master/aws.sh && chmod a+x /usr/local/bin/aws && \
     npm install && \
     for d in $_DEPLOYMENTS; do \      
+      var="_${d}_S3_BUCKET" echo $var && \
+      var="_${d}_S3_BUCKET" echo ${!var} && \
       var="_${d}_S3_BUCKET" aws s3 cp --recursive ./build s3://${!var}/ --acl public-read && \
       var="_${d}_CLOUDFRONT_DISTRIBUTION_ID" aws cloudfront create-invalidation --distribution-id ${!var}; --paths "/*" && \
       npm run build
