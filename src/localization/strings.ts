@@ -19,7 +19,7 @@ export interface IStrings extends LocalizedStringsMethods {
     filterLabel: string;
     filterShowAll: string;
     exportXlsx: string;
-    openReply: string;    
+    openReply: string;
   };
 
   adminReplyScreen: {
