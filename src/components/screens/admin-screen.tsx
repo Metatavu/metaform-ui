@@ -7,7 +7,7 @@ import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/admin-screen";
 
 import { History } from "history";
-import { WithStyles, withStyles, Button, Typography } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Typography, Select, MenuItem, InputLabel } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -41,6 +41,7 @@ interface State {
   loading: boolean;
   replies: Reply[];
   metaform?: Metaform;
+  filterId?: string;
 }
 
 /**
@@ -60,6 +61,42 @@ export class AdminScreen extends React.Component<Props, State> {
       replies: []
     };
   }
+
+  /**
+   * Component did update life cycle handler
+   *
+   * @param _prevProps previous props
+   * @param prevState previous state
+   */
+  public componentDidUpdate = async (_prevProps: Props, prevState: State) => {
+    if (this.state.filterId !== prevState.filterId) {
+      try {
+        this.setState({
+          loading: true
+        });
+  
+        const repliesApi = Api.getRepliesApi(this.props.adminToken);
+  
+        const [ replies ] = await Promise.all([
+          repliesApi.listReplies({
+            metaformId: Config.getMetaformId(),
+            realmId: Config.getRealm(),
+            fields: this.getFilterFields(this.state.metaform, this.state.filterId)
+          })
+        ]);
+  
+        this.setState({
+          loading: false,
+          replies: replies
+        });
+      } catch (e) {
+        this.setState({
+          loading: false,
+          error: e
+        });
+      }
+    }
+  }
   
   /**
    * Component did mount life cycle event
@@ -78,16 +115,19 @@ export class AdminScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
 
+      const filterId = (metaform.filters || [])[0]?.id;
+
       const [ replies ] = await Promise.all([
         repliesApi.listReplies({
           metaformId: Config.getMetaformId(),
           realmId: Config.getRealm(),
-          fields: this.getFieldNames(metaform)
+          fields: this.getFilterFields(metaform, filterId)
         })
       ]);
 
       this.setState({
         loading: false,
+        filterId: filterId,
         replies: replies,
         metaform: metaform
       });
@@ -111,13 +151,40 @@ export class AdminScreen extends React.Component<Props, State> {
         <div className={ classes.topBar }>
           <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
           <div className={ classes.topBarButton }>
-            <Button variant="contained" className={ classes.topBarButton }>{ strings.adminScreen.viewAllReplies }</Button>
-            <Button variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>
+            <Button variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>            
           </div>
         </div>
+        { this.renderFilters(metaform) }
         { this.renderReplies(metaform) }
       </AdminLayout>
     );
+  }
+
+  /**
+   * Renders filters select
+   * 
+   * @param metaform metaform
+   */
+  private renderFilters = (metaform?: Metaform) => {
+    const filters = metaform?.filters || [];
+    const { classes } = this.props;
+    const { filterId } = this.state;
+
+    return (
+      <div className={ classes.filters }>        
+        <div className={ classes.filterPrefixContainer }></div>
+        <div className={ classes.filterSelectContainer }>
+          <InputLabel shrink id="filters-select-label">{ strings.adminScreen.filterLabel }</InputLabel>
+
+          <Select id="filter-select" labelId="filters-select-label" value={ filterId || "all" } onChange={ this.onFilterChange }>
+            {
+              filters.map(filter => <MenuItem value={ filter.id }>{  filter.name }</MenuItem>)
+            }
+            <MenuItem value={ "all" }>{ strings.adminScreen.filterShowAll }</MenuItem>
+          </Select>
+        </div>
+      </div>
+    ); 
   }
 
   /**
@@ -244,15 +311,6 @@ export class AdminScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Returns table field names from metaform
-   * 
-   * @param metaform metaform
-   */
-  private getFieldNames = (metaform: Metaform) => {
-    return this.getFields(metaform).map(field => field.name).filter(name => !!name) as string[];
-  }
-
-  /**
    * Returns table field from metaform
    * 
    * @param metaform metaform
@@ -263,6 +321,30 @@ export class AdminScreen extends React.Component<Props, State> {
       .filter(field => (field.contexts || []).includes("MANAGEMENT_LIST"));    
   }
 
+  /**
+   * Returns filters field
+   * 
+   * @param metaform metaform
+   * @param filterId filter id
+   */
+  private getFilterFields = (metaform?: Metaform, filterId?: string) => {
+    if (!filterId || !metaform || !metaform.filters) {
+      return undefined;
+    }
+
+    return metaform.filters.find(filter => filter.id === filterId)?.fields;
+  }
+
+  /**
+   * Event handler for filter select change
+   * 
+   * @param event event
+   */
+  private onFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    this.setState({
+      filterId: (event.target.value as string) || undefined
+    });
+  }
 
   /**
    * Reply open click button handler

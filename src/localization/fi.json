@@ -10,7 +10,8 @@
 
   "adminScreen": {
     "title": "Vastaukset",
-    "viewAllReplies": "Näytä kaikki vastaukset",
+    "filterLabel": "Suodatus",
+    "filterShowAll": "Kaikki vastaukset",
     "exportXlsx": "Vie xlsx-muodossa",
     "openReply": "Avaa"
   },

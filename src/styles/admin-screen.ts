@@ -25,6 +25,18 @@ export default createStyles({
     marginLeft: "10px"
   },
 
+  filters: {
+    display: "flex"
+  },
+
+  filterPrefixContainer: {
+    flex: 1
+  },
+
+  filterSelectContainer: {
+    marginRight: "20px"
+  },
+
   table: {
     margin: "10px",
   }
