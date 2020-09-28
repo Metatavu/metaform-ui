@@ -11,6 +11,7 @@ export * from './MetaformFieldFlags';
 export * from './MetaformFieldOption';
 export * from './MetaformFieldPermissionContexts';
 export * from './MetaformFieldType';
+export * from './MetaformFilter';
 export * from './MetaformScript';
 export * from './MetaformScripts';
 export * from './MetaformSection';

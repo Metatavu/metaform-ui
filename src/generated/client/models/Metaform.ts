@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    MetaformFilter,
+    MetaformFilterFromJSON,
+    MetaformFilterFromJSONTyped,
+    MetaformFilterToJSON,
     MetaformScripts,
     MetaformScriptsFromJSON,
     MetaformScriptsFromJSONTyped,
@@ -74,6 +78,12 @@ export interface Metaform {
     sections?: Array<MetaformSection>;
     /**
      * 
+     * @type {Array<MetaformFilter>}
+     * @memberof Metaform
+     */
+    filters?: Array<MetaformFilter>;
+    /**
+     * 
      * @type {MetaformScripts}
      * @memberof Metaform
      */
@@ -97,6 +107,7 @@ export function MetaformFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'allowDrafts': !exists(json, 'allowDrafts') ? undefined : json['allowDrafts'],
         'title': !exists(json, 'title') ? undefined : json['title'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(MetaformSectionFromJSON)),
+        'filters': !exists(json, 'filters') ? undefined : ((json['filters'] as Array<any>).map(MetaformFilterFromJSON)),
         'scripts': !exists(json, 'scripts') ? undefined : MetaformScriptsFromJSON(json['scripts']),
     };
 }
@@ -117,6 +128,7 @@ export function MetaformToJSON(value?: Metaform | null): any {
         'allowDrafts': value.allowDrafts,
         'title': value.title,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(MetaformSectionToJSON)),
+        'filters': value.filters === undefined ? undefined : ((value.filters as Array<any>).map(MetaformFilterToJSON)),
         'scripts': MetaformScriptsToJSON(value.scripts),
     };
 }
