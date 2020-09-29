@@ -7,6 +7,8 @@ steps:
   args:
   - -c
   - |
+    echo "Branch $_HEAD_BRANCH / $_BASE_BRANCH"
+    echo "PR NUMBER $_PR_NUMBER"
     export DEBIAN_FRONTEND=noninteractive && \
     apt update && \
     apt install sudo && \
