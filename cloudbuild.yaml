@@ -9,24 +9,26 @@ steps:
     fi
 - name: 'node'
   entrypoint: 'bash'
+  env:
+    - "DEBIAN_FRONTEND=noninteractive"
   args:
   - -c
   - |
-    echo "Deployment ${_DEPLOYMENT}" &&
-    export DEBIAN_FRONTEND=noninteractive &&
-    apt update &&
-    apt install sudo &&
-    apt install unzip &&
-    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" &&
-    unzip awscli-bundle.zip &&
-    sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
-    /usr/local/bin/aws  --version &&
-    mkdir -p ~/.aws &&
-    echo "[default]" >> ~/.aws/credentials &&
-    echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials &&
-    echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials &&
-    echo "[default]" >> ~/.aws/config &&
-    echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config &&
+    if [ -n "${_AWS_ACCESS_KEY_ID}" ] && [ -n "${_AWS_SECRET_ACCESS_KEY}" ] && [ -n "${_AWS_DEFAULT_REGION}" ]; then
+      apt update &&
+      apt install sudo &&
+      apt install unzip &&
+      curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" &&
+      unzip awscli-bundle.zip &&
+      sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
+      /usr/local/bin/aws  --version &&
+      mkdir -p ~/.aws &&
+      echo "[default]" >> ~/.aws/credentials &&
+      echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials &&
+      echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials &&
+      echo "[default]" >> ~/.aws/config &&
+      echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config &&
+    fi
     npm install &&
     npm run build &&
     if [ -n "${_DEPLOYMENT}" ]; then
