@@ -14,7 +14,7 @@ steps:
   args:
   - -c
   - |
-    if [ -n "${_AWS_ACCESS_KEY_ID}" ] && [ -n "${_AWS_SECRET_ACCESS_KEY}" ] && [ -n "${_AWS_DEFAULT_REGION}" ]; then
+    if [ -n "${_AWS_ACCESS_KEY_ID}" ]; then
       apt update &&
       apt install sudo &&
       apt install unzip &&
