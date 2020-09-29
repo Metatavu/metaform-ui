@@ -10,7 +10,8 @@
 
   "adminScreen": {
     "title": "Replies",
-    "viewAllReplies": "View all replies",
+    "filterLabel": "Filter",
+    "filterShowAll": "All replies",
     "exportXlsx": "Export XLSX",
     "openReply": "Open"
   },

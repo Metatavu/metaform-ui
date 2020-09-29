@@ -1,28 +1,35 @@
 steps:
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=metaform-ui-perheneuvo-env --format='get(payload.data)' | tr '_-' '/+' | base64 -d > .env.perheneuvo" ]  
+  args: 
+  - -c
+  - |
+    if [ -n "${_DEPLOYMENT}" ]; then
+      gcloud secrets versions access latest --secret=metaform-ui-${_DEPLOYMENT}-env --format='get(payload.data)' | tr '_-' '/+' | base64 -d > .env
+    fi
 - name: 'node'
   entrypoint: 'bash'
+  env:
+    - "DEBIAN_FRONTEND=noninteractive"
   args:
   - -c
   - |
-    export DEBIAN_FRONTEND=noninteractive && \
-    apt update && \
-    apt install sudo && \
-    apt install unzip && \
-    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" && \
-    unzip awscli-bundle.zip && \
-    sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws && \
-    /usr/local/bin/aws  --version && \
-    mkdir -p ~/.aws && \
-    echo "[default]" >> ~/.aws/credentials && \
-    echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials && \
-    echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials && \
-    echo "[default]" >> ~/.aws/config && \
-    echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && \
-    npm install && \
-    cp .env.perheneuvo .env && \ 
-    npm run build && \
-    /usr/local/bin/aws s3 cp --recursive ./build s3://${_PERHENEUVO_S3_BUCKET} --acl public-read && \
-    /usr/local/bin/aws cloudfront create-invalidation --distribution-id ${_PERHENEUVO_CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"
+    npm install
+    npm run build
+    if [ -n "${_DEPLOYMENT}" ]; then
+      apt update &&
+      apt install sudo &&
+      apt install unzip &&
+      curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" &&
+      unzip awscli-bundle.zip &&
+      sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
+      /usr/local/bin/aws  --version &&
+      mkdir -p ~/.aws &&
+      echo "[default]" >> ~/.aws/credentials &&
+      echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials &&
+      echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials &&
+      echo "[default]" >> ~/.aws/config &&
+      echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && 
+      /usr/local/bin/aws s3 cp --recursive ./build s3://${_S3_BUCKET} --acl public-read &&
+      /usr/local/bin/aws cloudfront create-invalidation --distribution-id ${_CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"
+    fi
