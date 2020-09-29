@@ -11,25 +11,20 @@ steps:
   entrypoint: 'bash'
   env:
     - "DEBIAN_FRONTEND=noninteractive"
+    - "AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID}"
+    - "AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY}"
+    - "AWS_DEFAULT_REGION=${_AWS_DEFAULT_REGION}"
   args:
   - -c
   - |
     npm install
     npm run build
     if [ -n "${_DEPLOYMENT}" ]; then
-      apt update &&
-      apt install sudo &&
-      apt install unzip &&
+      apt update && apt install sudo unzip &&
       curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" &&
       unzip awscli-bundle.zip &&
       sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
       /usr/local/bin/aws  --version &&
-      mkdir -p ~/.aws &&
-      echo "[default]" >> ~/.aws/credentials &&
-      echo "aws_access_key_id = ${_AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials &&
-      echo "aws_secret_access_key = ${_AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials &&
-      echo "[default]" >> ~/.aws/config &&
-      echo "region = ${_AWS_DEFAULT_REGION}" >> ~/.aws/config && 
       /usr/local/bin/aws s3 cp --recursive ./build s3://${_S3_BUCKET} --acl public-read &&
       /usr/local/bin/aws cloudfront create-invalidation --distribution-id ${_CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"
     fi
