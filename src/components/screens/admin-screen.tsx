@@ -80,7 +80,6 @@ export class AdminScreen extends React.Component<Props, State> {
         const [ replies ] = await Promise.all([
           repliesApi.listReplies({
             metaformId: Config.getMetaformId(),
-            realmId: Config.getRealm(),
             fields: this.getFilterFields(this.state.metaform, this.state.filterId)
           })
         ]);
@@ -111,7 +110,6 @@ export class AdminScreen extends React.Component<Props, State> {
       const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
 
       const metaform = await metaformsApi.findMetaform({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId()
       });
 
@@ -120,7 +118,6 @@ export class AdminScreen extends React.Component<Props, State> {
       const [ replies ] = await Promise.all([
         repliesApi.listReplies({
           metaformId: Config.getMetaformId(),
-          realmId: Config.getRealm(),
           fields: this.getFilterFields(metaform, filterId)
         })
       ]);
@@ -368,7 +365,6 @@ export class AdminScreen extends React.Component<Props, State> {
 
       const data = await repliesApi._export({
         format: "XLSX",
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId()
       });
 
