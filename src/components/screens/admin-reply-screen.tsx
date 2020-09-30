@@ -76,11 +76,9 @@ export class AdminReplyScreen extends React.Component<Props, State> {
 
       const [ metaform, reply ] = await Promise.all([
         metaformsApi.findMetaform({
-          realmId: Config.getRealm(),
           metaformId: Config.getMetaformId()
         }),
         repliesApi.findReply({
-          realmId: Config.getRealm(),
           metaformId: Config.getMetaformId(),
           replyId: this.props.replyId
         })
@@ -190,7 +188,6 @@ export class AdminReplyScreen extends React.Component<Props, State> {
       const repliesApi = Api.getRepliesApi(this.props.adminToken);
 
       const pdf = await repliesApi.replyExport({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId(),
         replyId: this.props.replyId,
         format: "PDF"
@@ -230,14 +227,12 @@ export class AdminReplyScreen extends React.Component<Props, State> {
       const repliesApi = Api.getRepliesApi(this.props.adminToken);
 
       await repliesApi.updateReply({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId(),
         reply: { ...reply, data: formValues as any },
         replyId: reply.id
       });
 
       const updatedReply = await repliesApi.findReply({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId(),
         replyId: reply.id
       });

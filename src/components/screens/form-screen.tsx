@@ -71,7 +71,6 @@ export class FormScreen extends React.Component<Props, State> {
       const metaformsApi = Api.getMetaformsApi(this.props.anonymousToken);
 
       const metaform = await metaformsApi.findMetaform({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId()
       });
       
@@ -182,7 +181,6 @@ export class FormScreen extends React.Component<Props, State> {
       const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
 
       await repliesApi.createReply({
-        realmId: Config.getRealm(),
         metaformId: Config.getMetaformId(),
         reply: {
           data: formValues as any
