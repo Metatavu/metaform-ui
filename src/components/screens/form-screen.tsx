@@ -74,7 +74,7 @@ export class FormScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
       
-      document.title = metaform.title ? metaform.title : "Form";
+      document.title = metaform.title ? metaform.title : "Metaform";
 
       this.setState({
         metaform: metaform,
