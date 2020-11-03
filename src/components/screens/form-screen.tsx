@@ -186,7 +186,8 @@ export class FormScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId(),
         reply: {
           data: formValues as any
-        }
+        },
+        replyMode: Config.getReplyMode()
       });
 
       this.setState({
