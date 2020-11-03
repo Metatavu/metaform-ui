@@ -74,6 +74,8 @@ export class FormScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
       
+      document.title = metaform.title ? metaform.title : "Metaform";
+
       this.setState({
         metaform: metaform,
         loading: false
@@ -184,7 +186,8 @@ export class FormScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId(),
         reply: {
           data: formValues as any
-        }
+        },
+        replyMode: Config.getReplyMode()
       });
 
       this.setState({

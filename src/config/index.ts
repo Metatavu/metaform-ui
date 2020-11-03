@@ -24,6 +24,15 @@ export default class Config {
   }
 
   /**
+   * Returns used reply mode
+   * 
+   * @returns used reply mode
+   */
+  public static getReplyMode = () => {
+    return process.env.REACT_APP_REPLY_MODE as string || "CUMULATIVE";
+  }
+
+  /**
    * Returns anonymous login config
    * 
    * @returns anonymous login config
