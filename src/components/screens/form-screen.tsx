@@ -37,7 +37,7 @@ interface State {
   loading: boolean;
   saving: boolean;
   metaform?: Metaform;
-  formValues: Dictionary<string | number | null>;
+  formValues: Dictionary<FieldValue>;
 }
 
 /**

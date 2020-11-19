@@ -3,6 +3,12 @@
     "loading": "Loading..."
   },
 
+  "form": {
+    "tableField": {
+      "addNewRow": "Add new row"
+    }
+  },
+
   "formScreen": {
     "savingReply": "Saving your reply...",
     "replySaved": "Reply saved successfully"

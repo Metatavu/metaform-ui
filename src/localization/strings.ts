@@ -9,6 +9,12 @@ export interface IStrings extends LocalizedStringsMethods {
     loading: string;
   };
 
+  form: {
+    tableField: {
+      addNewRow: string;
+    };
+  };
+
   formScreen: {
     savingReply: string;
     replySaved: string;

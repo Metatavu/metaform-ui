@@ -40,7 +40,7 @@ interface State {
   error?: string | Error | Response;
   loading: boolean;
   saving: boolean;
-  formValues: Dictionary<string | number | null>;
+  formValues: Dictionary<FieldValue>;
 }
 
 /**
