@@ -3,6 +3,12 @@
     "loading": "Ladataan..."
   },
 
+  "form": {
+    "tableField": {
+      "addNewRow": "Lisää uusi rivi"
+    }
+  },
+
   "formScreen": {
     "savingReply": "Tallennetaan vastausta...",
     "replySaved": "Vastaus tallennettu onnistuneesti!"

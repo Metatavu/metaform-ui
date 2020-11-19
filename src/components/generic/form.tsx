@@ -6,6 +6,10 @@ import { WithStyles, withStyles, Icon } from "@material-ui/core";
 import { Metaform } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
+import AddIcon from '@material-ui/icons/Add';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -49,6 +53,7 @@ export class Form extends React.Component<Props, State> {
     return (
       <div className={ classes.formContainer }>
         <MetaformComponent
+          strings={ strings.form }
           form={ metaform } 
           contexts={ this.props.contexts }
           formReadOnly={ false }
@@ -74,7 +79,7 @@ export class Form extends React.Component<Props, State> {
     const value = this.props.getFieldValue(fieldName);
     return (
       <DatePicker
-        selected={ value ? new Date(value) : null }
+        selected={ value ? new Date(value as string) : null }
         onChange={ onChange }
         dateFormat="dd.MM.yyyy"
         locale="fi"
@@ -91,7 +96,7 @@ export class Form extends React.Component<Props, State> {
     const value = this.props.getFieldValue(fieldName);
     return (
       <DatePicker
-        selected={ value ? new Date(value) : null }
+        selected={ value ? new Date(value as string) : null }
         onChange={ onChange }
         dateFormat="dd.MM.yyyy"
         showTimeSelect
@@ -128,6 +133,15 @@ export class Form extends React.Component<Props, State> {
    * @param key key
    */
   private renderIcon = (icon: IconName, key: string): React.ReactNode => {
+    switch (icon) {
+      case "add":
+        return <AddIcon/>
+      case "check-square-o":
+        return <CheckBoxIcon/>
+      case "square-o":
+        return <CheckBoxOutlineBlankIcon/>
+    }
+
     return <Icon className={ icon } />;
   }
 
