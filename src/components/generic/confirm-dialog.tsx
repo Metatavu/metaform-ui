@@ -52,29 +52,27 @@ export default class ConfirmDialog extends React.Component<Props, State> {
       title,
       onConfirm} = this.props;
     return (
-      <>
-        <Dialog
-          open={ open }
-          onClose={ onClose }
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle disableTypography id="alert-dialog-title">{ title }</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              { text }
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={ onCancel } color="primary">
-              { cancelButtonText }
-            </Button>
-            <Button disableElevation variant="contained" onClick={ onConfirm } color="secondary" autoFocus>
-              { positiveButtonText }
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </>
+      <Dialog
+        open={ open }
+        onClose={ onClose }
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle disableTypography id="alert-dialog-title">{ title }</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            { text }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={ onCancel } color="primary">
+            { cancelButtonText }
+          </Button>
+          <Button disableElevation variant="contained" onClick={ onConfirm } color="secondary" autoFocus>
+            { positiveButtonText }
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 }
