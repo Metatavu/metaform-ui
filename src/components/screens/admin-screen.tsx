@@ -483,7 +483,6 @@ export class AdminScreen extends React.Component<Props, State> {
       deleteReplyId: undefined
     });
   }
-
 }
 
 /**
