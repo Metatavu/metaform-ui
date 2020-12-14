@@ -22,6 +22,7 @@ import { Metaform, Reply, MetaformField, MetaformFieldType } from "../../generat
 import Config from "../../config";
 import AdminLayout from "../layouts/admin-layout";
 import Utils from "../../utils";
+import ConfirmDialog from "../generic/confirm-dialog";
 
 
 /**
@@ -42,6 +43,7 @@ interface State {
   replies: Reply[];
   metaform?: Metaform;
   filterId?: string;
+  deleteReplyId?: string;
 }
 
 /**
@@ -153,6 +155,7 @@ export class AdminScreen extends React.Component<Props, State> {
         </div>
         { this.renderFilters(metaform) }
         { this.renderReplies(metaform) }
+        { this.renderDeleteReplyConfirm() }
       </AdminLayout>
     );
   }
@@ -248,6 +251,9 @@ export class AdminScreen extends React.Component<Props, State> {
           <Button variant="contained" color="primary" onClick={ () => this.onReplyOpenClick(reply) }>
             { strings.adminScreen.openReply }
           </Button>
+          <Button style={{ marginLeft: 10 }} variant="contained" color="secondary" onClick={ () => this.onReplyDeleteClick(reply) }>
+            { strings.adminScreen.deleteReply }
+          </Button>
         </TableCell>
       </TableRow>
     );
@@ -261,6 +267,60 @@ export class AdminScreen extends React.Component<Props, State> {
    */
   private renderReplyData = (field: MetaformField, reply: Reply) => {
     return <TableCell> { this.getDisplayReplyData(field, reply) } </TableCell>
+  }
+
+  /**
+   * Renders delete reply confirm dialog
+   */
+  private renderDeleteReplyConfirm = () => {
+    return (
+      <ConfirmDialog 
+        onClose={ this.onReplyDeleteClose }
+        onCancel={ this.onReplyDeleteCancel }
+        onConfirm={ this.onReplyDeleteConfirm }
+        cancelButtonText={ strings.generic.cancel }
+        positiveButtonText={ strings.generic.confirm }
+        title={ strings.adminScreen.confirmDeleteReplyTitle }
+        text={ strings.adminScreen.confirmDeleteReplyText }
+        open={ !!this.state.deleteReplyId } 
+      />
+    );
+  }
+
+  /**
+   * Deletes a reply
+   * 
+   * @param replyId reply id
+   */
+  private deleteReply = async (replyId: string) => {
+    try {
+      const { metaform, replies } = this.state;
+      if (!metaform || !metaform.id) {
+        return;
+      }
+
+      this.setState({
+        loading: true
+      });
+
+      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+
+      await repliesApi.deleteReply({
+        metaformId: metaform.id,
+        replyId: replyId
+      });
+
+      this.setState({
+        loading: false,
+        replies: replies.filter(item => item.id !== replyId)
+      });
+
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
   /**
@@ -353,6 +413,17 @@ export class AdminScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Event handler for reply delete click
+   * 
+   * @param reply reply
+   */
+  private onReplyDeleteClick = (reply: Reply) => {
+    this.setState({
+      deleteReplyId: reply.id
+    });
+  }
+
+  /**
    * Event handler for XLSX export button click
    */
   private onExportXlsxClick = async () => {
@@ -379,6 +450,38 @@ export class AdminScreen extends React.Component<Props, State> {
         error: e
       });
     }
+  }
+
+  /**
+   * Event handler for reply confirm dialog cancel
+   */
+  private onReplyDeleteCancel = () => {
+    this.setState({
+      deleteReplyId: undefined
+    });
+  }
+
+  /**
+   * Event handler for reply confirm dialog close
+   */
+  private onReplyDeleteClose = () => {
+    this.setState({
+      deleteReplyId: undefined
+    });
+  }
+
+  /**
+   * Event handler for reply confirm dialog confirm
+   */
+  private onReplyDeleteConfirm = async () => {
+    const { deleteReplyId } = this.state;
+    if (deleteReplyId) {
+      this.deleteReply(deleteReplyId);
+    }
+
+    this.setState({
+      deleteReplyId: undefined
+    });
   }
 
 }

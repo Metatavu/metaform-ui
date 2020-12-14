@@ -1,6 +1,8 @@
 {
   "generic": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
 
   "form": {
@@ -19,7 +21,10 @@
     "filterLabel": "Filter",
     "filterShowAll": "All replies",
     "exportXlsx": "Export XLSX",
-    "openReply": "Open"
+    "openReply": "Open",
+    "deleteReply": "Delete",
+    "confirmDeleteReplyTitle": "Are you sure?",
+    "confirmDeleteReplyText": "Are you sure that you wish to delete the reply?"
   },
 
   "adminReplyScreen": {
