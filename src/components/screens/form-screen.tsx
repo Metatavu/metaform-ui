@@ -74,10 +74,29 @@ export class FormScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
       
+      const formValues = { ...this.state.formValues };
       document.title = metaform.title ? metaform.title : "Metaform";
+
+      metaform.sections?.forEach(section => {        
+        section.fields?.forEach(field => {
+          const { name, _default, options } = field;
+
+          if (name) {
+            if (_default) {
+              formValues[name] = _default;
+            } else if (options && options.length) {
+              const selectedOption = options.find(option => option.selected || option.checked);
+              if (selectedOption) {
+                formValues[name] = selectedOption.name;
+              }
+            }
+          }
+        });
+      });
 
       this.setState({
         metaform: metaform,
+        formValues: formValues,
         loading: false
       });
     } catch (e) {
