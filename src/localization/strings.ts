@@ -7,6 +7,8 @@ export interface IStrings extends LocalizedStringsMethods {
 
   generic: {
     loading: string;
+    cancel: string;
+    confirm: string;
   };
 
   form: {
@@ -26,6 +28,9 @@ export interface IStrings extends LocalizedStringsMethods {
     filterShowAll: string;
     exportXlsx: string;
     openReply: string;
+    deleteReply: string;
+    confirmDeleteReplyTitle: string;
+    confirmDeleteReplyText: string;
   };
 
   adminReplyScreen: {

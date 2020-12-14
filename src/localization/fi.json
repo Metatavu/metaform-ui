@@ -1,6 +1,8 @@
 {
   "generic": {
-    "loading": "Ladataan..."
+    "loading": "Ladataan...",
+    "confirm": "Vahvista",
+    "cancel": "Peruuta"
   },
 
   "form": {
@@ -19,7 +21,10 @@
     "filterLabel": "Suodatus",
     "filterShowAll": "Kaikki vastaukset",
     "exportXlsx": "Vie xlsx-muodossa",
-    "openReply": "Avaa"
+    "openReply": "Avaa",
+    "deleteReply": "Poista",
+    "confirmDeleteReplyTitle": "Oletko varma?",
+    "confirmDeleteReplyText": "Oletko varma, että haluat poistaa vastauksen?"
   },
 
   "adminReplyScreen": {
