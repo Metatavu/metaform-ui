@@ -63,10 +63,11 @@ class App extends React.Component<Props, State> {
                 <Route
                   path="/"
                   exact={ true }
-                  render={({ history }) => (
+                  render={({ history, location }) => (
                     <AnonymousTokenRefresh>
                       <FormScreen
                         history={ history }
+                        location={ location }
                       />
                     </AnonymousTokenRefresh>
                   )}

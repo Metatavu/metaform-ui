@@ -14,14 +14,14 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    FieldRule,
+    FieldRuleFromJSON,
+    FieldRuleFromJSONTyped,
+    FieldRuleToJSON,
     MetaformField,
     MetaformFieldFromJSON,
     MetaformFieldFromJSONTyped,
     MetaformFieldToJSON,
-    MetaformVisibleIf,
-    MetaformVisibleIfFromJSON,
-    MetaformVisibleIfFromJSONTyped,
-    MetaformVisibleIfToJSON,
 } from './';
 
 /**
@@ -38,10 +38,10 @@ export interface MetaformSection {
     title?: string;
     /**
      * 
-     * @type {MetaformVisibleIf}
+     * @type {FieldRule}
      * @memberof MetaformSection
      */
-    visibleIf?: MetaformVisibleIf;
+    visibleIf?: FieldRule;
     /**
      * 
      * @type {Array<MetaformField>}
@@ -61,7 +61,7 @@ export function MetaformSectionFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'title': !exists(json, 'title') ? undefined : json['title'],
-        'visibleIf': !exists(json, 'visible-if') ? undefined : MetaformVisibleIfFromJSON(json['visible-if']),
+        'visibleIf': !exists(json, 'visible-if') ? undefined : FieldRuleFromJSON(json['visible-if']),
         'fields': !exists(json, 'fields') ? undefined : ((json['fields'] as Array<any>).map(MetaformFieldFromJSON)),
     };
 }
@@ -76,7 +76,7 @@ export function MetaformSectionToJSON(value?: MetaformSection | null): any {
     return {
         
         'title': value.title,
-        'visible-if': MetaformVisibleIfToJSON(value.visibleIf),
+        'visible-if': FieldRuleToJSON(value.visibleIf),
         'fields': value.fields === undefined ? undefined : ((value.fields as Array<any>).map(MetaformFieldToJSON)),
     };
 }

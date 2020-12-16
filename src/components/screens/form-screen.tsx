@@ -5,8 +5,8 @@ import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-screen";
 
-import { History } from "history";
-import { WithStyles, withStyles } from "@material-ui/core";
+import { History, Location } from "history";
+import { Link, Snackbar, WithStyles, withStyles } from "@material-ui/core";
 import BasicLayout, { SnackbarMessage } from "../layouts/basic-layout";
 
 import { KeycloakInstance } from "keycloak-js";
@@ -18,12 +18,14 @@ import { FieldValue } from "metaform-react";
 import Form from "../generic/form";
 import Config from "../../config";
 import strings from "../../localization/strings";
+import Alert from "@material-ui/lab/Alert";
 
 /**
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
   history: History;
+  location: Location;
   keycloak: KeycloakInstance;
   anonymousToken: AccessToken;
 }
@@ -36,8 +38,11 @@ interface State {
   error?: string | Error | Response;
   loading: boolean;
   saving: boolean;
+  draftSavedVisible: boolean;
+  draftSaveVisible: boolean;
+  draftId: string | null;
   metaform?: Metaform;
-  formValues: Dictionary<FieldValue>;
+  formValues: Dictionary<FieldValue>;  
 }
 
 /**
@@ -55,6 +60,9 @@ export class FormScreen extends React.Component<Props, State> {
     this.state = {      
       loading: false,
       saving: false,
+      draftSaveVisible: false,
+      draftSavedVisible: false,
+      draftId: null,
       formValues: {}
     };
   }
@@ -63,15 +71,22 @@ export class FormScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
+    const { location, anonymousToken } = this.props;
+    const query = new URLSearchParams(location.search);
+
+    const draftId = query.get("draft");
+    const metaformId = Config.getMetaformId();
+
     try {
       this.setState({
-        loading: true
+        loading: true,
+        draftId: draftId
       });
 
-      const metaformsApi = Api.getMetaformsApi(this.props.anonymousToken);
+      const metaformsApi = Api.getMetaformsApi(anonymousToken);
 
       const metaform = await metaformsApi.findMetaform({
-        metaformId: Config.getMetaformId()
+        metaformId: metaformId
       });
       
       const formValues = { ...this.state.formValues };
@@ -93,6 +108,19 @@ export class FormScreen extends React.Component<Props, State> {
           }
         });
       });
+
+      if (draftId) {
+        const draftApi = Api.getDraftsApi(anonymousToken);
+        const draft = await draftApi.findDraft({
+          metaformId: metaformId,
+          draftId: draftId
+        });
+
+        const draftData = draft?.data || {};
+        Object.keys(draftData).forEach(draftKey => {
+          formValues[draftKey] = draftData[draftKey] as any;
+        });
+      }
 
       this.setState({
         metaform: metaform,
@@ -117,6 +145,8 @@ export class FormScreen extends React.Component<Props, State> {
       <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
         <div className={ classes.root }>
           { this.renderForm() }
+          { this.renderDraftSave() }
+          { this.renderDraftSaved() }
         </div>
       </BasicLayout>
     );
@@ -144,6 +174,45 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Renders draft save dialog
+   */
+  private renderDraftSave = () => {
+    const { draftSaveVisible } = this.state;
+
+    return (
+      <Snackbar open={ draftSaveVisible }  onClose={ this.onDraftSaveClose }>
+        <Alert onClose={ this.onDraftSaveClose } severity="info">
+          <span> { strings.formScreen.saveDraft } </span>
+          <Link onClick={ this.onSaveDraftLinkClick }> { strings.formScreen.saveDraftLink } </Link>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders draft saved dialog
+   */
+  private renderDraftSaved = () => {
+    const { draftSavedVisible, draftId } = this.state;
+    if (!draftId) {
+      return null;
+    }
+
+    const { location } = window;
+    const href = (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?draft=${draftId}`)).toString();
+
+    return (
+      <Snackbar open={ draftSavedVisible } onClose={ this.onDraftSavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+        <Alert onClose={ this.onDraftSavedClose } severity="success">
+          <span> { strings.formScreen.draftSaved } </span>
+          <br/><br/>
+          <a href={ href }> { href } </a>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
    * Method for getting field value
    *
    * @param fieldName field name
@@ -160,10 +229,16 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
     const { formValues } = this.state;
-    formValues[fieldName] = fieldValue;
-    this.setState({
-      formValues: formValues
-    });
+
+    if (formValues[fieldName] !== fieldValue) {
+      formValues[fieldName] = fieldValue;
+      this.setState({
+        formValues: formValues
+      });
+      this.setState({
+        draftSaveVisible: !!this.state.metaform?.allowDrafts
+      });
+    }
   }
 
   /**
@@ -182,6 +257,55 @@ export class FormScreen extends React.Component<Props, State> {
     this.setState({ 
       snackbarMessage: undefined 
     });
+  }
+
+  /**
+   * Save the reply as draft
+   */
+  private saveDraft = async () => {
+    try {
+      const { metaform, formValues, draftId } = this.state;
+      if (!metaform || !metaform.id) {
+        return;
+      }
+
+      this.setState({
+        loading: true,
+        draftSaveVisible: false
+      });
+
+      const draftsApi = Api.getDraftsApi(this.props.anonymousToken);
+      let draft;
+
+      if (draftId) {
+        draft = await draftsApi.updateDraft({
+          metaformId: metaform.id,
+          draftId: draftId,
+          draft: {          
+            data: formValues as any
+          }
+        }) 
+      } else {
+        draft = await draftsApi.createDraft({
+          metaformId: metaform.id,
+          draft: {          
+            data: formValues as any
+          }
+        }) 
+      }
+
+      this.setState({
+        draftId: draft.id!,
+        draftSavedVisible: true,
+        loading: false
+      });
+
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
   }
 
   /**
@@ -223,6 +347,31 @@ export class FormScreen extends React.Component<Props, State> {
       });
     };
 
+  }
+
+  /**
+   * Event handler for draft save snackbar close
+   */
+  private onDraftSaveClose = () => {
+    this.setState({
+      draftSaveVisible: false
+    });
+  }
+
+  /**
+   * Event handler for draft save snackbar close
+   */
+  private onDraftSavedClose = () => {
+    this.setState({
+      draftSavedVisible: false
+    });
+  }
+
+  /**
+   * Event handler for draft save link click
+   */
+  private onSaveDraftLinkClick = () => {
+    this.saveDraft();
   }
 
 }

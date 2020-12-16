@@ -12,6 +12,9 @@
   },
 
   "formScreen": {
+    "saveDraft": "Voit tallentaa lomakkeen vedoksena klikkaamalla",
+    "saveDraftLink": "tästä",
+    "draftSaved": "Lomake on tallennettu vedoksena. Ota seuraava kirjanmerkki talteen niin voit jatkaa lomakkeen täyttöä myöhemmin: ",
     "savingReply": "Tallennetaan vastausta...",
     "replySaved": "Vastaus tallennettu onnistuneesti!"
   },
