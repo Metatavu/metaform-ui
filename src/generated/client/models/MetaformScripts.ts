@@ -38,6 +38,12 @@ export interface MetaformScripts {
      * @memberof MetaformScripts
      */
     afterUpdateReply?: Array<MetaformScript>;
+    /**
+     * List of scripts run when generating a metaform Excel export
+     * @type {Array<MetaformScript>}
+     * @memberof MetaformScripts
+     */
+    metaformExportXlsx?: Array<MetaformScript>;
 }
 
 export function MetaformScriptsFromJSON(json: any): MetaformScripts {
@@ -52,6 +58,7 @@ export function MetaformScriptsFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'afterCreateReply': !exists(json, 'afterCreateReply') ? undefined : ((json['afterCreateReply'] as Array<any>).map(MetaformScriptFromJSON)),
         'afterUpdateReply': !exists(json, 'afterUpdateReply') ? undefined : ((json['afterUpdateReply'] as Array<any>).map(MetaformScriptFromJSON)),
+        'metaformExportXlsx': !exists(json, 'metaformExportXlsx') ? undefined : ((json['metaformExportXlsx'] as Array<any>).map(MetaformScriptFromJSON)),
     };
 }
 
@@ -66,6 +73,7 @@ export function MetaformScriptsToJSON(value?: MetaformScripts | null): any {
         
         'afterCreateReply': value.afterCreateReply === undefined ? undefined : ((value.afterCreateReply as Array<any>).map(MetaformScriptToJSON)),
         'afterUpdateReply': value.afterUpdateReply === undefined ? undefined : ((value.afterUpdateReply as Array<any>).map(MetaformScriptToJSON)),
+        'metaformExportXlsx': value.metaformExportXlsx === undefined ? undefined : ((value.metaformExportXlsx as Array<any>).map(MetaformScriptToJSON)),
     };
 }
 

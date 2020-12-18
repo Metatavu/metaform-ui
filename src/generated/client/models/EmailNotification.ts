@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    FieldRule,
+    FieldRuleFromJSON,
+    FieldRuleFromJSONTyped,
+    FieldRuleToJSON,
+} from './';
+
 /**
  * Email notification
  * @export
@@ -43,6 +50,12 @@ export interface EmailNotification {
      * @memberof EmailNotification
      */
     emails: Array<string>;
+    /**
+     * 
+     * @type {FieldRule}
+     * @memberof EmailNotification
+     */
+    notifyIf?: FieldRule;
 }
 
 export function EmailNotificationFromJSON(json: any): EmailNotification {
@@ -59,6 +72,7 @@ export function EmailNotificationFromJSONTyped(json: any, ignoreDiscriminator: b
         'subjectTemplate': json['subjectTemplate'],
         'contentTemplate': json['contentTemplate'],
         'emails': json['emails'],
+        'notifyIf': !exists(json, 'notifyIf') ? undefined : FieldRuleFromJSON(json['notifyIf']),
     };
 }
 
@@ -75,6 +89,7 @@ export function EmailNotificationToJSON(value?: EmailNotification | null): any {
         'subjectTemplate': value.subjectTemplate,
         'contentTemplate': value.contentTemplate,
         'emails': value.emails,
+        'notifyIf': FieldRuleToJSON(value.notifyIf),
     };
 }
 
