@@ -21,6 +21,7 @@ import strings from "../../localization/strings";
 import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
+import ConfirmDialog from "../generic/confirm-dialog";
 
 /**
  * Component props
@@ -46,6 +47,8 @@ interface State {
   draftId: string | null;
   replySavedVisible: boolean;
   replyEmailDialogVisible: boolean;
+  replyDeleteVisible: boolean;
+  replyDeleteConfirmVisible: boolean;
   reply?: Reply;
   ownerKey: string | null;
   metaform?: Metaform;
@@ -72,6 +75,8 @@ export class FormScreen extends React.Component<Props, State> {
       draftEmailDialogVisible: false,
       replySavedVisible: false,
       replyEmailDialogVisible: false,
+      replyDeleteVisible: false,
+      replyDeleteConfirmVisible: false,
       draftId: null,
       ownerKey: null,
       formValues: {}
@@ -95,7 +100,8 @@ export class FormScreen extends React.Component<Props, State> {
       this.setState({
         loading: true,
         draftId: draftId,
-        ownerKey: ownerKey
+        ownerKey: ownerKey,
+        replyDeleteVisible: !!ownerKey
       });
 
       const metaformsApi = Api.getMetaformsApi(anonymousToken);
@@ -178,6 +184,8 @@ export class FormScreen extends React.Component<Props, State> {
           { this.renderForm() }
           { this.renderReplySaved() }
           { this.renderReplyEmailDialog() }
+          { this.renderReplyDelete() }
+          { this.renderReplyDeleteConfirm() }
           { this.renderDraftSave() }
           { this.renderDraftSaved() }
           { this.renderDraftEmailDialog() }
@@ -306,6 +314,38 @@ export class FormScreen extends React.Component<Props, State> {
         open={ this.state.replyEmailDialogVisible }
         onSend={ this.onReplyEmailDialogSend }
         onCancel={ this.onReplyEmailDialogCancel }
+      />
+    );
+  }
+
+  /**
+   * Renders reply delete dialog
+   */
+  private renderReplyDelete = () => {
+    return (
+      <Snackbar open={ this.state.replyDeleteVisible }  onClose={ this.onReplyDeleteClose }>
+        <Alert onClose={ this.onReplyDeleteClose  } severity="warning">
+          <span> { strings.formScreen.replyDeleteText } </span>
+          <Link href="#" onClick={ this.onReplyDeleteLinkClick }> { strings.formScreen.replyDeleteLink } </Link>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders delete reply confirm dialog
+   */
+  private renderReplyDeleteConfirm = () => {
+    return (
+      <ConfirmDialog
+        onClose={ this.onReplyDeleteConfirmClose }
+        onCancel={ this.onReplyDeleteConfirmClose }
+        onConfirm={ this.onReplyDeleteConfirmConfirm }
+        cancelButtonText={ strings.generic.cancel }
+        positiveButtonText={ strings.generic.confirm }
+        title={ strings.formScreen.confirmDeleteReplyTitle }
+        text={ strings.formScreen.confirmDeleteReplyText }
+        open={ this.state.replyDeleteConfirmVisible } 
       />
     );
   }
@@ -507,6 +547,46 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Deletes the reply
+   */
+  private deleteReply = async () => {
+    const { reply, ownerKey } = this.state;
+
+    try {
+      this.setState({
+        replyDeleteConfirmVisible: false,
+        loading: true
+      });
+
+      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
+
+      if (reply && reply.id && ownerKey) {
+        await repliesApi.deleteReply({
+          metaformId: Config.getMetaformId(),
+          replyId: reply.id,
+          ownerKey: ownerKey
+        });
+      } else {
+        throw new Error("Missing parameters, failed to delete reply");
+      }
+
+      this.setState({
+        loading: false,
+        replyDeleteVisible: false,
+        snackbarMessage: {
+          message: strings.formScreen.replyDeleted,
+          severity: "success"
+        }
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
+  }
+
+  /**
    * Returns draft link
    * 
    * @returns draft link or null if not available
@@ -680,6 +760,40 @@ export class FormScreen extends React.Component<Props, State> {
     this.setState({
       replySavedVisible: false
     });
+  }
+
+  /**
+   * Event handler for reply delete snackbar close
+   */
+  private onReplyDeleteClose = () => {
+    this.setState({
+      replyDeleteVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply delete link click
+   */
+  private onReplyDeleteLinkClick = () => {
+    this.setState({
+      replyDeleteConfirmVisible: true
+    });
+  }
+
+  /**
+   * Event handler for reply delete confirm dialog close
+   */
+  private onReplyDeleteConfirmClose = () => {
+    this.setState({
+      replyDeleteConfirmVisible: false
+    });
+  }
+  
+  /**
+   * Event handler for reply delete confirm dialog confirm
+   */
+  private onReplyDeleteConfirmConfirm = () => {
+    this.deleteReply();
   }
 
 }

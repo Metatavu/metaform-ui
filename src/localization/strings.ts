@@ -36,6 +36,11 @@ export interface IStrings extends LocalizedStringsMethods {
     replyEditEmailContent: string;
     replyEditEmailSubject: string;
     replyEditEmailSent: string;
+    replyDeleteText: string;
+    replyDeleteLink: string;
+    confirmDeleteReplyTitle: string;
+    confirmDeleteReplyText: string;
+    replyDeleted: string;
   };
 
   adminScreen: {

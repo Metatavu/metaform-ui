@@ -29,7 +29,12 @@
     "replyEditEmailDialogText": "Enter the email address to which you want the edit form link to be sent",
     "replyEditEmailSubject": "{0} -form edit link",
     "replyEditEmailContent": "<p>Hi!</p><p>You can edit form {0} reply from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" ,
-    "replyEditEmailSent": "Edit link has been sent!"
+    "replyEditEmailSent": "Edit link has been sent!",
+    "replyDeleteText": "You can delete this reply by clicking",
+    "replyDeleteLink": "here",
+    "confirmDeleteReplyTitle": "Are you sure?",
+    "confirmDeleteReplyText": "Are you sure that you wish to delete the reply?",
+    "replyDeleted": "The reply has been deleted!"
   },
 
   "adminScreen": {

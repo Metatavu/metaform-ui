@@ -29,7 +29,12 @@
     "replyEditEmailDialogText": "Kirjoita sähköpostiosoite, johon haluat lomakkeen muokkauslinkin lähetettävän",
     "replyEditEmailSubject": "{0} -lomakkeen muokkauslinkki",
     "replyEditEmailContent": "<p>Hei!</p><p>Pääset muokkaamaan {0} -lomakkeen vastauksia seuraavasta linkistä:</p><p><a href='{1}'>{1}</a></p><hr/><p>Tämä on automaattinen viesti, älä vastaa viestiin.</p>",
-    "replyEditEmailSent": "Muokkauslinkki lähetetty!"
+    "replyEditEmailSent": "Muokkauslinkki lähetetty!",
+    "replyDeleteText": "Voit poistaa tämän vastauksen klikkaamalla",
+    "replyDeleteLink": "tästä",
+    "confirmDeleteReplyTitle": "Oletko varma?",
+    "confirmDeleteReplyText": "Oletko varma, että haluat poistaa vastauksen?",
+    "replyDeleted": "Vastaus on poistettu onnistuneesti!"
   },
 
   "adminScreen": {
