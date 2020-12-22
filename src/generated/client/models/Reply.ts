@@ -38,6 +38,13 @@ export interface Reply {
      */
     revision?: Date;
     /**
+     * Reply owner key allows user to perform edit and delete operations on given reply.
+     * Key is returned only once on creation time and will not be recorable afterwards.
+     * @type {string}
+     * @memberof Reply
+     */
+    readonly ownerKey?: string;
+    /**
      * 
      * @type {Date}
      * @memberof Reply
@@ -70,6 +77,7 @@ export function ReplyFromJSONTyped(json: any, ignoreDiscriminator: boolean): Rep
         'id': !exists(json, 'id') ? undefined : json['id'],
         'userId': !exists(json, 'userId') ? undefined : json['userId'],
         'revision': !exists(json, 'revision') ? undefined : (new Date(json['revision'])),
+        'ownerKey': !exists(json, 'ownerKey') ? undefined : json['ownerKey'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'modifiedAt': !exists(json, 'modifiedAt') ? undefined : (new Date(json['modifiedAt'])),
         'data': !exists(json, 'data') ? undefined : json['data'],

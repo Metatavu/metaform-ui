@@ -23,6 +23,13 @@ export interface IStrings extends LocalizedStringsMethods {
     draftSaved: string;
     savingReply: string;
     replySaved: string;
+    replyEdit: string;
+    replyEditEmailText: string;
+    replyEditEmailLink: string;
+    replyEditEmailDialogText: string;
+    replyEditEmailContent: string;
+    replyEditEmailSubject: string;
+    replyEditEmailSent: string;
   };
 
   adminScreen: {
@@ -47,6 +54,13 @@ export interface IStrings extends LocalizedStringsMethods {
     replies: string;
     profile: string;
     logout: string;
+  },
+
+  emailDialog: {
+    title: string;
+    email: string;
+    cancel: string;
+    send: string;
   },
 
   errorDialog: {

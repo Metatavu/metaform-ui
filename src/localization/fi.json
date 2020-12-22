@@ -16,7 +16,14 @@
     "saveDraftLink": "tästä",
     "draftSaved": "Lomake on tallennettu vedoksena. Ota seuraava kirjanmerkki talteen niin voit jatkaa lomakkeen täyttöä myöhemmin: ",
     "savingReply": "Tallennetaan vastausta...",
-    "replySaved": "Vastaus tallennettu onnistuneesti!"
+    "replySaved": "Vastaus tallennettu onnistuneesti!",
+    "replyEdit": "Voit muokata vastaustasi käyttämällä seuraavaa linkkiä:",
+    "replyEditEmailText": "Voit lähettää linkin itsellesi sähköpostilla klikkaamalla",
+    "replyEditEmailLink": "tästä",
+    "replyEditEmailDialogText": "Kirjoita sähköpostiosoite, johon haluat lomakkeen muokkauslinkin lähetettävän",
+    "replyEditEmailSubject": "{0} -lomakkeen muokkauslinkki",
+    "replyEditEmailContent": "<p>Hei!</p><p>Pääset muokkaamaan {0} -lomakkeen vastauksia seuraavasta linkistä:</p><p><a href='{1}'>{1}</a></p><hr/><p>Tämä on automaattinen viesti, älä vastaa viestiin.</p>",
+    "replyEditEmailSent": "Muokkauslinkki lähetetty!"
   },
 
   "adminScreen": {
@@ -41,8 +48,15 @@
     "replies": "Vastaukset",
     "profile": "Käyttäjätili",
     "logout": "Kirjaudu ulos"
+  }, 
+  
+  "emailDialog": {
+    "title": "Sähköposti",
+    "email": "Sähköpostiosoite",
+    "cancel": "Peruuta",
+    "send": "Lähetä"
   },
-
+  
   "errorDialog": {
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",

@@ -47,11 +47,13 @@ export interface CreateReplyRequest {
 export interface DeleteReplyRequest {
     metaformId: string;
     replyId: string;
+    ownerKey?: string;
 }
 
 export interface FindReplyRequest {
     metaformId: string;
     replyId: string;
+    ownerKey?: string;
 }
 
 export interface ListRepliesRequest {
@@ -77,6 +79,7 @@ export interface UpdateReplyRequest {
     reply: Reply;
     metaformId: string;
     replyId: string;
+    ownerKey?: string;
 }
 
 /**
@@ -194,6 +197,10 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -232,6 +239,10 @@ export class RepliesApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -396,6 +407,10 @@ export class RepliesApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
