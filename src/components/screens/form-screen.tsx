@@ -42,9 +42,10 @@ interface State {
   saving: boolean;
   draftSavedVisible: boolean;
   draftSaveVisible: boolean;
+  draftEmailDialogVisible: boolean;
   draftId: string | null;
   replySavedVisible: boolean;
-  replyEmailVisible: boolean;
+  replyEmailDialogVisible: boolean;
   reply?: Reply;
   ownerKey: string | null;
   metaform?: Metaform;
@@ -68,8 +69,9 @@ export class FormScreen extends React.Component<Props, State> {
       saving: false,
       draftSaveVisible: false,
       draftSavedVisible: false,
+      draftEmailDialogVisible: false,
       replySavedVisible: false,
-      replyEmailVisible: false,
+      replyEmailDialogVisible: false,
       draftId: null,
       ownerKey: null,
       formValues: {}
@@ -178,6 +180,7 @@ export class FormScreen extends React.Component<Props, State> {
           { this.renderReplyEmailDialog() }
           { this.renderDraftSave() }
           { this.renderDraftSaved() }
+          { this.renderDraftEmailDialog() }
         </div>
       </BasicLayout>
     );
@@ -221,6 +224,46 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Renders draft saved dialog
+   */
+  private renderDraftSaved = () => {
+    const { draftSavedVisible } = this.state;
+    const draftLink = this.getDraftLink();
+
+    if (!draftLink) {
+      return null;
+    }
+
+    return (
+      <Snackbar open={ draftSavedVisible } onClose={ this.onDraftSavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+        <Alert onClose={ this.onDraftSavedClose } severity="success">
+          <span> { strings.formScreen.draftSaved } </span>
+          <br/><br/>
+          <a href={ draftLink }> { draftLink } </a>
+          <p> 
+            { strings.formScreen.draftEmailText } 
+            <Link href="#" onClick={ this.onDraftEmailLinkClick }> { strings.formScreen.draftEmailLink } </Link>
+          </p>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders reply email dialog
+   */
+  private renderDraftEmailDialog = () => {
+    return (
+      <EmailDialog 
+        text={ strings.formScreen.draftEmailDialogText }
+        open={ this.state.draftEmailDialogVisible }
+        onSend={ this.onDraftEmailDialogSend }
+        onCancel={ this.onDraftEmailDialogCancel }
+      />
+    );
+  }
+
+  /**
    * Renders reply saved dialog
    */
   private renderReplySaved = () => {
@@ -260,33 +303,10 @@ export class FormScreen extends React.Component<Props, State> {
     return (
       <EmailDialog 
         text={ strings.formScreen.replyEditEmailDialogText }
-        open={ this.state.replyEmailVisible }
+        open={ this.state.replyEmailDialogVisible }
         onSend={ this.onReplyEmailDialogSend }
         onCancel={ this.onReplyEmailDialogCancel }
       />
-    );
-  }
-
-  /**
-   * Renders draft saved dialog
-   */
-  private renderDraftSaved = () => {
-    const { draftSavedVisible, draftId } = this.state;
-    if (!draftId) {
-      return null;
-    }
-
-    const { location } = window;
-    const href = (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?draft=${draftId}`)).toString();
-
-    return (
-      <Snackbar open={ draftSavedVisible } onClose={ this.onDraftSavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <Alert onClose={ this.onDraftSavedClose } severity="success">
-          <span> { strings.formScreen.draftSaved } </span>
-          <br/><br/>
-          <a href={ href }> { href } </a>
-        </Alert>
-      </Snackbar>
     );
   }
 
@@ -387,12 +407,61 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Sends draft link to given email
+   * 
+   * @param email email
+   */
+  private sendDraftEmail = async (email: string) => {
+    const { metaform } = this.state;
+    const { REACT_APP_EMAIL_FROM } = process.env;
+    const draftLink = this.getDraftLink();
+    
+    if (!draftLink || !metaform) {
+      return;
+    }
+
+    try {
+      this.setState({
+        draftEmailDialogVisible: false,
+        loading: true
+      });
+
+      if (!REACT_APP_EMAIL_FROM) {
+        throw new Error("Missing REACT_APP_EMAIL_FROM env");
+      }
+
+      const formTitle = metaform.title || "";
+      const subject = strings.formatString(strings.formScreen.draftEmailSubject, formTitle) as string;
+      const html = strings.formatString(strings.formScreen.draftEmailContent, formTitle, draftLink) as string;
+
+      await Mail.sendMail({
+        from: REACT_APP_EMAIL_FROM,
+        html: html,
+        subject: subject,
+        to: email
+      });
+
+      this.setState({
+        loading: false,
+        snackbarMessage: {
+          message: strings.formScreen.draftEmailSent,
+          severity: "success"
+        }
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
+  }
+
+  /**
    * Sends reply link to given email
    * 
    * @param email email
    */
   private sendReplyEmail = async (email: string) => {
-    const { anonymousToken } = this.props;
     const { metaform } = this.state;
     const { REACT_APP_EMAIL_FROM } = process.env;
     const replyEditLink = this.getReplyEditLink();
@@ -403,7 +472,7 @@ export class FormScreen extends React.Component<Props, State> {
 
     try {
       this.setState({
-        replyEmailVisible: false,
+        replyEmailDialogVisible: false,
         loading: true
       });
 
@@ -435,6 +504,21 @@ export class FormScreen extends React.Component<Props, State> {
         error: e
       });
     }
+  }
+
+  /**
+   * Returns draft link
+   * 
+   * @returns draft link or null if not available
+   */
+  private getDraftLink = () => {
+    const { draftId } = this.state;
+    if (!draftId) {
+      return null;
+    }
+
+    const { location } = window;
+    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?draft=${draftId}`)).toString();
   }
 
   /**
@@ -523,19 +607,40 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for reply saved snackbar close
-   */
-  private onReplySavedClose  = () => {
-    this.setState({
-      replySavedVisible: false
-    });
-  }
-
-  /**
    * Event handler for draft save link click
    */
   private onSaveDraftLinkClick = () => {
     this.saveDraft();
+  }
+
+  /**
+   * Event handler for draft email link click
+   */
+  private onDraftEmailLinkClick = () => {
+    this.setState({
+      draftSavedVisible: false,
+      draftEmailDialogVisible: true
+    });
+  }
+
+  /**
+   * Event handler for draft email dialog send click
+   * 
+   * @param email email
+   */
+  private onDraftEmailDialogSend = (email: string) => {
+    this.sendDraftEmail(email);
+  }
+
+  /**
+   * Event handler for draft email dialog cancel click
+   * 
+   * @param email email
+   */
+  private onDraftEmailDialogCancel = () => {
+    this.setState({
+      draftEmailDialogVisible: false
+    });
   }
 
   /**
@@ -544,7 +649,7 @@ export class FormScreen extends React.Component<Props, State> {
   private onReplyEmailLinkClick = () => {
     this.setState({
       replySavedVisible: false,
-      replyEmailVisible: true
+      replyEmailDialogVisible: true
     });
   }
 
@@ -564,7 +669,16 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private onReplyEmailDialogCancel = () => {
     this.setState({
-      replyEmailVisible: false
+      replyEmailDialogVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply saved snackbar close
+   */
+  private onReplySavedClose  = () => {
+    this.setState({
+      replySavedVisible: false
     });
   }
 

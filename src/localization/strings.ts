@@ -21,6 +21,12 @@ export interface IStrings extends LocalizedStringsMethods {
     saveDraft: string;
     saveDraftLink: string;
     draftSaved: string;
+    draftEmailText: string;
+    draftEmailLink: string;
+    draftEmailDialogText: string;
+    draftEmailContent: string;
+    draftEmailSubject: string;
+    draftEmailSent: string;
     savingReply: string;
     replySaved: string;
     replyEdit: string;
