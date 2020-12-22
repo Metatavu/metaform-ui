@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-len
-import { Configuration, MetaformsApi, RepliesApi } from "../generated/client";
+import { Configuration, DraftsApi, MetaformsApi, RepliesApi } from "../generated/client";
 import { AccessToken } from "../types";
 
 /**
@@ -24,6 +24,16 @@ export default class Api {
   public static getRepliesApi(accessToken: AccessToken) {
     return new RepliesApi(Api.getConfiguration(accessToken));
   }
+
+  /**
+   * Gets initialized drafts api
+   *
+   * @param token access token
+   */
+  public static getDraftsApi(accessToken: AccessToken) {
+    return new DraftsApi(Api.getConfiguration(accessToken));
+  }
+
   /**
    * Gets api configuration
    *

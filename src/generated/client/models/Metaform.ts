@@ -65,6 +65,12 @@ export interface Metaform {
      */
     allowDrafts?: boolean;
     /**
+     * Generate reply owner keys to replies.
+     * @type {boolean}
+     * @memberof Metaform
+     */
+    allowReplyOwnerKeys?: boolean;
+    /**
      * 
      * @type {string}
      * @memberof Metaform
@@ -105,6 +111,7 @@ export function MetaformFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'exportThemeId': !exists(json, 'exportThemeId') ? undefined : json['exportThemeId'],
         'allowAnonymous': !exists(json, 'allowAnonymous') ? undefined : json['allowAnonymous'],
         'allowDrafts': !exists(json, 'allowDrafts') ? undefined : json['allowDrafts'],
+        'allowReplyOwnerKeys': !exists(json, 'allowReplyOwnerKeys') ? undefined : json['allowReplyOwnerKeys'],
         'title': !exists(json, 'title') ? undefined : json['title'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(MetaformSectionFromJSON)),
         'filters': !exists(json, 'filters') ? undefined : ((json['filters'] as Array<any>).map(MetaformFilterFromJSON)),
@@ -126,6 +133,7 @@ export function MetaformToJSON(value?: Metaform | null): any {
         'exportThemeId': value.exportThemeId,
         'allowAnonymous': value.allowAnonymous,
         'allowDrafts': value.allowDrafts,
+        'allowReplyOwnerKeys': value.allowReplyOwnerKeys,
         'title': value.title,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(MetaformSectionToJSON)),
         'filters': value.filters === undefined ? undefined : ((value.filters as Array<any>).map(MetaformFilterToJSON)),

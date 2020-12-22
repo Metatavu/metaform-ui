@@ -29,7 +29,7 @@ export default createStyles({
         padding: 0
       },
   
-      "& input[type='text'], & input[type='number'], & input[type='email'], & select": {
+      "& input[type='text'], & input[type='number'], & input[type='email'], & select, & textarea": {
         width: "100%",      
         padding: "10px",
         fontSize: "15px"

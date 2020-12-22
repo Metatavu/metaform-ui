@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    FieldRule,
+    FieldRuleFromJSON,
+    FieldRuleFromJSONTyped,
+    FieldRuleToJSON,
     MetaformFieldFlags,
     MetaformFieldFlagsFromJSON,
     MetaformFieldFlagsFromJSONTyped,
@@ -34,10 +38,6 @@ import {
     MetaformTableColumnFromJSON,
     MetaformTableColumnFromJSONTyped,
     MetaformTableColumnToJSON,
-    MetaformVisibleIf,
-    MetaformVisibleIfFromJSON,
-    MetaformVisibleIfFromJSONTyped,
-    MetaformVisibleIfToJSON,
 } from './';
 
 /**
@@ -48,10 +48,10 @@ import {
 export interface MetaformField {
     /**
      * 
-     * @type {MetaformVisibleIf}
+     * @type {FieldRule}
      * @memberof MetaformField
      */
-    visibleIf?: MetaformVisibleIf;
+    visibleIf?: FieldRule;
     /**
      * 
      * @type {MetaformFieldPermissionContexts}
@@ -238,7 +238,7 @@ export function MetaformFieldFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'visibleIf': !exists(json, 'visible-if') ? undefined : MetaformVisibleIfFromJSON(json['visible-if']),
+        'visibleIf': !exists(json, 'visible-if') ? undefined : FieldRuleFromJSON(json['visible-if']),
         'permissionContexts': !exists(json, 'permission-contexts') ? undefined : MetaformFieldPermissionContextsFromJSON(json['permission-contexts']),
         'name': !exists(json, 'name') ? undefined : json['name'],
         'type': MetaformFieldTypeFromJSON(json['type']),
@@ -280,7 +280,7 @@ export function MetaformFieldToJSON(value?: MetaformField | null): any {
     }
     return {
         
-        'visible-if': MetaformVisibleIfToJSON(value.visibleIf),
+        'visible-if': FieldRuleToJSON(value.visibleIf),
         'permission-contexts': MetaformFieldPermissionContextsToJSON(value.permissionContexts),
         'name': value.name,
         'type': MetaformFieldTypeToJSON(value.type),
