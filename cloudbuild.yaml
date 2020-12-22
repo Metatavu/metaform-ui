@@ -1,8 +1,9 @@
 steps:
-- name: 'node:12'
+- name: 'node:14'
   entrypoint: 'bash'
   env:
     - "DEBIAN_FRONTEND=noninteractive"
+    - "SKIP_PREFLIGHT_CHECK=true"
     - "AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID}"
     - "AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY}"
     - "AWS_DEFAULT_REGION=${_AWS_DEFAULT_REGION}"
