@@ -13,12 +13,15 @@ import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
 import Api from "../../api/api";
-import { Metaform } from "../../generated/client";
+import { Metaform, Reply } from "../../generated/client";
 import { FieldValue } from "metaform-react";
 import Form from "../generic/form";
 import Config from "../../config";
 import strings from "../../localization/strings";
 import Alert from "@material-ui/lab/Alert";
+import EmailDialog from "../generic/email-dialog";
+import Mail from "../../mail/mail";
+import ConfirmDialog from "../generic/confirm-dialog";
 
 /**
  * Component props
@@ -40,9 +43,16 @@ interface State {
   saving: boolean;
   draftSavedVisible: boolean;
   draftSaveVisible: boolean;
+  draftEmailDialogVisible: boolean;
   draftId: string | null;
+  replySavedVisible: boolean;
+  replyEmailDialogVisible: boolean;
+  replyDeleteVisible: boolean;
+  replyDeleteConfirmVisible: boolean;
+  reply?: Reply;
+  ownerKey: string | null;
   metaform?: Metaform;
-  formValues: Dictionary<FieldValue>;  
+  formValues: Dictionary<FieldValue>;
 }
 
 /**
@@ -62,7 +72,13 @@ export class FormScreen extends React.Component<Props, State> {
       saving: false,
       draftSaveVisible: false,
       draftSavedVisible: false,
+      draftEmailDialogVisible: false,
+      replySavedVisible: false,
+      replyEmailDialogVisible: false,
+      replyDeleteVisible: false,
+      replyDeleteConfirmVisible: false,
       draftId: null,
+      ownerKey: null,
       formValues: {}
     };
   }
@@ -75,7 +91,10 @@ export class FormScreen extends React.Component<Props, State> {
     const query = new URLSearchParams(location.search);
 
     const draftId = query.get("draft");
-    const metaformId = Config.getMetaformId();
+    const replyId = query.get("reply");
+    const ownerKey = query.get("owner-key");
+
+    const metaformId = Config.getMetaformId();    
 
     try {
       this.setState({
@@ -109,13 +128,29 @@ export class FormScreen extends React.Component<Props, State> {
         });
       });
 
-      if (draftId) {
-        const draftApi = Api.getDraftsApi(anonymousToken);
-        const draft = await draftApi.findDraft({
-          metaformId: metaformId,
-          draftId: draftId
-        });
+      if (replyId && ownerKey) {
+        const reply = await this.findReply(replyId, ownerKey);
+        if (reply) {
+          const replyData = reply?.data || {};
+          Object.keys(replyData).forEach(replyKey => {
+            formValues[replyKey] = replyData[replyKey] as any;
+          });
 
+          this.setState({
+            reply: reply,
+            ownerKey: ownerKey,
+            replyDeleteVisible: !!ownerKey
+          });
+        } else {
+          this.setState({
+            snackbarMessage: {
+              message: strings.formScreen.replyNotFound,
+              severity: "error"
+            }
+          });
+        }        
+      } else if (draftId) {
+        const draft = await this.findDraft(draftId);
         const draftData = draft?.data || {};
         Object.keys(draftData).forEach(draftKey => {
           formValues[draftKey] = draftData[draftKey] as any;
@@ -145,8 +180,13 @@ export class FormScreen extends React.Component<Props, State> {
       <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
         <div className={ classes.root }>
           { this.renderForm() }
+          { this.renderReplySaved() }
+          { this.renderReplyEmailDialog() }
+          { this.renderReplyDelete() }
+          { this.renderReplyDeleteConfirm() }
           { this.renderDraftSave() }
           { this.renderDraftSaved() }
+          { this.renderDraftEmailDialog() }
         </div>
       </BasicLayout>
     );
@@ -183,7 +223,7 @@ export class FormScreen extends React.Component<Props, State> {
       <Snackbar open={ draftSaveVisible }  onClose={ this.onDraftSaveClose }>
         <Alert onClose={ this.onDraftSaveClose } severity="info">
           <span> { strings.formScreen.saveDraft } </span>
-          <Link onClick={ this.onSaveDraftLinkClick }> { strings.formScreen.saveDraftLink } </Link>
+          <Link href="#" onClick={ this.onSaveDraftLinkClick }> { strings.formScreen.saveDraftLink } </Link>
         </Alert>
       </Snackbar>
     );
@@ -193,22 +233,118 @@ export class FormScreen extends React.Component<Props, State> {
    * Renders draft saved dialog
    */
   private renderDraftSaved = () => {
-    const { draftSavedVisible, draftId } = this.state;
-    if (!draftId) {
+    const { draftSavedVisible } = this.state;
+    const draftLink = this.getDraftLink();
+
+    if (!draftLink) {
       return null;
     }
-
-    const { location } = window;
-    const href = (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?draft=${draftId}`)).toString();
 
     return (
       <Snackbar open={ draftSavedVisible } onClose={ this.onDraftSavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
         <Alert onClose={ this.onDraftSavedClose } severity="success">
           <span> { strings.formScreen.draftSaved } </span>
           <br/><br/>
-          <a href={ href }> { href } </a>
+          <a href={ draftLink }> { draftLink } </a>
+          <p> 
+            { strings.formScreen.draftEmailText } 
+            <Link href="#" onClick={ this.onDraftEmailLinkClick }> { strings.formScreen.draftEmailLink } </Link>
+          </p>
         </Alert>
       </Snackbar>
+    );
+  }
+
+  /**
+   * Renders reply email dialog
+   */
+  private renderDraftEmailDialog = () => {
+    return (
+      <EmailDialog 
+        text={ strings.formScreen.draftEmailDialogText }
+        open={ this.state.draftEmailDialogVisible }
+        onSend={ this.onDraftEmailDialogSend }
+        onCancel={ this.onDraftEmailDialogCancel }
+      />
+    );
+  }
+
+  /**
+   * Renders reply saved dialog
+   */
+  private renderReplySaved = () => {
+    const replyEditLink = this.getReplyEditLink();
+
+    if (replyEditLink) {      
+      return (
+        <Snackbar open={ this.state.replySavedVisible } onClose={ this.onReplySavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+          <Alert onClose={ this.onReplySavedClose  } severity="success">
+            <span> { strings.formScreen.replySaved } </span>
+            <p> { strings.formScreen.replyEdit } </p>
+            <div style={{ textOverflow: "ellipsis", overflow: "hidden", maxWidth: "50vw", whiteSpace: "nowrap" }}>
+              <a href={ replyEditLink }> { replyEditLink } </a>
+            </div>
+            <p> 
+              { strings.formScreen.replyEditEmailText } 
+              <Link href="#" onClick={ this.onReplyEmailLinkClick }> { strings.formScreen.replyEditEmailLink } </Link>
+            </p>
+          </Alert>
+        </Snackbar>
+      );
+    } else {
+      return (
+        <Snackbar open={ this.state.replySavedVisible } onClose={ this.onReplySavedClose } anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+          <Alert onClose={ this.onReplySavedClose  } severity="success">
+            <span> { strings.formScreen.replySaved } </span>
+          </Alert>
+        </Snackbar>
+      );
+    }
+  }
+
+  /**
+   * Renders reply email dialog
+   */
+  private renderReplyEmailDialog = () => {
+    return (
+      <EmailDialog 
+        text={ strings.formScreen.replyEditEmailDialogText }
+        open={ this.state.replyEmailDialogVisible }
+        onSend={ this.onReplyEmailDialogSend }
+        onCancel={ this.onReplyEmailDialogCancel }
+      />
+    );
+  }
+
+  /**
+   * Renders reply delete dialog
+   */
+  private renderReplyDelete = () => {
+    return (
+      <Snackbar open={ this.state.replyDeleteVisible }  onClose={ this.onReplyDeleteClose }>
+        <Alert onClose={ this.onReplyDeleteClose  } severity="warning">
+          <span> { strings.formScreen.replyDeleteText } </span>
+          <Link href="#" onClick={ this.onReplyDeleteLinkClick }> { strings.formScreen.replyDeleteLink } </Link>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders delete reply confirm dialog
+   */
+  private renderReplyDeleteConfirm = () => {
+    return (
+      <ConfirmDialog
+        onClose={ this.onReplyDeleteConfirmClose }
+        onCancel={ this.onReplyDeleteConfirmClose }
+        onConfirm={ this.onReplyDeleteConfirmConfirm }
+        cancelButtonText={ strings.generic.cancel }
+        positiveButtonText={ strings.generic.confirm }
+        title={ strings.formScreen.confirmDeleteReplyTitle }
+        text={ strings.formScreen.confirmDeleteReplyText }
+        open={ this.state.replyDeleteConfirmVisible } 
+      />
     );
   }
 
@@ -257,6 +393,50 @@ export class FormScreen extends React.Component<Props, State> {
     this.setState({ 
       snackbarMessage: undefined 
     });
+  }
+
+  /**
+   * Finds the draft from API
+   * 
+   * @param draftId draft id
+   * @returns found draft or null if not found
+   */
+  private findDraft = async (draftId: string) => {
+    try {
+      const { anonymousToken } = this.props;
+      const metaformId = Config.getMetaformId();   
+      
+      const draftApi = Api.getDraftsApi(anonymousToken);
+      return await draftApi.findDraft({
+        metaformId: metaformId,
+        draftId: draftId
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * Finds the reply from API
+   * 
+   * @param replyId reply id
+   * @param ownerKey owner key
+   * @returns found reply or null if not found
+   */
+  private findReply = async (replyId: string, ownerKey: string) => {
+    try {
+      const { anonymousToken } = this.props;
+      const metaformId = Config.getMetaformId();   
+
+      const replyApi = Api.getRepliesApi(anonymousToken);
+      return await replyApi.findReply({
+        metaformId: metaformId,
+        replyId: replyId,
+        ownerKey: ownerKey
+      });
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
@@ -309,10 +489,183 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Sends draft link to given email
+   * 
+   * @param email email
+   */
+  private sendDraftEmail = async (email: string) => {
+    const { metaform } = this.state;
+    const { REACT_APP_EMAIL_FROM } = process.env;
+    const draftLink = this.getDraftLink();
+    
+    if (!draftLink || !metaform) {
+      return;
+    }
+
+    try {
+      this.setState({
+        draftEmailDialogVisible: false,
+        loading: true
+      });
+
+      if (!REACT_APP_EMAIL_FROM) {
+        throw new Error("Missing REACT_APP_EMAIL_FROM env");
+      }
+
+      const formTitle = metaform.title || "";
+      const subject = strings.formatString(strings.formScreen.draftEmailSubject, formTitle) as string;
+      const html = strings.formatString(strings.formScreen.draftEmailContent, formTitle, draftLink) as string;
+
+      await Mail.sendMail({
+        from: REACT_APP_EMAIL_FROM,
+        html: html,
+        subject: subject,
+        to: email
+      });
+
+      this.setState({
+        loading: false,
+        snackbarMessage: {
+          message: strings.formScreen.draftEmailSent,
+          severity: "success"
+        }
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
+  }
+
+  /**
+   * Sends reply link to given email
+   * 
+   * @param email email
+   */
+  private sendReplyEmail = async (email: string) => {
+    const { metaform } = this.state;
+    const { REACT_APP_EMAIL_FROM } = process.env;
+    const replyEditLink = this.getReplyEditLink();
+    
+    if (!replyEditLink || !metaform) {
+      return;
+    }
+
+    try {
+      this.setState({
+        replyEmailDialogVisible: false,
+        loading: true
+      });
+
+      if (!REACT_APP_EMAIL_FROM) {
+        throw new Error("Missing REACT_APP_EMAIL_FROM env");
+      }
+
+      const formTitle = metaform.title || "";
+      const subject = strings.formatString(strings.formScreen.replyEditEmailSubject, formTitle) as string;
+      const html = strings.formatString(strings.formScreen.replyEditEmailContent, formTitle, replyEditLink) as string;
+
+      await Mail.sendMail({
+        from: REACT_APP_EMAIL_FROM,
+        html: html,
+        subject: subject,
+        to: email
+      });
+
+      this.setState({
+        loading: false,
+        snackbarMessage: {
+          message: strings.formScreen.replyEditEmailSent,
+          severity: "success"
+        }
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
+  }
+
+  /**
+   * Deletes the reply
+   */
+  private deleteReply = async () => {
+    const { reply, ownerKey } = this.state;
+
+    try {
+      this.setState({
+        replyDeleteConfirmVisible: false,
+        loading: true
+      });
+
+      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
+
+      if (reply && reply.id && ownerKey) {
+        await repliesApi.deleteReply({
+          metaformId: Config.getMetaformId(),
+          replyId: reply.id,
+          ownerKey: ownerKey
+        });
+      } else {
+        throw new Error("Missing parameters, failed to delete reply");
+      }
+
+      this.setState({
+        loading: false,
+        replyDeleteVisible: false,
+        reply: undefined,
+        ownerKey: null,
+        snackbarMessage: {
+          message: strings.formScreen.replyDeleted,
+          severity: "success"
+        }
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+        error: e
+      });
+    }
+  }
+
+  /**
+   * Returns draft link
+   * 
+   * @returns draft link or null if not available
+   */
+  private getDraftLink = () => {
+    const { draftId } = this.state;
+    if (!draftId) {
+      return null;
+    }
+
+    const { location } = window;
+    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?draft=${draftId}`)).toString();
+  }
+
+  /**
+   * Returns reply edit link
+   * 
+   * @returns reply edit link or null if not available
+   */
+  private getReplyEditLink = () => {
+    const { reply, ownerKey } = this.state;
+    if (!reply || !ownerKey) {
+      return null;
+    }
+
+    const { location } = window;
+    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?reply=${reply.id}&owner-key=${ownerKey}`)).toString();
+  }
+
+  /**
    * Method for submitting form
    */
   private onSubmit = async () =>  {
-    const { formValues, metaform } = this.state;
+    const { formValues, metaform, ownerKey } = this.state;
+    let { reply } = this.state;
 
     if (!metaform || !metaform.id) {
       return;
@@ -325,20 +678,30 @@ export class FormScreen extends React.Component<Props, State> {
     try {
       const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
 
-      await repliesApi.createReply({
-        metaformId: Config.getMetaformId(),
-        reply: {
-          data: formValues as any
-        },
-        replyMode: Config.getReplyMode()
-      });
-
+      if (reply && reply.id && ownerKey) {
+        await repliesApi.updateReply({
+          metaformId: Config.getMetaformId(),
+          replyId: reply.id,
+          ownerKey: ownerKey,
+          reply: {
+            data: formValues as any
+          }
+        });
+      } else {
+        reply = await repliesApi.createReply({
+          metaformId: Config.getMetaformId(),
+          reply: {
+            data: formValues as any
+          },
+          replyMode: Config.getReplyMode()
+        });
+      }
+  
       this.setState({
         saving: false,
-        snackbarMessage: {
-          message: strings.formScreen.replySaved,
-          severity: "success"
-        }
+        replySavedVisible: true,
+        reply: reply,
+        ownerKey: ownerKey || reply.ownerKey || null
       });
     } catch (e) {
       this.setState({
@@ -372,6 +735,109 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private onSaveDraftLinkClick = () => {
     this.saveDraft();
+  }
+
+  /**
+   * Event handler for draft email link click
+   */
+  private onDraftEmailLinkClick = () => {
+    this.setState({
+      draftSavedVisible: false,
+      draftEmailDialogVisible: true
+    });
+  }
+
+  /**
+   * Event handler for draft email dialog send click
+   * 
+   * @param email email
+   */
+  private onDraftEmailDialogSend = (email: string) => {
+    this.sendDraftEmail(email);
+  }
+
+  /**
+   * Event handler for draft email dialog cancel click
+   * 
+   * @param email email
+   */
+  private onDraftEmailDialogCancel = () => {
+    this.setState({
+      draftEmailDialogVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply email link click
+   */
+  private onReplyEmailLinkClick = () => {
+    this.setState({
+      replySavedVisible: false,
+      replyEmailDialogVisible: true
+    });
+  }
+
+  /**
+   * Event handler for reply email dialog send click
+   * 
+   * @param email email
+   */
+  private onReplyEmailDialogSend = (email: string) => {
+    this.sendReplyEmail(email);
+  }
+
+  /**
+   * Event handler for reply email dialog cancel click
+   * 
+   * @param email email
+   */
+  private onReplyEmailDialogCancel = () => {
+    this.setState({
+      replyEmailDialogVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply saved snackbar close
+   */
+  private onReplySavedClose  = () => {
+    this.setState({
+      replySavedVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply delete snackbar close
+   */
+  private onReplyDeleteClose = () => {
+    this.setState({
+      replyDeleteVisible: false
+    });
+  }
+
+  /**
+   * Event handler for reply delete link click
+   */
+  private onReplyDeleteLinkClick = () => {
+    this.setState({
+      replyDeleteConfirmVisible: true
+    });
+  }
+
+  /**
+   * Event handler for reply delete confirm dialog close
+   */
+  private onReplyDeleteConfirmClose = () => {
+    this.setState({
+      replyDeleteConfirmVisible: false
+    });
+  }
+  
+  /**
+   * Event handler for reply delete confirm dialog confirm
+   */
+  private onReplyDeleteConfirmConfirm = () => {
+    this.deleteReply();
   }
 
 }

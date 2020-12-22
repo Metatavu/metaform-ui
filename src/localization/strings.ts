@@ -18,11 +18,30 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   formScreen: {
+    replyNotFound: string;
     saveDraft: string;
     saveDraftLink: string;
     draftSaved: string;
+    draftEmailText: string;
+    draftEmailLink: string;
+    draftEmailDialogText: string;
+    draftEmailContent: string;
+    draftEmailSubject: string;
+    draftEmailSent: string;
     savingReply: string;
     replySaved: string;
+    replyEdit: string;
+    replyEditEmailText: string;
+    replyEditEmailLink: string;
+    replyEditEmailDialogText: string;
+    replyEditEmailContent: string;
+    replyEditEmailSubject: string;
+    replyEditEmailSent: string;
+    replyDeleteText: string;
+    replyDeleteLink: string;
+    confirmDeleteReplyTitle: string;
+    confirmDeleteReplyText: string;
+    replyDeleted: string;
   };
 
   adminScreen: {
@@ -47,6 +66,13 @@ export interface IStrings extends LocalizedStringsMethods {
     replies: string;
     profile: string;
     logout: string;
+  },
+
+  emailDialog: {
+    title: string;
+    email: string;
+    cancel: string;
+    send: string;
   },
 
   errorDialog: {
