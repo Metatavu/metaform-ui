@@ -18,6 +18,7 @@ export interface IStrings extends LocalizedStringsMethods {
   };
 
   formScreen: {
+    replyNotFound: string;
     saveDraft: string;
     saveDraftLink: string;
     draftSaved: string;

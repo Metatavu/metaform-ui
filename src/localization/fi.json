@@ -12,6 +12,7 @@
   },
 
   "formScreen": {
+    "replyNotFound": "Vastausta ei löytynyt järjestelmästä",
     "saveDraft": "Voit tallentaa lomakkeen vedoksena klikkaamalla",
     "saveDraftLink": "tästä",
     "draftSaved": "Lomake on tallennettu vedoksena. Ota seuraava kirjanmerkki talteen niin voit jatkaa lomakkeen täyttöä myöhemmin: ",

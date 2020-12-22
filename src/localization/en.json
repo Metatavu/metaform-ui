@@ -12,6 +12,7 @@
   },
 
   "formScreen": {
+    "replyNotFound": "Reply could not be found from the system",
     "saveDraft": "You can save this form reply as a draft by clicking",
     "saveDraftLink": "here",
     "draftSaved": "The form has been saved as a draft. Please bookmark following link to continue later: ",

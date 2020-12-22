@@ -99,9 +99,7 @@ export class FormScreen extends React.Component<Props, State> {
     try {
       this.setState({
         loading: true,
-        draftId: draftId,
-        ownerKey: ownerKey,
-        replyDeleteVisible: !!ownerKey
+        draftId: draftId
       });
 
       const metaformsApi = Api.getMetaformsApi(anonymousToken);
@@ -131,28 +129,28 @@ export class FormScreen extends React.Component<Props, State> {
       });
 
       if (replyId && ownerKey) {
-        const replyApi = Api.getRepliesApi(anonymousToken);
-        const reply = await replyApi.findReply({
-          metaformId: metaformId,
-          replyId: replyId,
-          ownerKey: ownerKey
-        });
+        const reply = await this.findReply(replyId, ownerKey);
+        if (reply) {
+          const replyData = reply?.data || {};
+          Object.keys(replyData).forEach(replyKey => {
+            formValues[replyKey] = replyData[replyKey] as any;
+          });
 
-        const replyData = reply?.data || {};
-        Object.keys(replyData).forEach(replyKey => {
-          formValues[replyKey] = replyData[replyKey] as any;
-        });
-
-        this.setState({
-          reply: reply
-        });
+          this.setState({
+            reply: reply,
+            ownerKey: ownerKey,
+            replyDeleteVisible: !!ownerKey
+          });
+        } else {
+          this.setState({
+            snackbarMessage: {
+              message: strings.formScreen.replyNotFound,
+              severity: "error"
+            }
+          });
+        }        
       } else if (draftId) {
-        const draftApi = Api.getDraftsApi(anonymousToken);
-        const draft = await draftApi.findDraft({
-          metaformId: metaformId,
-          draftId: draftId
-        });
-
+        const draft = await this.findDraft(draftId);
         const draftData = draft?.data || {};
         Object.keys(draftData).forEach(draftKey => {
           formValues[draftKey] = draftData[draftKey] as any;
@@ -398,6 +396,50 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Finds the draft from API
+   * 
+   * @param draftId draft id
+   * @returns found draft or null if not found
+   */
+  private findDraft = async (draftId: string) => {
+    try {
+      const { anonymousToken } = this.props;
+      const metaformId = Config.getMetaformId();   
+      
+      const draftApi = Api.getDraftsApi(anonymousToken);
+      return await draftApi.findDraft({
+        metaformId: metaformId,
+        draftId: draftId
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * Finds the reply from API
+   * 
+   * @param replyId reply id
+   * @param ownerKey owner key
+   * @returns found reply or null if not found
+   */
+  private findReply = async (replyId: string, ownerKey: string) => {
+    try {
+      const { anonymousToken } = this.props;
+      const metaformId = Config.getMetaformId();   
+
+      const replyApi = Api.getRepliesApi(anonymousToken);
+      return await replyApi.findReply({
+        metaformId: metaformId,
+        replyId: replyId,
+        ownerKey: ownerKey
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
    * Save the reply as draft
    */
   private saveDraft = async () => {
@@ -573,6 +615,8 @@ export class FormScreen extends React.Component<Props, State> {
       this.setState({
         loading: false,
         replyDeleteVisible: false,
+        reply: undefined,
+        ownerKey: null,
         snackbarMessage: {
           message: strings.formScreen.replyDeleted,
           severity: "success"
