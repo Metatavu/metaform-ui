@@ -12,11 +12,30 @@
   },
 
   "formScreen": {
+    "replyNotFound": "Reply could not be found from the system",
     "saveDraft": "You can save this form reply as a draft by clicking",
     "saveDraftLink": "here",
     "draftSaved": "The form has been saved as a draft. Please bookmark following link to continue later: ",
+    "draftEmailText": "You can send the link to your email by clicking",
+    "draftEmailLink": "here",
+    "draftEmailDialogText": "Enter the email address to which you want the draft link to be sent",
+    "draftEmailSubject": "{0} -form draft link",
+    "draftEmailContent": "<p>Hi!</p><p>You can continue filling the form {0} from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" ,
+    "draftEmailSent": "Draft link has been sent!",
     "savingReply": "Saving your reply...",
-    "replySaved": "Reply saved successfully"
+    "replySaved": "Reply saved successfully",
+    "replyEdit": "You can modify your reply using following link:",
+    "replyEditEmailText": "You can send the link to your email by clicking",
+    "replyEditEmailLink": "here",
+    "replyEditEmailDialogText": "Enter the email address to which you want the edit form link to be sent",
+    "replyEditEmailSubject": "{0} -form edit link",
+    "replyEditEmailContent": "<p>Hi!</p><p>You can edit form {0} reply from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" ,
+    "replyEditEmailSent": "Edit link has been sent!",
+    "replyDeleteText": "You can delete this reply by clicking",
+    "replyDeleteLink": "here",
+    "confirmDeleteReplyTitle": "Are you sure?",
+    "confirmDeleteReplyText": "Are you sure that you wish to delete the reply?",
+    "replyDeleted": "The reply has been deleted!"
   },
 
   "adminScreen": {
@@ -41,6 +60,13 @@
     "replies": "Replies",
     "profile": "Profile",
     "logout": "Logout"
+  },
+  
+  "emailDialog": {
+    "title": "Email",
+    "email": "Email address",
+    "cancel": "Cancel",
+    "send": "Send"
   },
 
   "errorDialog": {
