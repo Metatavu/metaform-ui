@@ -75,7 +75,7 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeId','Required parameter requestParameters.exportThemeId was null or undefined when calling createExportThemeFile.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -118,7 +118,7 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeFileId','Required parameter requestParameters.exportThemeFileId was null or undefined when calling deleteExportThemeFile.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -157,7 +157,7 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeFileId','Required parameter requestParameters.exportThemeFileId was null or undefined when calling findExportThemeFile.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -193,7 +193,7 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeId','Required parameter requestParameters.exportThemeId was null or undefined when calling listExportThemeFiles.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -237,7 +237,7 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeFileId','Required parameter requestParameters.exportThemeFileId was null or undefined when calling updateExportThemeFile.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 

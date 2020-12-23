@@ -13,12 +13,13 @@ import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
 import Api from "../../api/api";
-import { Metaform, Reply } from "../../generated/client";
+import { Metaform, MetaformFieldType, Reply } from "../../generated/client";
 import Form from "../generic/form";
 import { FieldValue } from "metaform-react";
 import Config from "../../config";
 import strings from "../../localization/strings";
 import Utils from "../../utils";
+import { FileFieldValue } from "metaform-react/dist/types";
 
 /**
  * Component props
@@ -83,11 +84,20 @@ export class AdminReplyScreen extends React.Component<Props, State> {
           replyId: this.props.replyId
         })
       ]);
-    
+
+      metaform.sections?.forEach(section => {        
+        section.fields?.forEach(field => {
+          if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
+            field.uploadUrl = Api.createDefaultUploadUrl()
+          }
+        });
+      });
+
+      let values = await this.processReplyData(metaform, reply);
       this.setState({
         metaform: metaform,
         reply: reply,
-        formValues: reply.data as any,
+        formValues: values as any,
         loading: false
       });    
     } catch (e) {
@@ -119,13 +129,48 @@ export class AdminReplyScreen extends React.Component<Props, State> {
     );
   }
 
+  private processReplyData = async (metaform: Metaform, reply: Reply) => {
+    const attachmentsApi = Api.getAttachmentsApi(this.props.adminToken);
+    let values = reply.data;
+    for (let i = 0; i < (metaform.sections || []).length; i++) {
+      let section = metaform.sections && metaform.sections[i] ? metaform.sections[i] : undefined;
+      if (section) {
+        for (let j = 0; j < (section.fields || []).length; j++) {
+          let field = section.fields && section.fields[j] ? section.fields[j] : undefined;
+          if (field &&
+              field.type === MetaformFieldType.Files &&
+              values &&
+              field.name &&
+              values[field.name]) {
+            let fileIds = Array.isArray(values[field.name]) ? values[field.name] : [values[field.name]]; 
+            let attachmentPromises = (fileIds as string[]).map((fileId) => {
+              return attachmentsApi.findAttachment({attachmentId: fileId})
+            });
+            let attachments = await Promise.all(attachmentPromises);
+            values[field.name] = {
+              files: attachments.map((a) => {
+                return {
+                  name: a.name,
+                  id: a.id,
+                  secure: true
+                }
+              })
+            };
+          }
+        }
+      }
+    }
+    return values;
+  }
+
   private renderForm = (metaform?: Metaform) => {
     if (!metaform) {
       return null;
     }
 
     return (
-      <Form  
+      <Form
+        accessToken={this.props.adminToken}
         contexts={ ["MANAGEMENT"] }
         metaform={ metaform }
         getFieldValue={ this.getFieldValue }
@@ -223,12 +268,26 @@ export class AdminReplyScreen extends React.Component<Props, State> {
       saving: true
     });
 
+    let values = {...formValues};
+
+    metaform.sections?.forEach((section) => {
+      section.fields?.forEach((field) => {
+        if (field.type === MetaformFieldType.Files) {
+          let value = this.getFieldValue(field.name as string);
+          if ( !value ) {
+            value = { files: [] }
+          }
+          values[field.name as string] = (value as FileFieldValue).files.map(file => file.id);
+        } 
+      })
+    });
+
     try {
       const repliesApi = Api.getRepliesApi(this.props.adminToken);
 
       await repliesApi.updateReply({
         metaformId: Config.getMetaformId(),
-        reply: { ...reply, data: formValues as any },
+        reply: { ...reply, data: values as any },
         replyId: reply.id
       });
 
@@ -236,11 +295,11 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId(),
         replyId: reply.id
       });
-
+      let updatedValues = await this.processReplyData(metaform, updatedReply);
       this.setState({
         saving: false,
         reply: updatedReply,
-        formValues: updatedReply.data as any,
+        formValues: updatedValues as any,
         snackbarMessage: {
           message: strings.adminReplyScreen.replySaved,
           severity: "success"

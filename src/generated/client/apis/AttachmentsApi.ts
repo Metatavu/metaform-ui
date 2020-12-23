@@ -31,10 +31,12 @@ import {
 
 export interface FindAttachmentRequest {
     attachmentId: string;
+    ownerKey?: string;
 }
 
 export interface FindAttachmentDataRequest {
     attachmentId: string;
+    ownerKey?: string;
 }
 
 /**
@@ -51,7 +53,11 @@ export class AttachmentsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('attachmentId','Required parameter requestParameters.attachmentId was null or undefined when calling findAttachment.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
+
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -87,7 +93,11 @@ export class AttachmentsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('attachmentId','Required parameter requestParameters.attachmentId was null or undefined when calling findAttachmentData.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
+
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

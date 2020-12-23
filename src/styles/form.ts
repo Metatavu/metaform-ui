@@ -39,6 +39,24 @@ export default createStyles({
         color: "#6c757d"
       },
 
+      "& .metaform-react-file-value-container": {
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        borderBottom: "1px solid #aaa",
+        marginBottom: "10px",
+        display: "flex"
+      },
+
+      "& .metaform-react-file-field-open-button": {
+        marginLeft: "auto",
+        padding: "5px",
+        marginRight: "10px"
+      },
+
+      "& .metaform-react-file-field-delete-button": {
+        padding: "5px"
+      },
+      
       "& input[type='submit']": {
         padding: "10px 20px",
         fontSize: "18px",

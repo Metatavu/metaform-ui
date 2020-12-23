@@ -2,7 +2,7 @@ import * as React from "react";
 
 import styles from "../../styles/form";
 
-import { WithStyles, withStyles, Icon } from "@material-ui/core";
+import { WithStyles, withStyles, Icon, LinearProgress } from "@material-ui/core";
 import { Metaform } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
@@ -11,6 +11,9 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import strings from "../../localization/strings";
 import { FileFieldValue, FileFieldValueItem } from "metaform-react/dist/types";
+import { AccessToken } from "../../types";
+import Api from "../../api/api";
+import Utils from "../../utils";
 
 /**
  * Component props
@@ -18,6 +21,8 @@ import { FileFieldValue, FileFieldValueItem } from "metaform-react/dist/types";
 interface Props extends WithStyles<typeof styles> {
   contexts: string[];
   metaform: Metaform;
+  accessToken?: AccessToken
+  ownerKey?: string
   getFieldValue: (fieldName: string) => FieldValue;
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
   onSubmit: (source: Metaform) => void;
@@ -27,6 +32,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
+  uploadingFields: string[]
 }
 
 /**
@@ -41,7 +47,8 @@ export class Form extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.state = {      
+    this.state = {    
+      uploadingFields: []  
     };
   }
 
@@ -68,7 +75,11 @@ export class Form extends React.Component<Props, State> {
           setAutocompleteOptions={ this.setAutocompleteOptions }
           renderIcon={ this.renderIcon }        
           onSubmit={ this.props.onSubmit }
-
+          renderBeforeField={(fieldname) => {
+            if (fieldname && this.state.uploadingFields.indexOf(fieldname) > -1) {
+              return (<LinearProgress />);
+            }
+          }}
         />
       </div>
     );
@@ -131,7 +142,17 @@ export class Form extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * Performs file upload request
+   * 
+   * @param fieldName field name
+   * @param file file to upload
+   * @param path upload path
+   */
   private doUpload(fieldName: string, file: File, path: string) {
+    this.setState({
+      uploadingFields: [...this.state.uploadingFields, fieldName]
+    });
     const data = new FormData();
     data.append("file", file);
     fetch(path, {
@@ -152,18 +173,33 @@ export class Form extends React.Component<Props, State> {
       } as FileFieldValueItem;
       (currentFiles as FileFieldValue).files.push(value);
       this.props.setFieldValue(fieldName, {...currentFiles as FileFieldValue});
+      this.setState({
+        uploadingFields: this.state.uploadingFields.filter(f => f !== fieldName)
+      });
+    })
+    .catch((e) => {
+      this.setState({
+        uploadingFields: this.state.uploadingFields.filter(f => f !== fieldName)
+      });
     })
   }
 
+  /**
+   * Creates url with default format for accessing uploaded file
+   * 
+   * @param id fileRef id
+   */
   private createDefaultFileUrl = (id: string): string => {
-    let apiUrl = process.env.REACT_APP_API_BASE_PATH || "";
-    const apiVersionSlashIndex = apiUrl.lastIndexOf("/v1");
-    if (apiVersionSlashIndex < 0) {
-      return "";
-    }
-    return apiUrl.slice(0, apiVersionSlashIndex) + "/fileUpload?fileRef=" + id
+    return `${Api.createDefaultUploadUrl()}?fileRef=${id}`;
   }
 
+  /**
+   * Deletes uploaded file
+   * Only unsecure (not yet persisted) files can be deleted, otherwise they are just removed from data
+   * 
+   * @param fieldName field name
+   * @param value uploaded value
+   */
   private deleteFile = (fieldName: string, value: FileFieldValueItem) => {
     let currentFiles = this.props.getFieldValue(fieldName);
     if (!currentFiles) {
@@ -183,9 +219,21 @@ export class Form extends React.Component<Props, State> {
     }
   }
 
-  private showFile = (fieldName: string, value: FileFieldValueItem) => {
+  /**
+   * Shows uploaded file
+   * 
+   * @param fieldName field name
+   * @param value uploaded value
+   */
+  private showFile = async (fieldName: string, value: FileFieldValueItem) => {
     if (!value.secure) {
       window.open(value.url, "blank");
+      return
+    }
+    if (this.props.accessToken) {
+      const attachmentApi = Api.getAttachmentsApi(this.props.accessToken);
+      const data = await attachmentApi.findAttachmentData({attachmentId: value.id, ownerKey: this.props.ownerKey});
+      Utils.downloadBlob(data, value.name || "attachment");
     }
   }
 

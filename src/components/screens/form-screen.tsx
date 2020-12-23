@@ -22,7 +22,6 @@ import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
-import form from "../../styles/form";
 import { FileFieldValue } from "metaform-react/dist/types";
 
 /**
@@ -117,7 +116,7 @@ export class FormScreen extends React.Component<Props, State> {
         section.fields?.forEach(field => {
           const { name, _default, options } = field;
           if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
-            field.uploadUrl = this.createDefaultUploadUrl()
+            field.uploadUrl = Api.createDefaultUploadUrl()
           } 
           if (name) {
             if (_default) {
@@ -135,10 +134,12 @@ export class FormScreen extends React.Component<Props, State> {
       if (replyId && ownerKey) {
         const reply = await this.findReply(replyId, ownerKey);
         if (reply) {
-          const replyData = reply?.data || {};
-          Object.keys(replyData).forEach(replyKey => {
-            formValues[replyKey] = replyData[replyKey] as any;
-          });
+          const replyData = await this.processReplyData(metaform, reply, ownerKey);
+          if (replyData) {
+            Object.keys(replyData as any).forEach(replyKey => {
+              formValues[replyKey] = replyData[replyKey] as any;
+            });
+          }
 
           this.setState({
             reply: reply,
@@ -207,7 +208,9 @@ export class FormScreen extends React.Component<Props, State> {
     }
 
     return (
-      <Form  
+      <Form
+        accessToken={ this.props.anonymousToken }
+        ownerKey={ this.state.ownerKey || "" }
         contexts={ ["FORM"] }    
         metaform={ metaform }
         getFieldValue={ this.getFieldValue }
@@ -215,6 +218,40 @@ export class FormScreen extends React.Component<Props, State> {
         onSubmit={ this.onSubmit }
       />
     );
+  }
+
+  private processReplyData = async (metaform: Metaform, reply: Reply, ownerKey: string) => {
+    const attachmentsApi = Api.getAttachmentsApi(this.props.anonymousToken);
+    let values = reply.data;
+    for (let i = 0; i < (metaform.sections || []).length; i++) {
+      let section = metaform.sections && metaform.sections[i] ? metaform.sections[i] : undefined;
+      if (section) {
+        for (let j = 0; j < (section.fields || []).length; j++) {
+          let field = section.fields && section.fields[j] ? section.fields[j] : undefined;
+          if (field &&
+              field.type === MetaformFieldType.Files &&
+              values &&
+              field.name &&
+              values[field.name]) {
+            let fileIds = Array.isArray(values[field.name]) ? values[field.name] : [values[field.name]]; 
+            let attachmentPromises = (fileIds as string[]).map((fileId) => {
+              return attachmentsApi.findAttachment({attachmentId: fileId, ownerKey: ownerKey});
+            });
+            let attachments = await Promise.all(attachmentPromises);
+            values[field.name] = {
+              files: attachments.map((a) => {
+                return {
+                  name: a.name,
+                  id: a.id,
+                  secure: true
+                }
+              })
+            };
+          }
+        }
+      }
+    }
+    return values;
   }
 
   /**
@@ -231,15 +268,6 @@ export class FormScreen extends React.Component<Props, State> {
         </Alert>
       </Snackbar>
     );
-  }
-
-  private createDefaultUploadUrl = (): string => {
-    let apiUrl = process.env.REACT_APP_API_BASE_PATH || "";
-    const apiVersionSlashIndex = apiUrl.lastIndexOf("/v1");
-    if (apiVersionSlashIndex < 0) {
-      return "";
-    }
-    return apiUrl.slice(0, apiVersionSlashIndex) + "/fileUpload"
   }
 
   /**
@@ -700,7 +728,7 @@ export class FormScreen extends React.Component<Props, State> {
           values[field.name as string] = (value as FileFieldValue).files.map(file => file.id);
         } 
       })
-    })
+    });
 
     try {
       const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
@@ -713,6 +741,11 @@ export class FormScreen extends React.Component<Props, State> {
             data: values as any
           }
         });
+        reply = await repliesApi.findReply({
+          metaformId: Config.getMetaformId(),
+          replyId: reply.id,
+          ownerKey: ownerKey
+        });
       } else {
         reply = await repliesApi.createReply({
           metaformId: Config.getMetaformId(),
@@ -722,12 +755,17 @@ export class FormScreen extends React.Component<Props, State> {
           replyMode: Config.getReplyMode()
         });
       }
-  
+      const updatedOwnerKey = ownerKey || reply.ownerKey;
+      let updatedValues = reply.data;
+      if (updatedOwnerKey) {
+        updatedValues = await this.processReplyData(metaform, reply, updatedOwnerKey);
+      }
       this.setState({
         saving: false,
         replySavedVisible: true,
         reply: reply,
-        ownerKey: ownerKey || reply.ownerKey || null
+        ownerKey: updatedOwnerKey || null,
+        formValues: updatedValues as any 
       });
     } catch (e) {
       this.setState({

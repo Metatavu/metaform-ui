@@ -75,7 +75,7 @@ export class EmailNotificationsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling createEmailNotification.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -118,7 +118,7 @@ export class EmailNotificationsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('emailNotificationId','Required parameter requestParameters.emailNotificationId was null or undefined when calling deleteEmailNotification.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -157,7 +157,7 @@ export class EmailNotificationsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('emailNotificationId','Required parameter requestParameters.emailNotificationId was null or undefined when calling findEmailNotification.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -193,7 +193,7 @@ export class EmailNotificationsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling listEmailNotifications.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -237,7 +237,7 @@ export class EmailNotificationsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('emailNotificationId','Required parameter requestParameters.emailNotificationId was null or undefined when calling updateEmailNotification.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
