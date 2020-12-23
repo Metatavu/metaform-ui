@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import strings from "../../localization/strings";
+import { FileFieldValue, FileFieldValueItem } from "metaform-react/dist/types";
 
 /**
  * Component props
@@ -62,9 +63,12 @@ export class Form extends React.Component<Props, State> {
           datePicker={ this.renderDatePicker }
           datetimePicker={ this.renderDatetimePicker }
           uploadFile={ this.uploadFile }
+          onFileDelete={ this.deleteFile }
+          onFileShow={ this.showFile }
           setAutocompleteOptions={ this.setAutocompleteOptions }
           renderIcon={ this.renderIcon }        
           onSubmit={ this.props.onSubmit }
+
         />
       </div>
     );
@@ -114,7 +118,75 @@ export class Form extends React.Component<Props, State> {
    * @param path path
    */
   private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
+    
+    if (files instanceof FileList) {
+      for (let i = 0; i < files.length; i++) {
+        let item = files.item(i);
+        if (item) {
+          this.doUpload(fieldName, item, path);
+        }
+      }
+    } else if (files instanceof File) {
+      this.doUpload(fieldName, files, path);
+    }
+  }
 
+  private doUpload(fieldName: string, file: File, path: string) {
+    const data = new FormData();
+    data.append("file", file);
+    fetch(path, {
+      method: "POST",
+      body: data
+    })
+    .then(res => res.json())
+    .then((data) => {
+      let currentFiles = this.props.getFieldValue(fieldName);
+      if (!currentFiles) {
+        currentFiles = { files: [] };
+      }
+      const value = {
+        id: data.fileRef,
+        secure: false,
+        name: data.fileName,
+        url: this.createDefaultFileUrl(data.fileRef)
+      } as FileFieldValueItem;
+      (currentFiles as FileFieldValue).files.push(value);
+      this.props.setFieldValue(fieldName, {...currentFiles as FileFieldValue});
+    })
+  }
+
+  private createDefaultFileUrl = (id: string): string => {
+    let apiUrl = process.env.REACT_APP_API_BASE_PATH || "";
+    const apiVersionSlashIndex = apiUrl.lastIndexOf("/v1");
+    if (apiVersionSlashIndex < 0) {
+      return "";
+    }
+    return apiUrl.slice(0, apiVersionSlashIndex) + "/fileUpload?fileRef=" + id
+  }
+
+  private deleteFile = (fieldName: string, value: FileFieldValueItem) => {
+    let currentFiles = this.props.getFieldValue(fieldName);
+    if (!currentFiles) {
+      currentFiles = { files: [] };
+    }
+    const files = (currentFiles as FileFieldValue).files.filter(f => f.id !== value.id);
+    this.props.setFieldValue(fieldName, { files });
+    
+    //Only unsecured values can be deleted from server
+    if (!value.secure) {
+      fetch(this.createDefaultFileUrl(value.id), { method: "DELETE" })
+        .then((res) => {
+          if (res.ok) {
+            console.log("Deleted from server");
+          }
+        })
+    }
+  }
+
+  private showFile = (fieldName: string, value: FileFieldValueItem) => {
+    if (!value.secure) {
+      window.open(value.url, "blank");
+    }
   }
 
   /**

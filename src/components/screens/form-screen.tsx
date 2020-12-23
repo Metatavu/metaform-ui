@@ -13,7 +13,7 @@ import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary } from '../../types';
 import Api from "../../api/api";
-import { Metaform, Reply } from "../../generated/client";
+import { Metaform, MetaformFieldType, Reply } from "../../generated/client";
 import { FieldValue } from "metaform-react";
 import Form from "../generic/form";
 import Config from "../../config";
@@ -22,6 +22,8 @@ import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
+import form from "../../styles/form";
+import { FileFieldValue } from "metaform-react/dist/types";
 
 /**
  * Component props
@@ -114,7 +116,9 @@ export class FormScreen extends React.Component<Props, State> {
       metaform.sections?.forEach(section => {        
         section.fields?.forEach(field => {
           const { name, _default, options } = field;
-
+          if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
+            field.uploadUrl = this.createDefaultUploadUrl()
+          } 
           if (name) {
             if (_default) {
               formValues[name] = _default;
@@ -227,6 +231,15 @@ export class FormScreen extends React.Component<Props, State> {
         </Alert>
       </Snackbar>
     );
+  }
+
+  private createDefaultUploadUrl = (): string => {
+    let apiUrl = process.env.REACT_APP_API_BASE_PATH || "";
+    const apiVersionSlashIndex = apiUrl.lastIndexOf("/v1");
+    if (apiVersionSlashIndex < 0) {
+      return "";
+    }
+    return apiUrl.slice(0, apiVersionSlashIndex) + "/fileUpload"
   }
 
   /**
@@ -675,23 +688,36 @@ export class FormScreen extends React.Component<Props, State> {
       saving: true
     });
 
+    let values = {...formValues};
+
+    metaform.sections?.forEach((section) => {
+      section.fields?.forEach((field) => {
+        if (field.type === MetaformFieldType.Files) {
+          let value = this.getFieldValue(field.name as string);
+          if ( !value ) {
+            value = { files: [] }
+          }
+          values[field.name as string] = (value as FileFieldValue).files.map(file => file.id);
+        } 
+      })
+    })
+
     try {
       const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
-
       if (reply && reply.id && ownerKey) {
         await repliesApi.updateReply({
           metaformId: Config.getMetaformId(),
           replyId: reply.id,
           ownerKey: ownerKey,
           reply: {
-            data: formValues as any
+            data: values as any
           }
         });
       } else {
         reply = await repliesApi.createReply({
           metaformId: Config.getMetaformId(),
           reply: {
-            data: formValues as any
+            data: values as any
           },
           replyMode: Config.getReplyMode()
         });

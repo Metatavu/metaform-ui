@@ -15,6 +15,10 @@ export interface IStrings extends LocalizedStringsMethods {
     tableField: {
       addNewRow: string;
     };
+    fileField: {
+      deleteFileButton: string;
+      showFileButton: string;
+    };
   };
 
   formScreen: {

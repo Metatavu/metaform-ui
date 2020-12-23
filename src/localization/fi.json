@@ -8,6 +8,10 @@
   "form": {
     "tableField": {
       "addNewRow": "Lisää uusi rivi"
+    },
+    "fileField": {
+      "deleteFileButton": "Poista",
+      "showFileButton": "Näytä"
     }
   },
 
