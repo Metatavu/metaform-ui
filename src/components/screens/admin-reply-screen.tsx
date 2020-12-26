@@ -129,6 +129,13 @@ export class AdminReplyScreen extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Processes reply from server into form that is understood by ui
+   * 
+   * @param metaform metaform that is being viewed
+   * @param reply reply loaded from server
+   * @return data processes to be used by ui
+   */
   private processReplyData = async (metaform: Metaform, reply: Reply) => {
     const attachmentsApi = Api.getAttachmentsApi(this.props.adminToken);
     let values = reply.data;

@@ -220,6 +220,15 @@ export class FormScreen extends React.Component<Props, State> {
     );
   }
 
+    /**
+   * Processes reply from server into form that is understood by ui
+   * 
+   * @param metaform metaform that is being viewed
+   * @param reply reply loaded from server
+   * @param ownerKey owner key for the reply
+   * 
+   * @return data processes to be used by ui
+   */
   private processReplyData = async (metaform: Metaform, reply: Reply, ownerKey: string) => {
     const attachmentsApi = Api.getAttachmentsApi(this.props.anonymousToken);
     let values = reply.data;
