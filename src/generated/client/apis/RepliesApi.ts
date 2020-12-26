@@ -100,7 +100,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('format','Required parameter requestParameters.format was null or undefined when calling _export.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.format !== undefined) {
             queryParameters['format'] = requestParameters.format;
@@ -144,7 +144,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling createReply.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.updateExisting !== undefined) {
             queryParameters['updateExisting'] = requestParameters.updateExisting;
@@ -195,7 +195,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('replyId','Required parameter requestParameters.replyId was null or undefined when calling deleteReply.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.ownerKey !== undefined) {
             queryParameters['ownerKey'] = requestParameters.ownerKey;
@@ -238,7 +238,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('replyId','Required parameter requestParameters.replyId was null or undefined when calling findReply.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.ownerKey !== undefined) {
             queryParameters['ownerKey'] = requestParameters.ownerKey;
@@ -278,7 +278,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling listReplies.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.userId !== undefined) {
             queryParameters['userId'] = requestParameters.userId;
@@ -358,7 +358,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('format','Required parameter requestParameters.format was null or undefined when calling replyExport.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.format !== undefined) {
             queryParameters['format'] = requestParameters.format;
@@ -406,7 +406,7 @@ export class RepliesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('replyId','Required parameter requestParameters.replyId was null or undefined when calling updateReply.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         if (requestParameters.ownerKey !== undefined) {
             queryParameters['ownerKey'] = requestParameters.ownerKey;

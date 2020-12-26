@@ -8,6 +8,10 @@
   "form": {
     "tableField": {
       "addNewRow": "Add new row"
+    },
+    "fileField": {
+      "deleteFileButton": "Delete",
+      "showFileButton": "Show"
     }
   },
 

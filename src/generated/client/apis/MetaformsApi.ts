@@ -63,7 +63,7 @@ export class MetaformsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaform','Required parameter requestParameters.metaform was null or undefined when calling createMetaform.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -102,7 +102,7 @@ export class MetaformsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling deleteMetaform.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -137,7 +137,7 @@ export class MetaformsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling findMetaform.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -169,7 +169,7 @@ export class MetaformsApi extends runtime.BaseAPI {
      * Lists Metaforms
      */
     async listMetaformsRaw(): Promise<runtime.ApiResponse<Array<Metaform>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -209,7 +209,7 @@ export class MetaformsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('metaformId','Required parameter requestParameters.metaformId was null or undefined when calling updateMetaform.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
