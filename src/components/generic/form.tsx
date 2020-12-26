@@ -129,7 +129,6 @@ export class Form extends React.Component<Props, State> {
    * @param path path
    */
   private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
-    
     if (files instanceof FileList) {
       for (let i = 0; i < files.length; i++) {
         let item = files.item(i);
