@@ -155,10 +155,10 @@ export class AdminReplyScreen extends React.Component<Props, State> {
             });
             let attachments = await Promise.all(attachmentPromises);
             values[field.name] = {
-              files: attachments.map((a) => {
+              files: attachments.map(attachment => {
                 return {
-                  name: a.name,
-                  id: a.id,
+                  name: attachment.name,
+                  id: attachment.id,
                   secure: true
                 }
               })
