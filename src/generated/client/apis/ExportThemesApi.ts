@@ -63,7 +63,7 @@ export class ExportThemesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportTheme','Required parameter requestParameters.exportTheme was null or undefined when calling createExportTheme.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -102,7 +102,7 @@ export class ExportThemesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeId','Required parameter requestParameters.exportThemeId was null or undefined when calling deleteExportTheme.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -137,7 +137,7 @@ export class ExportThemesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeId','Required parameter requestParameters.exportThemeId was null or undefined when calling findExportTheme.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -169,7 +169,7 @@ export class ExportThemesApi extends runtime.BaseAPI {
      * Lists form export themes
      */
     async listExportThemesRaw(): Promise<runtime.ApiResponse<Array<ExportTheme>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -209,7 +209,7 @@ export class ExportThemesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('exportThemeId','Required parameter requestParameters.exportThemeId was null or undefined when calling updateExportTheme.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 

@@ -16,5 +16,4 @@ export default class Utils {
     window.URL.revokeObjectURL(downloadUrl);
     downloadLink.remove();
   }
-
 }

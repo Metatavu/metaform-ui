@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import strings from "../../localization/strings";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Input, TextField } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, TextField } from "@material-ui/core";
 import * as EmailValidator from 'email-validator';
 
 /**
