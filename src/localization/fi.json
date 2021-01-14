@@ -27,7 +27,7 @@
     "draftEmailContent": "<p>Hei!</p><p>Pääset jatkamaan {0} -lomakkeen täyttöä linkistä:</p><p><a href='{1}'>{1}</a></p><hr/><p>Tämä on automaattinen viesti, älä vastaa viestiin.</p>",
     "draftEmailSent": "Linkki vedokseen lähetetty!",
     "savingReply": "Tallennetaan vastausta...",
-    "replySaved": "Vastaus tallennettu onnistuneesti!",
+    "replySaved": "Lähetetty onnistuneesti!",
     "replyEdit": "Voit muokata vastaustasi käyttämällä seuraavaa linkkiä:",
     "replyEditEmailText": "Voit lähettää linkin itsellesi sähköpostilla klikkaamalla",
     "replyEditEmailLink": "tästä",
