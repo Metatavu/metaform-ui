@@ -166,7 +166,7 @@ export class Form extends React.Component<Props, State> {
       }
       const value = {
         id: data.fileRef,
-        secure: false,
+        persisted: false,
         name: data.fileName,
         url: this.createDefaultFileUrl(data.fileRef)
       } as FileFieldValueItem;
@@ -208,7 +208,7 @@ export class Form extends React.Component<Props, State> {
     this.props.setFieldValue(fieldName, { files });
     
     //Only unsecured values can be deleted from server
-    if (!value.secure) {
+    if (!value.persisted) {
       fetch(this.createDefaultFileUrl(value.id), { method: "DELETE" })
         .then((res) => {
           if (res.ok) {
@@ -225,7 +225,7 @@ export class Form extends React.Component<Props, State> {
    * @param value uploaded value
    */
   private showFile = async (fieldName: string, value: FileFieldValueItem) => {
-    if (!value.secure) {
+    if (!value.persisted) {
       window.open(value.url, "blank");
       return
     }
