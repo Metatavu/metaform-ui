@@ -150,13 +150,28 @@ export class AdminScreen extends React.Component<Props, State> {
         <div className={ classes.topBar }>
           <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
           <div className={ classes.topBarButton }>
-            <Button variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>            
+            { this.renderTopBarButtons() }
           </div>
         </div>
         { this.renderFilters(metaform) }
         { this.renderReplies(metaform) }
         { this.renderDeleteReplyConfirm() }
       </AdminLayout>
+    );
+  }
+
+  /**
+   * Renders top bar buttons
+   */
+  private renderTopBarButtons = () => {
+    const { classes } = this.props;
+
+    if (!this.isAllowedToExportXlsx()) {
+      return null;
+    }
+
+    return (
+      <Button variant="contained" className={ classes.topBarButton } onClick={ this.onExportXlsxClick }>{ strings.adminScreen.exportXlsx }</Button>            
     );
   }
 
@@ -285,6 +300,25 @@ export class AdminScreen extends React.Component<Props, State> {
         open={ !!this.state.deleteReplyId } 
       />
     );
+  }
+
+  /**
+   * Returns whether logged user may export form as XLSX
+   * 
+   * @return whether logged user may export form as XLSX
+   */
+  private isAllowedToExportXlsx = () => {
+    const { adminToken } = this.props;
+    const { realmRoles } = adminToken;
+    const allowedRoles = ["metaform-admin", "metaform-super"];
+
+    for (let i = 0; i < allowedRoles.length; i++) {
+      if (realmRoles.includes(allowedRoles[i])) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

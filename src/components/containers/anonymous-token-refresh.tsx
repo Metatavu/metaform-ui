@@ -31,6 +31,9 @@ interface DecodedAccessToken {
   sub: string | undefined;
   given_name: string | undefined;
   family_name: string | undefined;
+  realm_access?: {
+    roles: string[];
+  }
 }
 
 /**
@@ -192,7 +195,8 @@ class AnonymousTokenRefresh extends React.Component<Props, State> {
       expires_in: tokenData.expires_in,
       refresh_token: tokenData.refresh_token,
       refresh_expires_in: tokenData.refresh_expires_in,
-      userId: decodedToken.sub
+      userId: decodedToken.sub,
+      realmRoles: decodedToken.realm_access?.roles || []
     };
   }
 }
