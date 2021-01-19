@@ -141,7 +141,8 @@ class AccessTokenRefresh extends React.Component<Props, State> {
       refresh_expires_in: refreshTokenParsed?.exp,
       firstName: profile?.firstName,
       lastName: profile?.lastName,
-      userId: tokenParsed.sub
+      userId: tokenParsed.sub,
+      realmRoles: tokenParsed.realm_access?.roles || []
     };
   }
 
