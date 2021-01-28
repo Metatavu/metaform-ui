@@ -187,7 +187,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
     return (metaform.sections || [])
       .flatMap(section => section.fields || [])
       .filter(field => (field.contexts || []).includes("INVITE"))
-      .find(field => field.type === "email" && field.name && field.required)
+      .find(field => field.type === "email" && field.name && field.required);
   }
 
   /**
