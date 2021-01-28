@@ -7,6 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import MailIcon from '@material-ui/icons/Mail';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import TelegramIcon from '@material-ui/icons/Telegram';
 import strings from "../../localization/strings";
 import { Link } from "react-router-dom";
 import { KeycloakInstance } from "keycloak-js";
@@ -75,6 +76,10 @@ class AdminLayout extends React.Component<Props, State> {
         <ListItem button key="replies" component={ Link } to="/admin">
             <ListItemIcon><MailIcon /></ListItemIcon>
             <ListItemText primary={ strings.adminLayout.replies } />
+        </ListItem>
+        <ListItem button key="invite" component={ Link } to="/admin/invite">
+            <ListItemIcon><TelegramIcon /></ListItemIcon>
+            <ListItemText primary={ strings.adminLayout.invite } />
         </ListItem>
         <ListItem button key="profile" component="a" href={ this.getProfileLink() }>
           <ListItemIcon><PersonIcon /></ListItemIcon>

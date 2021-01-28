@@ -60,8 +60,18 @@
     "replySaved": "Changed saved successfully"
   },
 
+  "adminInviteScreen": {
+    "title":  "Invitations",
+    "emailFieldNotFoundError": "Email field not found. Check form configuration!",
+    "noOwnerKeyError": "Did not receive owner key. Check form configuration!",
+    "sendingInvitation": "Sending invitation...",
+    "invitationEmailSubject": "Invitation to reply to {0} -form",
+    "invitationEmailContent": "<p>Hi!</p><p>You have been invited to fill out form {0}. You can access the from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" 
+  },
+
   "adminLayout": {
     "replies": "Replies",
+    "invite": "Invite",
     "profile": "Profile",
     "logout": "Logout"
   },
