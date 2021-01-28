@@ -122,7 +122,9 @@ export class AdminInviteScreen extends React.Component<Props, State> {
         clearSnackbar={ this.clearSnackbar }
       >
         <div className={ classes.topBar }>
-          <Typography className={ classes.title } variant="h2">{ strings.adminInviteScreen.title }</Typography>
+          <Typography className={ classes.title } variant="h2">
+            { strings.adminInviteScreen.title }
+          </Typography>
         </div>
         
         <div className={ classes.formContainer }>
