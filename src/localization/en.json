@@ -61,7 +61,7 @@
   },
 
   "adminInviteScreen": {
-    "title":  "Invitations",
+    "title": "Invitations",
     "emailFieldNotFoundError": "Email field not found. Check form configuration!",
     "noOwnerKeyError": "Did not receive owner key. Check form configuration!",
     "sendingInvitation": "Sending invitation...",

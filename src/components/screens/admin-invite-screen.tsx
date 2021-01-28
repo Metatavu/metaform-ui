@@ -75,11 +75,9 @@ export class AdminInviteScreen extends React.Component<Props, State> {
 
       const metaformsApi = Api.getMetaformsApi(this.props.signedToken);
 
-      const [ metaform ] = await Promise.all([
-        metaformsApi.findMetaform({
-          metaformId: Config.getMetaformId()
-        })
-      ]);
+      const metaform = await metaformsApi.findMetaform({
+        metaformId: Config.getMetaformId()
+      });
 
       const emailField = this.getEmailField(metaform);
 
@@ -124,7 +122,9 @@ export class AdminInviteScreen extends React.Component<Props, State> {
         clearSnackbar={ this.clearSnackbar }
       >
         <div className={ classes.topBar }>
-          <Typography className={ classes.title } variant="h2">{ strings.adminInviteScreen.title }</Typography>
+          <Typography className={ classes.title } variant="h2">
+            { strings.adminInviteScreen.title }
+          </Typography>
         </div>
         
         <div className={ classes.formContainer }>
@@ -187,7 +187,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
     return (metaform.sections || [])
       .flatMap(section => section.fields || [])
       .filter(field => (field.contexts || []).includes("INVITE"))
-      .find(field => field.type === "email" && field.name && field.required)
+      .find(field => field.type === "email" && field.name && field.required);
   }
 
   /**
@@ -236,11 +236,11 @@ export class AdminInviteScreen extends React.Component<Props, State> {
       throw new Error("Missing REACT_APP_EMAIL_FROM env");
     }
 
-    this.setState({
-      sending: true
-    });
-
     try {
+      this.setState({
+        sending: true
+      });
+
       const repliesApi = Api.getRepliesApi(signedToken);
       const reply = await repliesApi.createReply({
         metaformId: Config.getMetaformId(),

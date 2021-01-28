@@ -61,7 +61,7 @@
   },
 
   "adminInviteScreen": {
-    "title":  "Kutsuminen",
+    "title": "Kutsuminen",
     "emailFieldNotFoundError": "Sähköpostikenttää ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
     "noOwnerKeyError": "Omistaja-avainta ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
     "sendingInvitation": "Lähetetään kutsua...",    
