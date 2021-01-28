@@ -28,7 +28,7 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
   replyId: string;
-  adminToken: AccessToken;
+  signedToken: AccessToken;
 }
 
 /**
@@ -67,13 +67,15 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
+    const { signedToken, replyId } = this.props;
+
     try {
       this.setState({
         loading: true
       });
 
-      const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const metaformsApi = Api.getMetaformsApi(signedToken);
+      const repliesApi = Api.getRepliesApi(signedToken);
 
       const [ metaform, reply ] = await Promise.all([
         metaformsApi.findMetaform({
@@ -81,7 +83,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         }),
         repliesApi.findReply({
           metaformId: Config.getMetaformId(),
-          replyId: this.props.replyId
+          replyId: replyId
         })
       ]);
 
@@ -147,7 +149,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    * @return data processes to be used by ui
    */
   private processReplyData = async (metaform: Metaform, reply: Reply) => {
-    const attachmentsApi = Api.getAttachmentsApi(this.props.adminToken);
+    const attachmentsApi = Api.getAttachmentsApi(this.props.signedToken);
     let values = reply.data;
     for (let i = 0; i < (metaform.sections || []).length; i++) {
       let section = metaform.sections && metaform.sections[i] ? metaform.sections[i] : undefined;
@@ -187,7 +189,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
 
     return (
       <Form
-        accessToken={this.props.adminToken}
+        accessToken={this.props.signedToken}
         contexts={ ["MANAGEMENT"] }
         metaform={ metaform }
         getFieldValue={ this.getFieldValue }
@@ -247,7 +249,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.signedToken);
 
       const pdf = await repliesApi.replyExport({
         metaformId: Config.getMetaformId(),
@@ -300,7 +302,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
     });
 
     try {
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.signedToken);
 
       await repliesApi.updateReply({
         metaformId: Config.getMetaformId(),
@@ -341,7 +343,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    adminToken: state.auth.adminToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken
   };
 }
 

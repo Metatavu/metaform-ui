@@ -10,7 +10,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import strings from "../localization/strings";
 import AnonymousTokenRefresh from "./containers/anonymous-token-refresh";
-import AdminTokenRefresh from "./containers/admin-token-refresh";
+import SignedTokenRefresh from "./containers/signed-token-refresh";
 import moment from "moment";
 import "moment/locale/fi";
 import "moment/locale/en-gb";
@@ -74,37 +74,49 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  path="/protected/form"
+                  exact={ true }
+                  render={({ history, location }) => (
+                    <SignedTokenRefresh>
+                      <FormScreen
+                        history={ history }
+                        location={ location }
+                      />
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
                   path="/admin"
                   exact={ true }
                   render={({ history }) => (
-                    <AdminTokenRefresh>
+                    <SignedTokenRefresh>
                       <AdminScreen
                         history={ history }
                       />
-                    </AdminTokenRefresh>
+                    </SignedTokenRefresh>
                   )}
                 />
                 <Route
                   path="/admin/invite"
                   exact={ true }
                   render={({ history, match }) => (
-                    <AdminTokenRefresh>
+                    <SignedTokenRefresh>
                       <AdminInviteScreen                            
                         history={ history }
                       />
-                    </AdminTokenRefresh>
+                    </SignedTokenRefresh>
                   )}
                 />
                 <Route
                   path="/admin/replies/:replyId"
                   exact={ true }
                   render={({ history, match }) => (
-                    <AdminTokenRefresh>
+                    <SignedTokenRefresh>
                       <AdminReplyScreen                            
                         history={ history }
                         replyId={ match.params.replyId }
                       />
-                    </AdminTokenRefresh>
+                    </SignedTokenRefresh>
                   )}
                 />
               </Switch>
