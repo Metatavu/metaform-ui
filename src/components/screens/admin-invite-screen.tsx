@@ -75,11 +75,9 @@ export class AdminInviteScreen extends React.Component<Props, State> {
 
       const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
 
-      const [ metaform ] = await Promise.all([
-        metaformsApi.findMetaform({
-          metaformId: Config.getMetaformId()
-        })
-      ]);
+      const metaform = await metaformsApi.findMetaform({
+        metaformId: Config.getMetaformId()
+      });
 
       const emailField = this.getEmailField(metaform);
 
