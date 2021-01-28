@@ -71,6 +71,12 @@ export interface Metaform {
      */
     allowReplyOwnerKeys?: boolean;
     /**
+     * Enable invitation functionality
+     * @type {boolean}
+     * @memberof Metaform
+     */
+    allowInvitations?: boolean;
+    /**
      * 
      * @type {string}
      * @memberof Metaform
@@ -112,6 +118,7 @@ export function MetaformFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'allowAnonymous': !exists(json, 'allowAnonymous') ? undefined : json['allowAnonymous'],
         'allowDrafts': !exists(json, 'allowDrafts') ? undefined : json['allowDrafts'],
         'allowReplyOwnerKeys': !exists(json, 'allowReplyOwnerKeys') ? undefined : json['allowReplyOwnerKeys'],
+        'allowInvitations': !exists(json, 'allowInvitations') ? undefined : json['allowInvitations'],
         'title': !exists(json, 'title') ? undefined : json['title'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(MetaformSectionFromJSON)),
         'filters': !exists(json, 'filters') ? undefined : ((json['filters'] as Array<any>).map(MetaformFilterFromJSON)),
@@ -134,6 +141,7 @@ export function MetaformToJSON(value?: Metaform | null): any {
         'allowAnonymous': value.allowAnonymous,
         'allowDrafts': value.allowDrafts,
         'allowReplyOwnerKeys': value.allowReplyOwnerKeys,
+        'allowInvitations': value.allowInvitations,
         'title': value.title,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(MetaformSectionToJSON)),
         'filters': value.filters === undefined ? undefined : ((value.filters as Array<any>).map(MetaformFilterToJSON)),

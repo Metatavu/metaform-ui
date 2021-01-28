@@ -66,8 +66,18 @@ export interface IStrings extends LocalizedStringsMethods {
     replySaved: string;
   };
 
+  adminInviteScreen: {
+    title: string;
+    emailFieldNotFoundError: string;
+    noOwnerKeyError: string;
+    sendingInvitation: string;
+    invitationEmailSubject: string;
+    invitationEmailContent: string;
+  };
+
   adminLayout: {
     replies: string;
+    invite: string;
     profile: string;
     logout: string;
   },

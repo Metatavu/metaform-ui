@@ -142,11 +142,17 @@ export class AdminScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { metaform } = this.state;
-    const { classes } = this.props;
+    const { metaform, loading, error } = this.state;
+    const { classes, keycloak } = this.props;
 
     return (
-      <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || !metaform } error={ this.state.error } clearError={ this.clearError }>
+      <AdminLayout 
+        keycloak={ keycloak } 
+        metaform={ metaform }
+        loading={ loading || !metaform } 
+        error={ error } 
+        clearError={ this.clearError }
+      >
         <div className={ classes.topBar }>
           <Typography className={ classes.title } variant="h2">{ strings.adminScreen.title }</Typography>
           <div className={ classes.topBarButton }>

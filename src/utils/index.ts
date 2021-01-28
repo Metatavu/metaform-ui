@@ -16,4 +16,17 @@ export default class Utils {
     window.URL.revokeObjectURL(downloadUrl);
     downloadLink.remove();
   }
+
+  /**
+   * Creates owner key protected reply edit link 
+   * 
+   * @param replyId reply id
+   * @param ownerKey owner key
+   * @returns owner key protected reply edit link 
+   */
+  public static createOwnerKeyLink = (replyId: string, ownerKey: string) => {
+    const { location } = window;
+    return (new URL(`${location.protocol}//${location.hostname}:${location.port}?reply=${replyId}&owner-key=${ownerKey}`)).toString();
+  }
+
 }

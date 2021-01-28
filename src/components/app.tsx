@@ -17,6 +17,7 @@ import "moment/locale/en-gb";
 import FormScreen from "./screens/form-screen";
 import AdminScreen from "./screens/admin-screen";
 import AdminReplyScreen from "./screens/admin-reply-screen";
+import AdminInviteScreen from "./screens/admin-invite-screen";
 
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
 
@@ -78,6 +79,17 @@ class App extends React.Component<Props, State> {
                   render={({ history }) => (
                     <AdminTokenRefresh>
                       <AdminScreen
+                        history={ history }
+                      />
+                    </AdminTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/invite"
+                  exact={ true }
+                  render={({ history, match }) => (
+                    <AdminTokenRefresh>
+                      <AdminInviteScreen                            
                         history={ history }
                       />
                     </AdminTokenRefresh>

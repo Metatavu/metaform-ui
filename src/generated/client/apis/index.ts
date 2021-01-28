@@ -1,4 +1,5 @@
 export * from './AttachmentsApi';
+export * from './AuditLogEntriesApi';
 export * from './DraftsApi';
 export * from './EmailNotificationsApi';
 export * from './ExportThemeFilesApi';

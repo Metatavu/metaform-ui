@@ -23,6 +23,7 @@ import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
 import { FileFieldValue } from "metaform-react/dist/types";
+import Utils from "../../utils";
 
 /**
  * Component props
@@ -702,12 +703,11 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private getReplyEditLink = () => {
     const { reply, ownerKey } = this.state;
-    if (!reply || !ownerKey) {
+    if (!reply?.id || !ownerKey) {
       return null;
     }
 
-    const { location } = window;
-    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?reply=${reply.id}&owner-key=${ownerKey}`)).toString();
+    return Utils.createOwnerKeyLink(reply.id, ownerKey);
   }
 
   /**

@@ -7,15 +7,18 @@ import Drawer from '@material-ui/core/Drawer';
 import MailIcon from '@material-ui/icons/Mail';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import TelegramIcon from '@material-ui/icons/Telegram';
 import strings from "../../localization/strings";
 import { Link } from "react-router-dom";
 import { KeycloakInstance } from "keycloak-js";
+import { Metaform } from "../../generated/client";
 
 /**
  * Interface representing component properties
  */
 interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
+  metaform?: Metaform;
   snackbarMessage?: SnackbarMessage;
   error?: string | Error | Response;
   loading?: boolean;
@@ -72,19 +75,65 @@ class AdminLayout extends React.Component<Props, State> {
   private renderMenu = () => {
     return (
       <List>
-        <ListItem button key="replies" component={ Link } to="/admin">
-            <ListItemIcon><MailIcon /></ListItemIcon>
-            <ListItemText primary={ strings.adminLayout.replies } />
-        </ListItem>
-        <ListItem button key="profile" component="a" href={ this.getProfileLink() }>
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-          <ListItemText primary={ strings.adminLayout.profile } />
-        </ListItem>
-        <ListItem button key="logout" onClick={ this.onLogOutClick }>
-          <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-          <ListItemText primary={ strings.adminLayout.logout } />
-        </ListItem>
+        { this.renderRepliesMenuItem() }
+        { this.renderInviteMenuItem() }
+        { this.renderProfileMenuItem() }
+        { this.renderLogoutMenuItem() }
       </List>
+    );
+  }
+
+  /**
+   * Renders replies menu item
+   */
+  private renderRepliesMenuItem = () => {
+    return (
+      <ListItem button key="replies" component={ Link } to="/admin">
+        <ListItemIcon><MailIcon /></ListItemIcon>
+        <ListItemText primary={ strings.adminLayout.replies } />
+      </ListItem>
+    );
+  }
+
+  /**
+   * Renders invite menu item
+   */
+  private renderInviteMenuItem = () => {
+    const { metaform } = this.props;
+
+    if (!metaform?.allowInvitations) {
+      return null;
+    }
+
+    return (
+      <ListItem button key="invite" component={ Link } to="/admin/invite">
+        <ListItemIcon><TelegramIcon /></ListItemIcon>
+        <ListItemText primary={ strings.adminLayout.invite } />
+      </ListItem>
+    );
+  }
+
+  /**
+   * Renders profile menu item
+   */
+  private renderProfileMenuItem = () => {
+    return (
+      <ListItem button key="profile" component="a" href={ this.getProfileLink() }>
+        <ListItemIcon><PersonIcon /></ListItemIcon>
+        <ListItemText primary={ strings.adminLayout.profile } />
+      </ListItem>
+    );
+  }
+
+  /**
+   * Renders logout menu item
+   */
+  private renderLogoutMenuItem = () => {
+    return (
+      <ListItem button key="logout" onClick={ this.onLogOutClick }>
+        <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+        <ListItemText primary={ strings.adminLayout.logout } />
+      </ListItem>
     );
   }
 
