@@ -3,19 +3,19 @@ import { AccessToken } from '../types';
 import { KeycloakInstance } from 'keycloak-js';
 
 /**
- * Interface for admin login action type
+ * Interface for signed login action type
  */
-export interface AdminLoginAction {
-  type: actionTypes.ADMIN_LOGIN;
+export interface SignedLoginAction {
+  type: actionTypes.SIGNED_LOGIN;
   accessToken: AccessToken;
   keycloak: KeycloakInstance;
 }
 
 /**
- * Interface for admin logout action type
+ * Interface for signed logout action type
  */
-export interface AdminLogoutAction {
-  type: actionTypes.ADMIN_LOGOUT;
+export interface SignedLogoutAction {
+  type: actionTypes.SIGNED_LOGOUT;
 }
 
 /**
@@ -27,13 +27,13 @@ export interface AnonymousLoginAction {
 }
 
 /**
- * Store update method for admin access token
+ * Store update method for signed access token
  *
  * @param keycloak keycloak instance
  */
-export function adminLogin(keycloak: KeycloakInstance, accessToken: AccessToken): AdminLoginAction {
+export function signedLogin(keycloak: KeycloakInstance, accessToken: AccessToken): SignedLoginAction {
   return {
-    type: actionTypes.ADMIN_LOGIN,
+    type: actionTypes.SIGNED_LOGIN,
     accessToken: accessToken,
     keycloak: keycloak
   };
@@ -42,9 +42,9 @@ export function adminLogin(keycloak: KeycloakInstance, accessToken: AccessToken)
 /**
  * Store logout method
  */
-export function adminLogout(): AdminLogoutAction {
+export function signedLogout(): SignedLogoutAction {
   return {
-    type: actionTypes.ADMIN_LOGOUT
+    type: actionTypes.SIGNED_LOGOUT
   };
 }
 
@@ -60,4 +60,4 @@ export function anonymousLogin(accessToken: AccessToken): AnonymousLoginAction {
   };
 }
 
-export type AuthAction = AdminLoginAction | AdminLogoutAction | AnonymousLoginAction;
+export type AuthAction = SignedLoginAction | SignedLogoutAction | AnonymousLoginAction;

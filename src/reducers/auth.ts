@@ -1,5 +1,5 @@
 import { AuthAction } from '../actions/auth';
-import { ADMIN_LOGIN, ADMIN_LOGOUT, ANONYMOUS_LOGIN } from '../constants/actionTypes';
+import { SIGNED_LOGIN, SIGNED_LOGOUT, ANONYMOUS_LOGIN } from '../constants/actionTypes';
 import { KeycloakInstance } from 'keycloak-js';
 import { AccessToken } from '../types';
 
@@ -7,7 +7,7 @@ import { AccessToken } from '../types';
  * Redux auth state
  */
 export interface AuthState {
-  adminToken?: AccessToken;
+  signedToken?: AccessToken;
   anonymousToken?: AccessToken;
   keycloak?: KeycloakInstance;
 }
@@ -16,7 +16,7 @@ export interface AuthState {
  * Initial auth state
  */
 const initialState: AuthState = {
-  adminToken: undefined,
+  signedToken: undefined,
   anonymousToken: undefined,
   keycloak: undefined
 }
@@ -30,10 +30,10 @@ const initialState: AuthState = {
  */
 export function authReducer(authState: AuthState = initialState, action: AuthAction): AuthState {
   switch (action.type) {
-    case ADMIN_LOGIN:
-      return { ...authState, keycloak: action.keycloak, adminToken: action.accessToken };
-    case ADMIN_LOGOUT:
-      return { ...authState, keycloak: undefined, adminToken: undefined };
+    case SIGNED_LOGIN:
+      return { ...authState, keycloak: action.keycloak, signedToken: action.accessToken };
+    case SIGNED_LOGOUT:
+      return { ...authState, keycloak: undefined, signedToken: undefined };
     case ANONYMOUS_LOGIN:
       return { ...authState, anonymousToken: action.accessToken };
     default:

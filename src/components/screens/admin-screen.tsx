@@ -31,7 +31,7 @@ import ConfirmDialog from "../generic/confirm-dialog";
 interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
-  adminToken: AccessToken;
+  signedToken: AccessToken;
 }
 
 /**
@@ -77,7 +77,7 @@ export class AdminScreen extends React.Component<Props, State> {
           loading: true
         });
   
-        const repliesApi = Api.getRepliesApi(this.props.adminToken);
+        const repliesApi = Api.getRepliesApi(this.props.signedToken);
   
         const [ replies ] = await Promise.all([
           repliesApi.listReplies({
@@ -108,8 +108,8 @@ export class AdminScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
-      const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.signedToken);
+      const metaformsApi = Api.getMetaformsApi(this.props.signedToken);
 
       const metaform = await metaformsApi.findMetaform({
         metaformId: Config.getMetaformId()
@@ -314,8 +314,8 @@ export class AdminScreen extends React.Component<Props, State> {
    * @return whether logged user may export form as XLSX
    */
   private isAllowedToExportXlsx = () => {
-    const { adminToken } = this.props;
-    const { realmRoles } = adminToken;
+    const { signedToken } = this.props;
+    const { realmRoles } = signedToken;
     const allowedRoles = ["metaform-admin", "metaform-super"];
 
     for (let i = 0; i < allowedRoles.length; i++) {
@@ -343,7 +343,7 @@ export class AdminScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.signedToken);
 
       await repliesApi.deleteReply({
         metaformId: metaform.id,
@@ -472,7 +472,7 @@ export class AdminScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.adminToken);
+      const repliesApi = Api.getRepliesApi(this.props.signedToken);
 
       const data = await repliesApi._export({
         format: "XLSX",
@@ -533,7 +533,7 @@ export class AdminScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    adminToken: state.auth.adminToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken
   };
 }
 

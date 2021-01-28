@@ -32,7 +32,8 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   location: Location;
   keycloak: KeycloakInstance;
-  anonymousToken: AccessToken;
+  signedToken?: AccessToken;
+  anonymousToken?: AccessToken
 }
 
 /**
@@ -55,6 +56,7 @@ interface State {
   ownerKey: string | null;
   metaform?: Metaform;
   formValues: Dictionary<FieldValue>;
+  redirectTo?: string;
 }
 
 /**
@@ -89,7 +91,9 @@ export class FormScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { location, anonymousToken } = this.props;
+    const { location, signedToken } = this.props;
+
+    const accessToken = this.getAccessToken();
     const query = new URLSearchParams(location.search);
 
     const draftId = query.get("draft");
@@ -104,7 +108,7 @@ export class FormScreen extends React.Component<Props, State> {
         draftId: draftId
       });
 
-      const metaformsApi = Api.getMetaformsApi(anonymousToken);
+      const metaformsApi = Api.getMetaformsApi(accessToken);
 
       const metaform = await metaformsApi.findMetaform({
         metaformId: metaformId
@@ -169,10 +173,16 @@ export class FormScreen extends React.Component<Props, State> {
         loading: false
       });
     } catch (e) {
-      this.setState({
-        loading: false,
-        error: e
-      });
+      if (e.status === 403 && !signedToken) {
+        this.setState({
+          redirectTo: "/protected/form"
+        });
+      } else {
+        this.setState({
+          loading: false,
+          error: e
+        });
+      }
     }
   }
 
@@ -181,9 +191,18 @@ export class FormScreen extends React.Component<Props, State> {
    */
   public render = () => {
     const { classes } = this.props;
+    const { redirectTo, loading, saving, snackbarMessage, error } = this.state;
 
     return (
-      <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+      <BasicLayout 
+        loading={ loading || saving } 
+        loadMessage={ saving ? strings.formScreen.savingReply : undefined } 
+        snackbarMessage={ snackbarMessage } 
+        error={ error } 
+        redirectTo={ redirectTo }
+        clearError={ this.clearError } 
+        clearSnackbar={ this.clearSnackbar }
+      >
         <div className={ classes.root }>
           { this.renderForm() }
           { this.renderReplySaved() }
@@ -208,9 +227,11 @@ export class FormScreen extends React.Component<Props, State> {
       return null
     }
 
+    const accessToken = this.getAccessToken();
+
     return (
       <Form
-        accessToken={ this.props.anonymousToken }
+        accessToken={ accessToken }
         ownerKey={ this.state.ownerKey || "" }
         contexts={ ["FORM"] }    
         metaform={ metaform }
@@ -231,7 +252,9 @@ export class FormScreen extends React.Component<Props, State> {
    * @return data processes to be used by ui
    */
   private processReplyData = async (metaform: Metaform, reply: Reply, ownerKey: string) => {
-    const attachmentsApi = Api.getAttachmentsApi(this.props.anonymousToken);
+    const accessToken = this.getAccessToken();
+    
+    const attachmentsApi = Api.getAttachmentsApi(accessToken);
     let values = reply.data;
     for (let i = 0; i < (metaform.sections || []).length; i++) {
       let section = metaform.sections && metaform.sections[i] ? metaform.sections[i] : undefined;
@@ -454,10 +477,10 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private findDraft = async (draftId: string) => {
     try {
-      const { anonymousToken } = this.props;
+      const accessToken = this.getAccessToken();
       const metaformId = Config.getMetaformId();   
       
-      const draftApi = Api.getDraftsApi(anonymousToken);
+      const draftApi = Api.getDraftsApi(accessToken);
       return await draftApi.findDraft({
         metaformId: metaformId,
         draftId: draftId
@@ -476,10 +499,10 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private findReply = async (replyId: string, ownerKey: string) => {
     try {
-      const { anonymousToken } = this.props;
+      const accessToken = this.getAccessToken();
       const metaformId = Config.getMetaformId();   
 
-      const replyApi = Api.getRepliesApi(anonymousToken);
+      const replyApi = Api.getRepliesApi(accessToken);
       return await replyApi.findReply({
         metaformId: metaformId,
         replyId: replyId,
@@ -496,6 +519,8 @@ export class FormScreen extends React.Component<Props, State> {
   private saveDraft = async () => {
     try {
       const { metaform, formValues, draftId } = this.state;
+      const accessToken = this.getAccessToken();
+      
       if (!metaform || !metaform.id) {
         return;
       }
@@ -505,7 +530,7 @@ export class FormScreen extends React.Component<Props, State> {
         draftSaveVisible: false
       });
 
-      const draftsApi = Api.getDraftsApi(this.props.anonymousToken);
+      const draftsApi = Api.getDraftsApi(accessToken);
       let draft;
 
       if (draftId) {
@@ -643,6 +668,7 @@ export class FormScreen extends React.Component<Props, State> {
    * Deletes the reply
    */
   private deleteReply = async () => {
+    const accessToken = this.getAccessToken();
     const { reply, ownerKey } = this.state;
 
     try {
@@ -651,7 +677,7 @@ export class FormScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
+      const repliesApi = Api.getRepliesApi(accessToken);
 
       if (reply && reply.id && ownerKey) {
         await repliesApi.deleteReply({
@@ -711,9 +737,20 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Returns either signed token or anonymous token is signed is absent
+   * 
+   * @return either signed token or anonymous token is signed is absent
+   */
+  private getAccessToken = () => {
+    const { signedToken, anonymousToken } = this.props;
+    return signedToken || anonymousToken as AccessToken;
+  }
+
+  /**
    * Method for submitting form
    */
   private onSubmit = async () =>  {
+    const accessToken = this.getAccessToken();
     const { formValues, metaform, ownerKey } = this.state;
     let { reply } = this.state;
 
@@ -740,7 +777,7 @@ export class FormScreen extends React.Component<Props, State> {
     });
 
     try {
-      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
+      const repliesApi = Api.getRepliesApi(accessToken);
       if (reply && reply.id && ownerKey) {
         await repliesApi.updateReply({
           metaformId: Config.getMetaformId(),
@@ -923,7 +960,8 @@ export class FormScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    anonymousToken: state.auth.anonymousToken as AccessToken
+    signedToken: state.auth.signedToken,
+    anonymousToken: state.auth.anonymousToken
   };
 }
 

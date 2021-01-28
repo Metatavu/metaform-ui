@@ -29,7 +29,7 @@ const { REACT_APP_EMAIL_FROM } = process.env;
 interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
-  adminToken: AccessToken;
+  signedToken: AccessToken;
 }
 
 /**
@@ -73,7 +73,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const metaformsApi = Api.getMetaformsApi(this.props.adminToken);
+      const metaformsApi = Api.getMetaformsApi(this.props.signedToken);
 
       const [ metaform ] = await Promise.all([
         metaformsApi.findMetaform({
@@ -146,7 +146,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
 
     return (
       <Form
-        accessToken={ this.props.adminToken }
+        accessToken={ this.props.signedToken }
         contexts={ ["INVITE"] }    
         metaform={ metaform }
         getFieldValue={ this.getFieldValue }
@@ -220,7 +220,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
    * Method for submitting form
    */
   private onSubmit = async () =>  {
-    const { adminToken } = this.props;
+    const { signedToken } = this.props;
     const { formValues, metaform, emailField } = this.state;
     if (!metaform || !metaform.id || !emailField) {
       return;
@@ -241,7 +241,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
     });
 
     try {
-      const repliesApi = Api.getRepliesApi(adminToken);
+      const repliesApi = Api.getRepliesApi(signedToken);
       const reply = await repliesApi.createReply({
         metaformId: Config.getMetaformId(),
         reply: {
@@ -296,7 +296,7 @@ export class AdminInviteScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    adminToken: state.auth.adminToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken
   };
 }
 
