@@ -67,13 +67,15 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
+    const { signedToken, replyId } = this.props;
+
     try {
       this.setState({
         loading: true
       });
 
-      const metaformsApi = Api.getMetaformsApi(this.props.signedToken);
-      const repliesApi = Api.getRepliesApi(this.props.signedToken);
+      const metaformsApi = Api.getMetaformsApi(signedToken);
+      const repliesApi = Api.getRepliesApi(signedToken);
 
       const [ metaform, reply ] = await Promise.all([
         metaformsApi.findMetaform({
@@ -81,7 +83,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
         }),
         repliesApi.findReply({
           metaformId: Config.getMetaformId(),
-          replyId: this.props.replyId
+          replyId: replyId
         })
       ]);
 
