@@ -33,7 +33,7 @@ interface Props extends WithStyles<typeof styles> {
   location: Location;
   keycloak: KeycloakInstance;
   signedToken?: AccessToken;
-  anonymousToken?: AccessToken
+  anonymousToken?: AccessToken;
 }
 
 /**
