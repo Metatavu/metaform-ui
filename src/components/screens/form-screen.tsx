@@ -111,7 +111,9 @@ export class FormScreen extends React.Component<Props, State> {
       const metaformsApi = Api.getMetaformsApi(accessToken);
 
       const metaform = await metaformsApi.findMetaform({
-        metaformId: metaformId
+        metaformId: metaformId,
+        replyId: replyId || undefined,
+        ownerKey: ownerKey || undefined
       });
       
       const formValues = { ...this.state.formValues };
