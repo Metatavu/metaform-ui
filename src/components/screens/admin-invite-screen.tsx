@@ -236,11 +236,11 @@ export class AdminInviteScreen extends React.Component<Props, State> {
       throw new Error("Missing REACT_APP_EMAIL_FROM env");
     }
 
-    this.setState({
-      sending: true
-    });
-
     try {
+      this.setState({
+        sending: true
+      });
+
       const repliesApi = Api.getRepliesApi(adminToken);
       const reply = await repliesApi.createReply({
         metaformId: Config.getMetaformId(),
