@@ -42,6 +42,8 @@ export interface DeleteMetaformRequest {
 
 export interface FindMetaformRequest {
     metaformId: string;
+    replyId?: string;
+    ownerKey?: string;
 }
 
 export interface UpdateMetaformRequest {
@@ -138,6 +140,14 @@ export class MetaformsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters.replyId !== undefined) {
+            queryParameters['replyId'] = requestParameters.replyId;
+        }
+
+        if (requestParameters.ownerKey !== undefined) {
+            queryParameters['ownerKey'] = requestParameters.ownerKey;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
