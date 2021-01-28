@@ -109,15 +109,17 @@ export class AdminInviteScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes } = this.props;
+    const { classes, keycloak } = this.props;
+    const { metaform, loading, sending, snackbarMessage, error } = this.state;
 
     return (
       <AdminLayout 
-        keycloak={ this.props.keycloak } 
-        loading={ this.state.loading || this.state.sending } 
-        loadMessage={ this.state.sending ? strings.adminInviteScreen.sendingInvitation : undefined } 
-        snackbarMessage={ this.state.snackbarMessage } 
-        error={ this.state.error } 
+        keycloak={ keycloak } 
+        metaform={ metaform }
+        loading={ loading || sending } 
+        loadMessage={ sending ? strings.adminInviteScreen.sendingInvitation : undefined } 
+        snackbarMessage={ snackbarMessage } 
+        error={ error } 
         clearError={ this.clearError } 
         clearSnackbar={ this.clearSnackbar }
       >

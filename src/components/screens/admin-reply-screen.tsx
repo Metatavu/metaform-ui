@@ -112,10 +112,20 @@ export class AdminReplyScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes } = this.props;
+    const { classes, keycloak } = this.props;
+    const { loading, saving, snackbarMessage, error, metaform } = this.state;
 
     return (
-      <AdminLayout keycloak={ this.props.keycloak } loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.adminReplyScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+      <AdminLayout 
+        keycloak={ keycloak } 
+        metaform={ metaform }
+        loading={ loading || saving } 
+        loadMessage={ saving ? strings.adminReplyScreen.savingReply : undefined } 
+        snackbarMessage={ snackbarMessage } 
+        error={ error } 
+        clearError={ this.clearError } 
+        clearSnackbar={ this.clearSnackbar }
+      >
         <div className={ classes.topBar }>
           <Typography className={ classes.title } variant="h2">{ strings.adminReplyScreen.title }</Typography>
           <div className={ classes.topBarButton }>
@@ -123,7 +133,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
           </div>
         </div>
         <div className={ classes.formContainer }>
-          { this.renderForm(this.state.metaform) }
+          { this.renderForm(metaform) }
         </div>
       </AdminLayout>
     );
