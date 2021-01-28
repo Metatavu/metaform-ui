@@ -26,7 +26,7 @@ export default class Utils {
    */
   public static createOwnerKeyLink = (replyId: string, ownerKey: string) => {
     const { location } = window;
-    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?reply=${replyId}&owner-key=${ownerKey}`)).toString();
+    return (new URL(`${location.protocol}//${location.hostname}:${location.port}?reply=${replyId}&owner-key=${ownerKey}`)).toString();
   }
 
 }
