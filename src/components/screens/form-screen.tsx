@@ -33,7 +33,7 @@ interface Props extends WithStyles<typeof styles> {
   location: Location;
   keycloak: KeycloakInstance;
   signedToken?: AccessToken;
-  anonymousToken?: AccessToken
+  anonymousToken?: AccessToken;
 }
 
 /**
@@ -737,9 +737,9 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Returns either signed token or anonymous token is signed is absent
+   * Returns either signed token or anonymous token if signed is absent
    * 
-   * @return either signed token or anonymous token is signed is absent
+   * @return either signed token or anonymous token if signed is absent
    */
   private getAccessToken = () => {
     const { signedToken, anonymousToken } = this.props;
