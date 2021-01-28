@@ -1,4 +1,5 @@
 apis/AttachmentsApi.ts
+apis/AuditLogEntriesApi.ts
 apis/DraftsApi.ts
 apis/EmailNotificationsApi.ts
 apis/ExportThemeFilesApi.ts
@@ -8,6 +9,8 @@ apis/RepliesApi.ts
 apis/index.ts
 index.ts
 models/Attachment.ts
+models/AuditLogEntry.ts
+models/AuditLogEntryType.ts
 models/BadRequest.ts
 models/Draft.ts
 models/EmailNotification.ts

@@ -1,4 +1,6 @@
 export * from './Attachment';
+export * from './AuditLogEntry';
+export * from './AuditLogEntryType';
 export * from './BadRequest';
 export * from './Draft';
 export * from './EmailNotification';
