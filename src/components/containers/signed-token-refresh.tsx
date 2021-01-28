@@ -15,7 +15,7 @@ import Config from "../../config";
  */
 interface Props {
   signedToken?: AccessToken;
-  onSignedLogin: (keycloak: KeycloakInstance, signedToken: AccessToken) => void;
+  onSignedLogin: typeof signedLogin;
 }
 
 /**
