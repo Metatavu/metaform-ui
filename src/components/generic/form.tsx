@@ -2,7 +2,7 @@ import * as React from "react";
 
 import styles from "../../styles/form";
 
-import { WithStyles, withStyles, Icon, LinearProgress } from "@material-ui/core";
+import { WithStyles, withStyles, Icon, LinearProgress, Slider } from "@material-ui/core";
 import { Metaform } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
@@ -74,6 +74,7 @@ export class Form extends React.Component<Props, State> {
           onFileShow={ this.showFile }
           setAutocompleteOptions={ this.setAutocompleteOptions }
           renderIcon={ this.renderIcon }        
+          renderSlider={ this.renderSlider }
           onSubmit={ this.props.onSubmit }
           renderBeforeField={(fieldname) => {
             if (fieldname && this.state.uploadingFields.indexOf(fieldname) > -1) {
@@ -120,6 +121,51 @@ export class Form extends React.Component<Props, State> {
         locale="fi"
       />
     );
+  }
+
+  /**
+   * Renders slider field
+   * 
+   * @param fieldName field name
+   * @param readOnly whether the field is read only
+   */
+  private renderSlider = (fieldName: string, readOnly: boolean) => {
+    const { setFieldValue } = this.props; 
+    const field = this.getField(fieldName);
+    if (!field) {
+      return null;
+    }
+
+    const value = this.props.getFieldValue(fieldName);
+    
+    return (
+      <Slider 
+        step={ field.step }
+        max={ field.max }
+        min={ field.min }
+        name={ field.name }
+        placeholder={ field.placeholder }
+        disabled={ readOnly }
+        value={ value as number }
+        onChange={ (_event: React.ChangeEvent<{}>, value: number | number[]) => {
+          setFieldValue(fieldName, value as number);
+        }}
+      />
+    );
+  }
+
+  /**
+   * Finds a field from form by field name
+   * 
+   * @param fieldName field name
+   * @returns field or null if not found
+   */
+  private getField = (fieldName: string) => {
+    const { metaform } = this.props;
+
+    return (metaform.sections || [])
+      .flatMap(section => section.fields || [])
+      .find(field => field.name === fieldName);
   }
 
   /**
