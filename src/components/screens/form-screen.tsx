@@ -784,7 +784,7 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private getFormValues = (metaform: Metaform): { [ key: string]: object } => {
     const { formValues } = this.state;
-    const values = {...formValues};
+    const values = { ...formValues };
 
     metaform.sections?.forEach((section) => {
       section.fields?.forEach((field) => {
