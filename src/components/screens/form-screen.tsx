@@ -22,7 +22,7 @@ import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
-import { FileFieldValue } from "metaform-react/dist/types";
+import { FileFieldValue, ValidationErrors } from "metaform-react/dist/types";
 import Utils from "../../utils";
 
 const AUTOSAVE_COOLDOWN = 500;
@@ -47,6 +47,7 @@ interface State {
   loading: boolean;
   saving: boolean;
   autosaving: boolean;
+  formValid: boolean;
   draftSavedVisible: boolean;
   draftSaveVisible: boolean;
   draftEmailDialogVisible: boolean;
@@ -80,6 +81,7 @@ export class FormScreen extends React.Component<Props, State> {
       loading: false,
       saving: false,
       autosaving: false,
+      formValid: true,
       draftSaveVisible: false,
       draftSavedVisible: false,
       draftEmailDialogVisible: false,
@@ -247,6 +249,7 @@ export class FormScreen extends React.Component<Props, State> {
         getFieldValue={ this.getFieldValue }
         setFieldValue={ this.setFieldValue }
         onSubmit={ this.onSubmit }
+        onValidationErrorsChange={ this.onValidationErrorsChange }
       />
     );
   }
@@ -462,7 +465,7 @@ export class FormScreen extends React.Component<Props, State> {
    * @param fieldValue field value
    */
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
-    const { formValues, metaform } = this.state;
+    const { formValues, metaform, formValid } = this.state;
 
     if (formValues[fieldName] !== fieldValue) {
       formValues[fieldName] = fieldValue;
@@ -472,7 +475,7 @@ export class FormScreen extends React.Component<Props, State> {
         draftSaveVisible: !!this.state.metaform?.allowDrafts
       });
 
-      if (metaform?.autosave) {
+      if (formValid && metaform?.autosave) {
         this.scheduleAutosave();
       }
     }
@@ -906,8 +909,12 @@ export class FormScreen extends React.Component<Props, State> {
   private autosave = async () => {
     this.formValueChangeTimeout = null;
 
-    const { metaform, ownerKey, autosaving } = this.state;
+    const { formValid, metaform, ownerKey, autosaving } = this.state;
     let { reply } = this.state;
+
+    if (!formValid) {
+      return;
+    }
 
     if (autosaving) {
       this.scheduleAutosave();
@@ -941,6 +948,27 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private onSubmit = async () =>  {
     await this.saveReply();
+  }
+
+  /**
+   * Event handler for validation errors change
+   * 
+   * @param validationErrors validation errors
+   */
+  private onValidationErrorsChange = (validationErrors: ValidationErrors) => {
+    const { metaform } = this.state;
+
+    const formValid = Object.keys(validationErrors).length === 0;
+
+    if (formValid !== this.state.formValid) {
+      this.setState({
+        formValid: formValid
+      });
+
+      if (formValid && metaform?.autosave) {
+        this.scheduleAutosave();
+      }
+    }
   }
 
   /**
