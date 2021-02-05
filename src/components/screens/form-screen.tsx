@@ -784,7 +784,7 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private getFormValues = (metaform: Metaform): { [ key: string]: object } => {
     const { formValues } = this.state;
-    const values = {...formValues};
+    const values = { ...formValues };
 
     metaform.sections?.forEach((section) => {
       section.fields?.forEach((field) => {
@@ -892,7 +892,7 @@ export class FormScreen extends React.Component<Props, State> {
 
   /**
    * Schedules an autosave. If new autosave is scheduled before given cooldown period 
-   * the old autosave is cancelled and replaved with the new one
+   * the old autosave is cancelled and replaced with the new one
    */
   private scheduleAutosave = () => {
     if (this.formValueChangeTimeout) {
