@@ -798,7 +798,7 @@ export class FormScreen extends React.Component<Props, State> {
       })
     });
 
-    return values as any;
+    return values as { [ key: string]: object };
   }
 
   /**
