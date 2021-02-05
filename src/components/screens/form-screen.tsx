@@ -22,8 +22,10 @@ import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
-import { FileFieldValue } from "metaform-react/dist/types";
+import { FileFieldValue, ValidationErrors } from "metaform-react/dist/types";
 import Utils from "../../utils";
+
+const AUTOSAVE_COOLDOWN = 500;
 
 /**
  * Component props
@@ -44,6 +46,8 @@ interface State {
   error?: string | Error | Response;
   loading: boolean;
   saving: boolean;
+  autosaving: boolean;
+  formValid: boolean;
   draftSavedVisible: boolean;
   draftSaveVisible: boolean;
   draftEmailDialogVisible: boolean;
@@ -64,6 +68,8 @@ interface State {
  */
 export class FormScreen extends React.Component<Props, State> {
 
+  private formValueChangeTimeout: any = null;
+
   /**
    * Constructor
    *
@@ -74,6 +80,8 @@ export class FormScreen extends React.Component<Props, State> {
     this.state = {      
       loading: false,
       saving: false,
+      autosaving: false,
+      formValid: true,
       draftSaveVisible: false,
       draftSavedVisible: false,
       draftEmailDialogVisible: false,
@@ -214,6 +222,7 @@ export class FormScreen extends React.Component<Props, State> {
           { this.renderDraftSave() }
           { this.renderDraftSaved() }
           { this.renderDraftEmailDialog() }
+          { this.renderAutosaving() }
         </div>
       </BasicLayout>
     );
@@ -240,6 +249,7 @@ export class FormScreen extends React.Component<Props, State> {
         getFieldValue={ this.getFieldValue }
         setFieldValue={ this.setFieldValue }
         onSubmit={ this.onSubmit }
+        onValidationErrorsChange={ this.onValidationErrorsChange }
       />
     );
   }
@@ -326,6 +336,21 @@ export class FormScreen extends React.Component<Props, State> {
             { strings.formScreen.draftEmailText } 
             <Link href="#" onClick={ this.onDraftEmailLinkClick }> { strings.formScreen.draftEmailLink } </Link>
           </p>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders autosave dialog
+   */
+  private renderAutosaving = () => {
+    const { autosaving } = this.state;
+
+    return (
+      <Snackbar open={ autosaving }>
+        <Alert severity="info">
+          <span> { strings.formScreen.autosaving } </span>
         </Alert>
       </Snackbar>
     );
@@ -440,16 +465,19 @@ export class FormScreen extends React.Component<Props, State> {
    * @param fieldValue field value
    */
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
-    const { formValues } = this.state;
+    const { formValues, metaform, formValid } = this.state;
 
     if (formValues[fieldName] !== fieldValue) {
       formValues[fieldName] = fieldValue;
+      
       this.setState({
-        formValues: formValues
-      });
-      this.setState({
+        formValues: formValues,
         draftSaveVisible: !!this.state.metaform?.allowDrafts
       });
+
+      if (formValid && metaform?.autosave) {
+        this.scheduleAutosave();
+      }
     }
   }
 
@@ -749,22 +777,14 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Method for submitting form
+   * Returns form values as map
+   * 
+   * @param metaform metaform
+   * @returns form values as map
    */
-  private onSubmit = async () =>  {
-    const accessToken = this.getAccessToken();
-    const { formValues, metaform, ownerKey } = this.state;
-    let { reply } = this.state;
-
-    if (!metaform || !metaform.id) {
-      return;
-    }
-
-    this.setState({
-      saving: true
-    });
-
-    let values = {...formValues};
+  private getFormValues = (metaform: Metaform): { [ key: string]: object } => {
+    const { formValues } = this.state;
+    const values = { ...formValues };
 
     metaform.sections?.forEach((section) => {
       section.fields?.forEach((field) => {
@@ -778,31 +798,31 @@ export class FormScreen extends React.Component<Props, State> {
       })
     });
 
+    return values as { [ key: string]: object };
+  }
+
+  /**
+   * Saves the reply
+   */
+  private saveReply = async () => {
+    const { metaform, ownerKey } = this.state;
+    let { reply } = this.state;
+
+    if (!metaform || !metaform.id) {
+      return;
+    }
+
+    this.setState({
+      saving: true
+    });
+
     try {
-      const repliesApi = Api.getRepliesApi(accessToken);
       if (reply && reply.id && ownerKey) {
-        await repliesApi.updateReply({
-          metaformId: Config.getMetaformId(),
-          replyId: reply.id,
-          ownerKey: ownerKey,
-          reply: {
-            data: values as any
-          }
-        });
-        reply = await repliesApi.findReply({
-          metaformId: Config.getMetaformId(),
-          replyId: reply.id,
-          ownerKey: ownerKey
-        });
+        reply = await this.updateReply(metaform, reply, ownerKey);        
       } else {
-        reply = await repliesApi.createReply({
-          metaformId: Config.getMetaformId(),
-          reply: {
-            data: values as any
-          },
-          replyMode: Config.getReplyMode()
-        });
+        reply = await this.createReply(metaform);
       }
+
       const updatedOwnerKey = ownerKey || reply.ownerKey;
       let updatedValues = reply.data;
       if (updatedOwnerKey) {
@@ -821,7 +841,134 @@ export class FormScreen extends React.Component<Props, State> {
         error: e
       });
     };
+  }
 
+  /**
+   * Creates new reply
+   * 
+   * @param metaform metaform
+   * @returns created reply
+   */
+  private createReply = async (metaform: Metaform) => {
+    const accessToken = this.getAccessToken();
+    const repliesApi = Api.getRepliesApi(accessToken);
+    
+    return await repliesApi.createReply({
+      metaformId: Config.getMetaformId(),
+      reply: {
+        data: this.getFormValues(metaform)
+      },
+      replyMode: Config.getReplyMode()
+    });
+  }
+
+  /**
+   * Updates existing reply
+   * 
+   * @param metaform metaform
+   * @param reply reply
+   * @param ownerKey owner key
+   * @returns updated reply
+   */
+  private updateReply = async (metaform: Metaform, reply: Reply, ownerKey: string | null) => {
+    const accessToken = this.getAccessToken();
+    const repliesApi = Api.getRepliesApi(accessToken);
+    
+    await repliesApi.updateReply({
+      metaformId: Config.getMetaformId(),
+      replyId: reply.id!,
+      ownerKey: ownerKey || undefined,
+      reply: {
+        data: this.getFormValues(metaform)
+      }
+    });
+
+    return await repliesApi.findReply({
+      metaformId: Config.getMetaformId(),
+      replyId: reply.id!,
+      ownerKey: ownerKey || undefined
+    });
+  }
+
+  /**
+   * Schedules an autosave. If new autosave is scheduled before given cooldown period 
+   * the old autosave is cancelled and replaced with the new one
+   */
+  private scheduleAutosave = () => {
+    if (this.formValueChangeTimeout) {
+      clearTimeout(this.formValueChangeTimeout);
+      this.formValueChangeTimeout = null;
+    }
+
+    this.formValueChangeTimeout = setTimeout(this.autosave, AUTOSAVE_COOLDOWN);
+  }
+
+  /**
+   * Autosaves the form
+   */
+  private autosave = async () => {
+    this.formValueChangeTimeout = null;
+
+    const { formValid, metaform, ownerKey, autosaving } = this.state;
+    let { reply } = this.state;
+
+    if (!formValid) {
+      return;
+    }
+
+    if (autosaving) {
+      this.scheduleAutosave();
+      return;
+    }
+
+    if (!metaform || !metaform.id || !reply) {
+      return;
+    }
+
+    try {
+      this.setState({
+        autosaving: true
+      });
+
+      await this.updateReply(metaform, reply, ownerKey);        
+
+      this.setState({
+        autosaving: false
+      });
+    } catch (e) {
+      this.setState({
+        autosaving: false,
+        error: e
+      });
+    };
+  }
+
+  /**
+   * Method for submitting form
+   */
+  private onSubmit = async () =>  {
+    await this.saveReply();
+  }
+
+  /**
+   * Event handler for validation errors change
+   * 
+   * @param validationErrors validation errors
+   */
+  private onValidationErrorsChange = (validationErrors: ValidationErrors) => {
+    const { metaform } = this.state;
+
+    const formValid = Object.keys(validationErrors).length === 0;
+
+    if (formValid !== this.state.formValid) {
+      this.setState({
+        formValid: formValid
+      });
+
+      if (formValid && metaform?.autosave) {
+        this.scheduleAutosave();
+      }
+    }
   }
 
   /**

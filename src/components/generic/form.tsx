@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import strings from "../../localization/strings";
-import { FileFieldValue, FileFieldValueItem } from "metaform-react/dist/types";
+import { FileFieldValue, FileFieldValueItem, ValidationErrors } from "metaform-react/dist/types";
 import { AccessToken } from "../../types";
 import Api from "../../api/api";
 import Utils from "../../utils";
@@ -26,6 +26,7 @@ interface Props extends WithStyles<typeof styles> {
   getFieldValue: (fieldName: string) => FieldValue;
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
   onSubmit: (source: Metaform) => void;
+  onValidationErrorsChange?: (validationErrors: ValidationErrors) => void;
 }
 
 /**
@@ -56,7 +57,7 @@ export class Form extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes, metaform } = this.props;
+    const { classes, metaform, onValidationErrorsChange } = this.props;
 
     return (
       <div className={ classes.formContainer }>
@@ -76,6 +77,7 @@ export class Form extends React.Component<Props, State> {
           renderIcon={ this.renderIcon }        
           renderSlider={ this.renderSlider }
           onSubmit={ this.props.onSubmit }
+          onValidationErrorsChange={ onValidationErrorsChange }
           renderBeforeField={(fieldname) => {
             if (fieldname && this.state.uploadingFields.indexOf(fieldname) > -1) {
               return (<LinearProgress />);

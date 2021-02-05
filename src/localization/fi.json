@@ -16,6 +16,7 @@
   },
 
   "formScreen": {
+    "autosaving": "Vastausta tallennetaan...",
     "replyNotFound": "Vastausta ei löytynyt järjestelmästä",
     "saveDraft": "Voit tallentaa lomakkeen vedoksena klikkaamalla",
     "saveDraftLink": "tästä",
