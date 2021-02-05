@@ -16,6 +16,7 @@
   },
 
   "formScreen": {
+    "autosaving": "Saving reply...",
     "replyNotFound": "Reply could not be found from the system",
     "saveDraft": "You can save this form reply as a draft by clicking",
     "saveDraftLink": "here",

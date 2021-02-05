@@ -77,6 +77,12 @@ export interface Metaform {
      */
     allowInvitations?: boolean;
     /**
+     * Toggles the autosaving functionality on the form. When autosaving is enabled the form will save automatically every time form values change
+     * @type {boolean}
+     * @memberof Metaform
+     */
+    autosave?: boolean;
+    /**
      * 
      * @type {string}
      * @memberof Metaform
@@ -119,6 +125,7 @@ export function MetaformFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'allowDrafts': !exists(json, 'allowDrafts') ? undefined : json['allowDrafts'],
         'allowReplyOwnerKeys': !exists(json, 'allowReplyOwnerKeys') ? undefined : json['allowReplyOwnerKeys'],
         'allowInvitations': !exists(json, 'allowInvitations') ? undefined : json['allowInvitations'],
+        'autosave': !exists(json, 'autosave') ? undefined : json['autosave'],
         'title': !exists(json, 'title') ? undefined : json['title'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(MetaformSectionFromJSON)),
         'filters': !exists(json, 'filters') ? undefined : ((json['filters'] as Array<any>).map(MetaformFilterFromJSON)),
@@ -142,6 +149,7 @@ export function MetaformToJSON(value?: Metaform | null): any {
         'allowDrafts': value.allowDrafts,
         'allowReplyOwnerKeys': value.allowReplyOwnerKeys,
         'allowInvitations': value.allowInvitations,
+        'autosave': value.autosave,
         'title': value.title,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(MetaformSectionToJSON)),
         'filters': value.filters === undefined ? undefined : ((value.filters as Array<any>).map(MetaformFilterToJSON)),
