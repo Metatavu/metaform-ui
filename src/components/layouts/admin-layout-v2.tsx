@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { WithStyles, withStyles } from "@material-ui/core";
-import styles from "../../styles/admin-layout";
+import styles from "../../styles/admin-layoutv2";
 import BasicLayout, { SnackbarMessage } from "./basic-layout";
 import { KeycloakInstance } from "keycloak-js";
 import { Metaform } from "../../generated/client";
@@ -51,7 +51,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
     return (
       <BasicLayout snackbarMessage={ snackbarMessage } error={ error } loading={ loading } loadMessage={ loadMessage } clearError={ clearError } clearSnackbar={ clearSnackbar }>
         <div className={classes.root}>
-          Tähän sitä Jsonia
+          { this.props.children }
         </div>
       </BasicLayout>
     );
