@@ -6,29 +6,19 @@ import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/json-screen";
 
 import { History } from "history";
-import { WithStyles, withStyles, Button, Typography, Select, MenuItem, InputLabel, Box, Grid } from "@material-ui/core";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { WithStyles, withStyles, Button, Typography, Grid } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken } from '../../types';
-import strings from "../../localization/strings";
 import Api from "../../api/api";
-import { Metaform, Reply, MetaformField, MetaformFieldType } from "../../generated/client";
+import { Metaform } from "../../generated/client";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
-import Utils from "../../utils";
-import ConfirmDialog from "../generic/confirm-dialog";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/javascript/javascript";
-import codemirror from "codemirror";
-
 
 /**
  * Component props
@@ -92,7 +82,7 @@ export class JsonScreen extends React.Component<Props, State> {
       });
 
       /**
-       * Create mutable metaform
+       * Create mutable copy of metaform json
        */
       const metaformJson = JSON.stringify(metaform, null, 2)
 
