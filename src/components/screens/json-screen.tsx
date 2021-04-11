@@ -45,12 +45,10 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   error?: string | Error | Response;
   loading: boolean;
-  replies: Reply[];
   metaform?: Metaform;
-  filterId?: string;
-  deleteReplyId?: string;
   value:string;
   metaformJson : string;
+  readOnly: boolean;
 }
 
 /**
@@ -67,35 +65,10 @@ export class JsonScreen extends React.Component<Props, State> {
     super(props);
     this.state = {      
       loading: false,
-      replies: [],
       value:"",
-      metaformJson:""
+      metaformJson:"",
+      readOnly:true
     };
-  }
-
-  /**
-   * Component did update life cycle handler
-   *
-   * @param _prevProps previous props
-   * @param prevState previous state
-   */
-  public componentDidUpdate = async (_prevProps: Props, prevState: State) => {
-    if (this.state.filterId !== prevState.filterId) {
-      try {
-        this.setState({
-          loading: true
-        });
-  
-        this.setState({
-          loading: false,
-        });
-      } catch (e) {
-        this.setState({
-          loading: false,
-          error: e
-        });
-      }
-    }
   }
   
   /**
@@ -150,7 +123,8 @@ export class JsonScreen extends React.Component<Props, State> {
                                 gutter: true,
                                 lineWrapping: true,
                                 matchBrackets: true,
-                                dragDrop: false
+                                dragDrop: false,
+                                readOnly: this.state.readOnly
                             };
 
     return (
@@ -171,6 +145,7 @@ export class JsonScreen extends React.Component<Props, State> {
         
           </Grid>
           <Grid item md={6} className={ classes.jsonEditor }>
+          <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{this.state.readOnly ? "Muokkaus päälle" : "Muokkaus Pois"}</Button>
             <CodeMirror 
               className={ classes.codeMirror }
               value={metaformJson}
@@ -189,6 +164,17 @@ export class JsonScreen extends React.Component<Props, State> {
   }
 
 /**
+ * Toggle json readOnly/Writable
+ */
+  private toggleMutableJson = () => {
+    let readOnly = this.state.readOnly;
+    readOnly = !readOnly;
+    this.setState({ 
+      readOnly: readOnly 
+    });
+  }
+
+/**
    * Clears error
    */
 private clearError = () => {
@@ -196,6 +182,7 @@ private clearError = () => {
       error: undefined 
     });
   }
+
 }
 
 /**

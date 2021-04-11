@@ -4,10 +4,10 @@ export default createStyles({
 
   root: {
     margin: "20px",
-    maxWidth: "1140px",
+    maxWidth: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    padding: "15px"
+    padding: "15px",
   },
   jsonEditor: {
       marginTop: "1rem",
@@ -18,6 +18,9 @@ export default createStyles({
     "& .CodeMirror": {
       height: "100%"
     }
+  },
+  toggleReadOnlyButton: {
+      bachgroundColor: "green"
   }
 
 });

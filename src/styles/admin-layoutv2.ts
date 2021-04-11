@@ -1,25 +1,10 @@
 import { createStyles } from "@material-ui/core";
 
-const drawerWidth = 240;
-
 export default createStyles({
 
   root: {
-    display: "flex"
+    display: "flex",
+    backgroundColor:  "#e0e0e0"
   },
-  
-  drawer: {
-    width: drawerWidth,
-    flex: 0
-  },
-
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  
-  content: {
-    marginLeft: drawerWidth,
-    flex: 1
-  }
 
 });
