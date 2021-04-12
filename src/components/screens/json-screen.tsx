@@ -44,7 +44,7 @@ interface State {
 /**
  * Component for viewing and editing Metaform JSON
  */
-export class JsonScreen extends React.Component<Props, State> {
+export class FormEditJsonScreen extends React.Component<Props, State> {
 
   /**
    * Constructor
@@ -198,4 +198,4 @@ function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(JsonScreen));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FormEditJsonScreen));
