@@ -158,9 +158,8 @@ export class JsonScreen extends React.Component<Props, State> {
  */
   private toggleMutableJson = () => {
     let readOnly = this.state.readOnly;
-    readOnly = !readOnly;
     this.setState({ 
-      readOnly: readOnly 
+      readOnly: !readOnly
     });
   }
 
