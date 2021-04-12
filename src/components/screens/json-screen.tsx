@@ -145,7 +145,7 @@ export class JsonScreen extends React.Component<Props, State> {
                 }}
               />
           </Grid>
-          <Grid item md={3} >
+          <Grid item md={ 3 }>
        
           </Grid>
         </Grid>
