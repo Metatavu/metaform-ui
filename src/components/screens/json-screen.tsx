@@ -156,13 +156,13 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
 /**
  * Toggle json readOnly/Writable
  */
-  private toggleMutableJson = () => {
-    let readOnly = this.state.readOnly;
-    readOnly = !readOnly;
-    this.setState({ 
-      readOnly: readOnly 
-    });
-  }
+private toggleMutableJson = () => {
+  let readOnly = this.state.readOnly;
+  readOnly = !readOnly;
+  this.setState({ 
+    readOnly: readOnly 
+  });
+}
 
 /**
  * Clears error
