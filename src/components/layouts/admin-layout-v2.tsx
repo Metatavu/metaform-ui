@@ -27,7 +27,7 @@ interface State {
 }
 
 /**
- * Component for basic application layout
+ * Component for admin layout
  */
 class AdminLayoutV2 extends React.Component<Props, State> {
 
