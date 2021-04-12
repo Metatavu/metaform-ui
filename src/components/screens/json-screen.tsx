@@ -134,7 +134,7 @@ export class JsonScreen extends React.Component<Props, State> {
           <Grid item md={ 3 }>
         
           </Grid>
-          <Grid item md={6} className={ classes.jsonEditor }>
+          <Grid item md={ 6 } className={ classes.jsonEditor }>
           <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{this.state.readOnly ? "Muokkaus päälle" : "Muokkaus Pois"}</Button>
             <CodeMirror 
               className={ classes.codeMirror }
