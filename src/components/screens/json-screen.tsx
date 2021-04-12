@@ -42,7 +42,7 @@ interface State {
 }
 
 /**
- * Component for json screen
+ * Component for viewing and editing Metaform JSON
  */
 export class JsonScreen extends React.Component<Props, State> {
 
