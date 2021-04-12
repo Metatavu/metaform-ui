@@ -43,7 +43,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
   }
 
   /**
-   * Render basic layout
+   * Renders admin layout
    */
   public render() {
     const { classes, snackbarMessage, error, loading, loadMessage, clearError, clearSnackbar } = this.props;
