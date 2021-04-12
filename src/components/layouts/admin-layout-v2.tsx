@@ -57,10 +57,6 @@ class AdminLayoutV2 extends React.Component<Props, State> {
     );
   }
 
-  /**
-   * Renders menu
-   */
-
 }
 
 export default withStyles(styles)(AdminLayoutV2);
