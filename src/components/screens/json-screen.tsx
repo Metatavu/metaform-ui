@@ -165,13 +165,13 @@ export class JsonScreen extends React.Component<Props, State> {
   }
 
 /**
-   * Clears error
-   */
+ * Clears error
+ */
 private clearError = () => {
-    this.setState({ 
-      error: undefined 
-    });
-  }
+  this.setState({ 
+    error: undefined 
+  });
+}
 
 }
 
