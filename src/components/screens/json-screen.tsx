@@ -125,7 +125,7 @@ export class JsonScreen extends React.Component<Props, State> {
         error={ error } 
         clearError={ this.clearError }
       >
-        <Grid container className={classes.root}>
+        <Grid container className={ classes.root }>
           <Grid item md={12}>
             <Typography align="center" variant="h4" >
                 Jsonin esikatselu
