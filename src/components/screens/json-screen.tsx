@@ -105,19 +105,25 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { metaform, metaformJson, loading, error } = this.state;
+    const { 
+      metaform, 
+      metaformJson, 
+      loading, error 
+    } = this.state;
+
     const { classes, keycloak } = this.props;
+
     const jsonEditorOptions = {
-                                mode: "javascript",
-                                json: true,
-                                theme: "material",
-                                lineNumbers: true,
-                                gutter: true,
-                                lineWrapping: true,
-                                matchBrackets: true,
-                                dragDrop: false,
-                                readOnly: this.state.readOnly
-                            };
+      mode: "javascript",
+      json: true,
+      theme: "material",
+      lineNumbers: true,
+      gutter: true,
+      lineWrapping: true,
+      matchBrackets: true,
+      dragDrop: false,
+      readOnly: this.state.readOnly
+    };
 
     return (
       <AdminLayoutV2 
@@ -137,13 +143,13 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         
           </Grid>
           <Grid item md={6} className={ classes.jsonEditor }>
-          <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
+            <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
             <CodeMirror 
               className={ classes.codeMirror }
               value={metaformJson}
               options={ jsonEditorOptions }
               onBeforeChange={this.onCodeMirrorBeforeJsonChange}
-              />
+            />
           </Grid>
           <Grid item md={3} >
        
