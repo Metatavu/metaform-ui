@@ -19,6 +19,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/javascript/javascript";
+import codemirror from "codemirror";
 
 /**
  * Component props
@@ -39,6 +40,7 @@ interface State {
   value:string;
   metaformJson : string;
   readOnly: boolean;
+  dataChanged: boolean;
 }
 
 /**
@@ -57,7 +59,8 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       loading: false,
       value:"",
       metaformJson:"",
-      readOnly:true
+      readOnly:true,
+      dataChanged: false
     };
   }
   
@@ -140,9 +143,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
               className={ classes.codeMirror }
               value={metaformJson}
               options={ jsonEditorOptions }
-              onBeforeChange={(editor, data, value) => {
-                this.setState({metaformJson: value})
-                }}
+              onBeforeChange={this.onCodeMirrorBeforeJsonChange}
               />
           </Grid>
           <Grid item md={3} >
@@ -152,6 +153,20 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       </AdminLayoutV2>
     );
   }
+  
+/**
+ * Event handler for CodeMirror before JSON code change event
+ *
+ * @param editor editor instance
+ * @param data editor data
+ * @param value code
+ */
+private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
+this.setState({
+  metaformJson: value,
+  dataChanged: true
+});
+}
 
 /**
  * Toggle json readOnly/Writable
