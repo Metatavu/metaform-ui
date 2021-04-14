@@ -103,6 +103,12 @@ export interface IStrings extends LocalizedStringsMethods {
     reload: string;
   };
 
+  jsonScreen: {
+    title: string,
+    toggleReadOnlyButtonEdit: string,
+    toggleReadOnlyButtonPreview: string
+  }
+
 }
 
 /**

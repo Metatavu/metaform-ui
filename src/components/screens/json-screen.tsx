@@ -12,6 +12,7 @@ import { KeycloakInstance } from "keycloak-js";
 import { AccessToken } from '../../types';
 import Api from "../../api/api";
 import { Metaform } from "../../generated/client";
+import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { Controlled as CodeMirror } from "react-codemirror2";
@@ -129,14 +130,14 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         <Grid container className={classes.root}>
           <Grid item md={12}>
             <Typography align="center" variant="h4" >
-                Jsonin esikatselu
+            { strings.jsonScreen.title }
             </Typography> 
           </Grid>
           <Grid item md={3} >
         
           </Grid>
           <Grid item md={6} className={ classes.jsonEditor }>
-          <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{this.state.readOnly ? "Muokkaus päälle" : "Muokkaus Pois"}</Button>
+          <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
             <CodeMirror 
               className={ classes.codeMirror }
               value={metaformJson}
@@ -160,9 +161,9 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
  * @param value code
  */
 private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
-this.setState({
-  metaformJson: value
-});
+  this.setState({
+    metaformJson: value
+  });
 }
 
 /**
