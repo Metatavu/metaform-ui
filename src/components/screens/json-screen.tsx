@@ -153,38 +153,38 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
     );
   }
   
-/**
- * Event handler for CodeMirror before JSON code change event
- *
- * @param editor editor instance
- * @param data editor data
- * @param value code
- */
-private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
-  this.setState({
-    metaformJson: value
-  });
-}
+  /**
+   * Event handler for CodeMirror before JSON code change event
+   *
+   * @param editor editor instance
+   * @param data editor data
+   * @param value code
+   */
+  private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
+    this.setState({
+      metaformJson: value
+    });
+  }
 
-/**
- * Toggle json readOnly/Writable
- */
-private toggleMutableJson = () => {
-  let readOnly = this.state.readOnly;
-  readOnly = !readOnly;
-  this.setState({ 
-    readOnly: readOnly 
-  });
-}
+  /**
+   * Toggle json readOnly/Writable
+   */
+  private toggleMutableJson = () => {
+    let readOnly = this.state.readOnly;
+    readOnly = !readOnly;
+    this.setState({ 
+      readOnly: readOnly 
+    });
+  }
 
-/**
- * Clears error
- */
-private clearError = () => {
-  this.setState({ 
-    error: undefined 
-  });
-}
+  /**
+   * Clears error
+   */
+  private clearError = () => {
+    this.setState({ 
+      error: undefined 
+    });
+  }
 
 }
 
