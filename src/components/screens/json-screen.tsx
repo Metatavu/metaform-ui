@@ -40,7 +40,6 @@ interface State {
   value:string;
   metaformJson : string;
   readOnly: boolean;
-  dataChanged: boolean;
 }
 
 /**
@@ -59,8 +58,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       loading: false,
       value:"",
       metaformJson:"",
-      readOnly:true,
-      dataChanged: false
+      readOnly:true
     };
   }
   
@@ -163,8 +161,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
  */
 private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
 this.setState({
-  metaformJson: value,
-  dataChanged: true
+  metaformJson: value
 });
 }
 
