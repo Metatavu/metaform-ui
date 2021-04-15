@@ -95,6 +95,12 @@
     "errorMessage": "Virheilmoitus: ",
     "close": "Sulje",
     "reload": "Lataa uudelleen"
+  },
+
+  "jsonScreen": {
+    "title": "JSON-esikatselu ja muokkaus",
+    "toggleReadOnlyButtonEdit": "Muokkaa",
+    "toggleReadOnlyButtonPreview": "Esikatsele"
   }
 
 }

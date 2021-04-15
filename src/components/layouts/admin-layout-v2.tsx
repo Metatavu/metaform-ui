@@ -1,0 +1,62 @@
+import * as React from "react";
+
+import { WithStyles, withStyles } from "@material-ui/core";
+import styles from "../../styles/admin-layoutv2";
+import BasicLayout, { SnackbarMessage } from "./basic-layout";
+import { KeycloakInstance } from "keycloak-js";
+import { Metaform } from "../../generated/client";
+
+/**
+ * Interface representing component properties
+ */
+interface Props extends WithStyles<typeof styles> {
+  keycloak: KeycloakInstance;
+  metaform?: Metaform;
+  snackbarMessage?: SnackbarMessage;
+  error?: string | Error | Response;
+  loading?: boolean;
+  loadMessage?: string;
+  clearError?: () => void;
+  clearSnackbar?: () => void;
+}
+
+/**
+ * Interface representing component state
+ */
+interface State {
+}
+
+/**
+ * Component for admin layout
+ */
+class AdminLayoutV2 extends React.Component<Props, State> {
+
+  /**
+   * Constructor
+   *
+   * @param props component properties
+   */
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+    };
+  }
+
+  /**
+   * Renders admin layout
+   */
+  public render() {
+    const { classes, snackbarMessage, error, loading, loadMessage, clearError, clearSnackbar } = this.props;
+
+    return (
+      <BasicLayout snackbarMessage={ snackbarMessage } error={ error } loading={ loading } loadMessage={ loadMessage } clearError={ clearError } clearSnackbar={ clearSnackbar }>
+        <div className={classes.root}>
+          { this.props.children }
+        </div>
+      </BasicLayout>
+    );
+  }
+
+}
+
+export default withStyles(styles)(AdminLayoutV2);
