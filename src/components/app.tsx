@@ -98,7 +98,7 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
-                  path="/adminv2"
+                  path="/admin/edit-form/json"
                   exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh>

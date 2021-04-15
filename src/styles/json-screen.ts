@@ -1,5 +1,8 @@
 import { createStyles } from "@material-ui/core";
 
+/**
+ * Styles for json screen
+ */
 export default createStyles({
 
   root: {
@@ -20,7 +23,7 @@ export default createStyles({
     }
   },
   toggleReadOnlyButton: {
-      bachgroundColor: "green"
+
   }
 
 });

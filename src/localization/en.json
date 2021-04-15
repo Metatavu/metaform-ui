@@ -95,6 +95,12 @@
     "errorMessage": "Error message: ",
     "close": "Close",
     "reload": "Reload"
+  },
+
+  "jsonScreen": {
+    "title": "JSON preview and edit",
+    "toggleReadOnlyButtonEdit": "Edit",
+    "toggleReadOnlyButtonPreview": "Preview"
   }
 
 }
