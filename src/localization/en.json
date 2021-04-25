@@ -76,6 +76,12 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+
+  "adminLayoutV2": {
+    "form": "Form",
+    "preview": "Preview",
+    "json": "JSON"
+  },
   
   "emailDialog": {
     "title": "Email",

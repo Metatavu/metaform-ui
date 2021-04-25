@@ -83,6 +83,12 @@ export interface IStrings extends LocalizedStringsMethods {
     logout: string;
   },
 
+  adminLayoutV2: {
+    form: string;
+    preview: string;
+    json: string;
+  },
+
   emailDialog: {
     title: string;
     email: string;

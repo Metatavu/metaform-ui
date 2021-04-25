@@ -134,7 +134,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         clearError={ this.clearError }
       >
         <Grid container className={classes.root}>
-          <Grid item md={12}>
+          <Grid item md={ 12 }>
             <Typography align="center" variant="h4" >
             { strings.jsonScreen.title }
             </Typography> 
@@ -142,7 +142,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
           <Grid item md={ 3 }>
         
           </Grid>
-          <Grid item md={6} className={ classes.jsonEditor }>
+          <Grid item md={ 6 } className={ classes.jsonEditor }>
             <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
             <CodeMirror 
               className={ classes.codeMirror }
