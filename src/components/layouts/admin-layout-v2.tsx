@@ -83,7 +83,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
 
     return (
       <AppBar position="static" className={ classes.appBar }>
-        <Toolbar className={classes.toolBar}>
+        <Toolbar className={ classes.toolBar }>
           { this.renderLogo() }
           { this.renderNavLinks() }
         </Toolbar>
