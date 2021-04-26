@@ -62,12 +62,12 @@ class AdminLayoutV2 extends React.Component<Props, State> {
 
     return (
       <BasicLayout
-        snackbarMessage={snackbarMessage}
-        error={error}
-        loading={loading}
-        loadMessage={loadMessage}
-        clearError={clearError}
-        clearSnackbar={clearSnackbar}
+        snackbarMessage={ snackbarMessage }
+        error={ error }
+        loading={ loading }
+        loadMessage={ loadMessage }
+        clearError={ clearError }
+        clearSnackbar={ clearSnackbar }
       >
         { this.renderNavBar() }
         <div className={classes.root}>{this.props.children}</div>
