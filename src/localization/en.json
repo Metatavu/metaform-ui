@@ -76,6 +76,13 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+
+  "adminLayoutV2": {
+    "form": "Form",
+    "preview": "Preview",
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigation"
+  },
   
   "emailDialog": {
     "title": "Email",

@@ -6,15 +6,15 @@ import { createStyles } from "@material-ui/core";
 export default createStyles({
 
   root: {
-    margin: "20px",
+    margin: "0",
     maxWidth: "100%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    padding: "15px",
+    padding: "0",
   },
   jsonEditor: {
       marginTop: "1rem",
       height: "100%",
+      maxWidth: "100%",
+      padding: "5%"
   },
   codeMirror: {
     paddingBottom: "0.5rem",
@@ -24,6 +24,9 @@ export default createStyles({
   },
   toggleReadOnlyButton: {
 
+  },
+  sideBar: {
+    backgroundColor: "#fff",
   }
 
 });

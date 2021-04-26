@@ -76,6 +76,13 @@
     "profile": "Käyttäjätili",
     "logout": "Kirjaudu ulos"
   }, 
+
+  "adminLayoutV2": {
+    "form": "Lomake",
+    "preview": "Esikatselu",
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigaatio"
+  },
   
   "emailDialog": {
     "title": "Sähköposti",
