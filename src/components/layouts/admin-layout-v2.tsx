@@ -82,7 +82,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar position="static" className={ classes.appBar }>
         <Toolbar className={classes.toolBar}>
           { this.renderLogo() }
           { this.renderNavLinks() }
