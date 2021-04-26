@@ -80,7 +80,8 @@
   "adminLayoutV2": {
     "form": "Form",
     "preview": "Preview",
-    "json": "JSON"
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigation"
   },
   
   "emailDialog": {

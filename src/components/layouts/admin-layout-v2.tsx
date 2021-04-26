@@ -116,7 +116,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
 
     return (
       <List
-        aria-labelledby="Metaform-UI navigation" //localize string
+        aria-labelledby={ strings.adminLayoutV2.metaformNavigation }
         className={ classes.navDisplayFlex }
       >
         <ListItem

@@ -80,7 +80,8 @@
   "adminLayoutV2": {
     "form": "Lomake",
     "preview": "Esikatselu",
-    "json": "JSON"
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigaatio"
   },
   
   "emailDialog": {

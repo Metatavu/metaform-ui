@@ -87,6 +87,7 @@ export interface IStrings extends LocalizedStringsMethods {
     form: string;
     preview: string;
     json: string;
+    metaformNavigation: string;
   },
 
   emailDialog: {
