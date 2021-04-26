@@ -133,7 +133,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
           className={ classes.navBarLink }
         >
           <VisibilityIcon />
-          <ListItemText>{strings.adminLayoutV2.preview }</ListItemText>
+          <ListItemText>{ strings.adminLayoutV2.preview }</ListItemText>
         </ListItem>
         <ListItem
           component={ Link }
