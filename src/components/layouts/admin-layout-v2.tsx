@@ -70,7 +70,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         clearSnackbar={ clearSnackbar }
       >
         { this.renderNavBar() }
-        <div className={classes.root}>{this.props.children}</div>
+        <div className={ classes.root }>{ this.props.children }</div>
       </BasicLayout>
     );
   }
