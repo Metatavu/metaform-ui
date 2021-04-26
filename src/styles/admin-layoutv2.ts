@@ -20,7 +20,6 @@ export default createStyles({
   },
   navBarLink: {
     color: "#fff",
-    //color: "#e16928",
     paddingRight: "2rem",
     paddingLeft: "2rem",
     marginLeft: "1.5rem",
