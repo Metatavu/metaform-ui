@@ -14,6 +14,7 @@ import { FileFieldValue, FileFieldValueItem, ValidationErrors } from "metaform-r
 import { AccessToken } from "../../types";
 import Api from "../../api/api";
 import Utils from "../../utils";
+import "react-datepicker/dist/react-datepicker.css";
 
 /**
  * Component props
