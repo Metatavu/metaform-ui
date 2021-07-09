@@ -108,6 +108,27 @@
     "title": "JSON preview and edit",
     "toggleReadOnlyButtonEdit": "Edit",
     "toggleReadOnlyButtonPreview": "Preview"
+  },
+
+  "formEditScreen": {
+    "leftSideBarComponentsTab": "Components",
+    "leftSideBarStylingTab": "Styling",
+    "leftSideBarFieldHeader": "Fields",
+    "leftSideBarComponentHeader": "Components",
+    "rightSideBarLinksTab": "Links",
+    "rightSideBarVisibilityTab": "Visibility",
+    "leftSideBarInfo": "Fields and Components not working yet!",
+    "chooseComponent": "Choose component",
+    "sectionLayout": "Section layout",
+    "headerField": "Header field",
+    "textField": "Text field",
+    "editableTextField": "Editable field",
+    "conditionalField": "Conditional field",
+    "dropDownMenu": "Dropdown menu",
+    "selectBox": "Select box",
+    "radioButton": "Radio button",
+    "button": "Button",
+    "image": "Image"
   }
 
 }

@@ -4,9 +4,11 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import InfoIcon from '@material-ui/icons/Info';
 
 import { History } from "history";
-import { WithStyles, withStyles, Grid } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken } from '../../types';
@@ -33,7 +35,6 @@ interface State {
   loading: boolean;
   metaform?: Metaform;
   value:string;
-  metaformJson : string;
   readOnly: boolean;
 }
 
@@ -41,7 +42,6 @@ interface State {
  * Component for editing Metaform
  */
 export class FormEditScreen extends React.Component<Props, State> {
-
   /**
    * Constructor
    *
@@ -49,14 +49,13 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.state = {      
+    this.state = {
       loading: false,
-      value:"",
-      metaformJson:"",
-      readOnly:true
+      value: "",
+      readOnly: true,
     };
   }
-  
+
   /**
    * Component did mount life cycle event
    */
@@ -77,15 +76,9 @@ export class FormEditScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
 
-      /**
-       * Create mutable copy of metaform json
-       */
-      const metaformJson = JSON.stringify(metaform, null, 2)
-
       this.setState({
         loading: false,
-        metaform: metaform,
-        metaformJson : metaformJson
+        metaform: metaform
       });
     } catch (e) {
       this.setState({
@@ -93,40 +86,154 @@ export class FormEditScreen extends React.Component<Props, State> {
         error: e
       });
     }
-  }
-  
+  };
+
   /**
    * Component render method
    */
   public render = () => {
-    const { 
-      metaform, 
-      metaformJson, 
-      loading, error 
-    } = this.state;
+    const { metaform,
+            loading, 
+            error
+          } = this.state;
 
     const { classes, keycloak } = this.props;
 
     return (
-      <AdminLayoutV2 
-        keycloak={ keycloak } 
+      <AdminLayoutV2
+        keycloak={ keycloak }
         metaform={ metaform }
-        loading={ loading || !metaform } 
-        error={ error } 
+        loading={ loading || !metaform }
+        error={ error }
         clearError={ this.clearError }
       >
-        <Grid container className={classes.root}>
-          <Grid item md={ 2 } className={ classes.sideBar }>
-        
-          </Grid>
-          <Grid item md={ 8 } className={ classes.formEditor }>
-            
-          </Grid>
-          <Grid item md={ 2 } className={ classes.sideBar }>
-       
-          </Grid>
+        <Grid container className={ classes.root }>
+          { this.renderLeftSideBar() }
+          { this.renderFormEditor() }
+          { this.renderRightSideBar() }
         </Grid>
       </AdminLayoutV2>
+    );
+  };
+
+  /**
+   * Method for rendering form editor
+   */
+  private renderFormEditor = () => {
+    return (
+      <Grid item md={ 8 } className={ this.props.classes.formEditor }>
+        <Box className={ this.props.classes.editableForm }>
+          { this.state.metaform?.title } 
+        </Box>
+      </Grid>
+    )
+  }
+
+  /**
+   * Method for rendering left sidebar
+   */
+  private renderLeftSideBar = () => {
+    return (
+      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
+        <Grid item md={6} className={ this.props.classes.sideBarTabs }>
+          <h5>{ strings.formEditScreen.leftSideBarComponentsTab }</h5>
+        </Grid>
+        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+          <h5> { strings.formEditScreen.leftSideBarStylingTab }</h5>
+        </Grid>
+        <hr />
+        <Typography variant="caption">
+          <InfoIcon />
+          { strings.formEditScreen.leftSideBarInfo }
+        </Typography>
+        { this.renderFields() }
+        { this.renderComponents() }
+      </Grid>
+    );
+  }
+
+  /**
+   * Method for rendering right sidebar
+   */
+  private renderRightSideBar = () => {
+    return (
+      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
+        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+          <h5>{ strings.formEditScreen.rightSideBarLinksTab }</h5>
+        </Grid>
+        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+          <h5>{ strings.formEditScreen.rightSideBarVisibilityTab }</h5>
+        </Grid>
+      <hr />
+        <Typography variant="caption">
+          <InfoOutlinedIcon color="disabled" />
+          { strings.formEditScreen.chooseComponent }
+        </Typography>
+      </Grid>
+    );
+  }
+
+  /**
+   * Method for rendering addable fields
+   */
+  private renderFields = () => {
+    const listOfFields : string[] = [
+                                    `${ strings.formEditScreen.sectionLayout }`,
+                                    `${ strings.formEditScreen.headerField }`,
+                                    `${ strings.formEditScreen.textField }`,
+                                    `${ strings.formEditScreen.editableTextField }`,
+                                    `${ strings.formEditScreen.conditionalField }`
+                                  ];
+
+    return (
+      <List>
+        <Box border={ 1 } className={ this.props.classes.fieldHeader }>
+          <ListItemText>
+            <Typography>
+              { strings.formEditScreen.leftSideBarFieldHeader }
+            </Typography>
+          </ListItemText>
+        </Box>
+        { listOfFields.map((field: string, index: number) => (
+          <Box border={ 1 } className={ this.props.classes.fields } key={ index } >
+            <ListItemText>
+              <Typography>{ field }</Typography>
+            </ListItemText>
+          </Box>
+        )) }
+      </List>
+    );
+  }
+
+  /**
+   * Method for rendering addable components
+   */
+   private renderComponents = () => {
+    const listOfComponents : string[] = [
+                                    `${ strings.formEditScreen.dropDownMenu }`,
+                                    `${ strings.formEditScreen.selectBox }`,
+                                    `${ strings.formEditScreen.radioButton }`,
+                                    `${ strings.formEditScreen.button }`,
+                                    `${ strings.formEditScreen.image }`
+                                  ];
+
+    return (
+      <List>
+        <Box border={ 1 } className={ this.props.classes.componentHeader }>
+          <ListItemText>
+            <Typography>
+              { strings.formEditScreen.leftSideBarComponentHeader }
+            </Typography>
+          </ListItemText>
+        </Box>
+        { listOfComponents.map((component: string, index: number) => (
+          <Box border={ 1 } className={ this.props.classes.fields } key={ index }>
+            <ListItemText>
+              <Typography>{ component }</Typography>
+            </ListItemText>
+          </Box>
+        )) }
+      </List>
     );
   }
 
@@ -134,10 +241,10 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Clears error
    */
   private clearError = () => {
-    this.setState({ 
-      error: undefined 
+    this.setState({
+      error: undefined,
     });
-  }
+  };
 
 }
 

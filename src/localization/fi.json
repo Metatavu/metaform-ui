@@ -95,7 +95,7 @@
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",
     "unsavedContents": "Huomaathan, että tallentamattomat sisällöt häviävät uudelleenladattaessa. Mikäli sinulla on sivulla tallentamattomia sisältöjä, voit sulkea tämän ilmoituksen ja kopioida sisällöt leikepöydälle ennen uudelleenlatausta.",
-    "reportIssue": "Mikäli ongelma jatkuu, ota sähköpostilla yhteyttä osoitteeseen support@metatavu.fi. Liitä tekniset lisätiedot osaksi sähköpostia nopeuttaaksesi ongelan selvittelyä.",
+    "reportIssue": "Mikäli ongelma jatkuu, ota sähköpostilla yhteyttä osoitteeseen support@metatavu.fi. Liitä tekniset lisätiedot osaksi sähköpostia nopeuttaaksesi ongelman selvittelyä.",
     "technicalDetails": "Teknisiä lisätietoja:",
     "time": "Aika: {0}",
     "url": "Osoite: {0}",
@@ -108,6 +108,27 @@
     "title": "JSON-esikatselu ja muokkaus",
     "toggleReadOnlyButtonEdit": "Muokkaa",
     "toggleReadOnlyButtonPreview": "Esikatsele"
+  },
+
+  "formEditScreen": {
+    "leftSideBarComponentsTab": "Palikat",
+    "leftSideBarStylingTab": "Muotoilu",
+    "leftSideBarFieldHeader": "Kentät",
+    "leftSideBarComponentHeader": "Komponentit",
+    "rightSideBarLinksTab": "Linkit",
+    "rightSideBarVisibilityTab": "Näkyvyys",
+    "leftSideBarInfo": "Kentät ja Komponentit eivät vielä toimi!",
+    "chooseComponent": "Valitse komponentti",
+    "sectionLayout": "Osion pohja",
+    "headerField": "Otsikkokenttä",
+    "textField": "Tekstikenttä",
+    "editableTextField": "Muokattava tekstikenttä",
+    "conditionalField": "Ehdollinen kenttä",
+    "dropDownMenu": "Alasvetovalikko",
+    "selectBox": "Valintaruutu",
+    "radioButton": "Valintanappi",
+    "button": "Nappi",
+    "image": "Kuva"
   }
 
 }
