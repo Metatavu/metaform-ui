@@ -108,12 +108,33 @@ export interface IStrings extends LocalizedStringsMethods {
     errorMessage: string;
     close: string;
     reload: string;
-  };
+  },
 
   jsonScreen: {
     title: string,
     toggleReadOnlyButtonEdit: string,
     toggleReadOnlyButtonPreview: string
+  },
+
+  formEditScreen: {
+    leftSideBarComponentsTab: string,
+    leftSideBarStylingTab: string,
+    leftSideBarFieldHeader: string,
+    leftSideBarComponentHeader: string,
+    rightSideBarLinksTab: string,
+    rightSideBarVisibilityTab: string,
+    leftSideBarInfo: string,
+    chooseComponent: string,
+    sectionLayout: string,
+    headerField: string,
+    textField: string,
+    editableTextField: string,
+    conditionalField: string,
+    dropDownMenu: string,
+    selectBox: string,
+    radioButton: string,
+    button: string,
+    image: string
   }
 
 }

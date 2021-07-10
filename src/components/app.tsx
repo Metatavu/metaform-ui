@@ -18,7 +18,8 @@ import FormScreen from "./screens/form-screen";
 import AdminScreen from "./screens/admin-screen";
 import AdminReplyScreen from "./screens/admin-reply-screen";
 import AdminInviteScreen from "./screens/admin-invite-screen";
-import JsonScreen from "./screens/json-screen";
+import FormEditJsonScreen from "./screens/json-screen";
+import FormEditScreen from "./screens/form-edit-screen";
 
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
 
@@ -102,7 +103,18 @@ class App extends React.Component<Props, State> {
                   exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh>
-                      <JsonScreen
+                      <FormEditJsonScreen
+                        history={ history }
+                      />
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/edit-form/form"
+                  exact={ true }
+                  render={({ history }) => (
+                    <SignedTokenRefresh>
+                      <FormEditScreen
                         history={ history }
                       />
                     </SignedTokenRefresh>
