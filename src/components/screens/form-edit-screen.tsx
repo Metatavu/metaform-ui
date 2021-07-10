@@ -92,10 +92,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { metaform,
-            loading, 
-            error
-          } = this.state;
+    const { metaform, loading, error } = this.state;
 
     const { classes, keycloak } = this.props;
 
