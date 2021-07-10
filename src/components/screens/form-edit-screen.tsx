@@ -174,13 +174,13 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering addable fields
    */
   private renderFields = () => {
-    const listOfFields : string[] = [
-                                    `${ strings.formEditScreen.sectionLayout }`,
-                                    `${ strings.formEditScreen.headerField }`,
-                                    `${ strings.formEditScreen.textField }`,
-                                    `${ strings.formEditScreen.editableTextField }`,
-                                    `${ strings.formEditScreen.conditionalField }`
-                                  ];
+    const listOfFields = [
+      strings.formEditScreen.sectionLayout,
+      strings.formEditScreen.headerField,
+      strings.formEditScreen.textField,
+      strings.formEditScreen.editableTextField,
+      strings.formEditScreen.conditionalField
+    ];
 
     return (
       <List>
