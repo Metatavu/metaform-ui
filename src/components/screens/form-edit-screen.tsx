@@ -206,13 +206,13 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering addable components
    */
    private renderComponents = () => {
-    const listOfComponents : string[] = [
-                                    `${ strings.formEditScreen.dropDownMenu }`,
-                                    `${ strings.formEditScreen.selectBox }`,
-                                    `${ strings.formEditScreen.radioButton }`,
-                                    `${ strings.formEditScreen.button }`,
-                                    `${ strings.formEditScreen.image }`
-                                  ];
+    const listOfComponents = [
+      strings.formEditScreen.dropDownMenu,
+      strings.formEditScreen.selectBox,
+      strings.formEditScreen.radioButton,
+      strings.formEditScreen.button,
+      strings.formEditScreen.image
+    ];
 
     return (
       <List>
