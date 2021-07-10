@@ -135,7 +135,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   private renderLeftSideBar = () => {
     return (
       <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-        <Grid item md={6} className={ this.props.classes.sideBarTabs }>
+        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
           <h5>{ strings.formEditScreen.leftSideBarComponentsTab }</h5>
         </Grid>
         <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
