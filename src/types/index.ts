@@ -39,3 +39,47 @@ export interface AdminLoginConfig {
   realm: string
   clientId: string
 }
+
+/**
+ * Type for field value
+ */
+ export type FieldValue = string | string[] | number | TableFieldValue | FileFieldValue | null;
+
+ /**
+ * Type for field file
+ */
+export type FileFieldValueItem = {
+  url?: string;
+  name?: string;
+  id: string;
+  persisted: boolean;
+}
+
+/**
+ * Type for field file
+ */
+export type FileFieldValue = {
+  files: FileFieldValueItem[]
+}
+
+/**
+ * Type for single table cell value
+ */
+ export type TableFieldCellValue = string | number | null;
+
+ /**
+  * Interface for values in single row
+  */
+ export interface TableFieldRowValue { 
+   [key: string]: TableFieldCellValue
+ }
+ 
+ /**
+  * Type for table field value
+  */
+ export type TableFieldValue = TableFieldRowValue[];
+
+ /**
+ * Type for icon name
+ */
+export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-o" | "add";

@@ -11,12 +11,15 @@ import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from '../../types';
+import { AccessToken, FieldValue, FileFieldValueItem, IconName, } from '../../types';
 import Api from "../../api/api";
-import { Metaform } from "../../generated/client";
+import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
+import { MetaformTextFieldComponent } from "../generic/field-components/MetaformTextFieldComponent";
+import { MetaformHtmlComponent } from "../generic/field-components/MetaformHtmlFieldComponent";
+import { MetaformRadioFieldComponent } from "../generic/field-components/MetaformRadioFieldComponent";
 
 /**
  * Component props
@@ -25,6 +28,7 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
   signedToken: AccessToken;
+  contexts?: string[];
 }
 
 /**
@@ -36,6 +40,8 @@ interface State {
   metaform?: Metaform;
   value:string;
   readOnly: boolean;
+  sections?: MetaformSection[],
+  metaformId?: string
 }
 
 /**
@@ -53,6 +59,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       loading: false,
       value: "",
       readOnly: true,
+      sections: [],
     };
   }
 
@@ -78,7 +85,9 @@ export class FormEditScreen extends React.Component<Props, State> {
 
       this.setState({
         loading: false,
-        metaform: metaform
+        metaform: metaform,
+        metaformId: metaform.id,
+        sections: metaform.sections || []
       });
     } catch (e) {
       this.setState({
@@ -86,6 +95,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         error: e
       });
     }
+    console.log(this.state.sections)
   };
 
   /**
@@ -120,10 +130,99 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Grid item md={ 8 } className={ this.props.classes.formEditor }>
         <Box className={ this.props.classes.editableForm }>
-          { this.state.metaform?.title } 
+          <h3>{ this.state.metaform?.title }</h3>
+          { this.state.sections?.map((section, i) => {
+            return (
+              <section key={ i }>
+                { this.renderFormFields(section) }
+              </section> 
+            );
+          })}
         </Box>
       </Grid>
     )
+  }
+
+  /**
+   * Method for rendering form fields
+   */
+  private renderFormFields = (section : any) => {
+    return (
+      <fieldset>
+        {
+          section.fields.map((field : MetaformField, i : number) => {
+            return (
+              <div key={ i } >
+                <p>name: { field.name }</p> 
+                { this.renderInput(field) }
+              </div>
+            )
+          })
+        }
+      </fieldset>
+    );
+  }
+
+  /**
+  * Renders field's input
+  */
+  private renderInput = (field : MetaformField) => {
+    console.log(field.type)
+  switch (field.type) {
+    case MetaformFieldType.Text:
+      return  <MetaformTextFieldComponent
+                field={ field }
+              />;
+    case MetaformFieldType.Html:
+      return  <MetaformHtmlComponent
+                fieldLabelId={ this.getFieldLabelId(field) }
+                fieldId={ this.getFieldId(field) }
+                field={ field }
+                //getFieldValue={ this.getFieldValue(field)}
+              />;
+    case MetaformFieldType.Radio:
+      return  <MetaformRadioFieldComponent
+                formReadOnly={ this.state.readOnly }
+                fieldLabelId={ this.getFieldLabelId(field) }
+                fieldId={ this.getFieldId(field) }
+                field={ field }
+                value="test"
+              />;
+      default:
+        return <div style={{ color: "red" }}> Unknown field type { field.type } </div>;
+    }
+  }
+
+  /**
+  * Returns field's id
+  */
+  private getFieldId = (field : MetaformField) => {
+    return `${ this.state.metaformId }-field-${ field.name }`;
+  }
+
+  /**
+  * Returns field label's id
+  */
+  private getFieldLabelId = (field : MetaformField) => {
+    return `${this.getFieldId(field)}-label`;
+  }
+
+  /**
+   * Returns field's value
+   * 
+   * @returns field's value
+   */
+  private getFieldValue = (field : MetaformField): FieldValue => {
+    if (!field) {
+      return null;
+    }
+
+    const result = this.getFieldValue(field);
+    if (!result && field._default) {
+      return field._default;
+    }
+
+    return result;
   }
 
   /**
@@ -243,6 +342,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     });
   };
 
+
 }
 
 /**
@@ -266,6 +366,5 @@ function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FormEditScreen));
