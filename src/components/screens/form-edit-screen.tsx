@@ -11,7 +11,7 @@ import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken, FieldValue, FileFieldValueItem, IconName, } from '../../types';
+import { AccessToken, FieldValue, } from '../../types';
 import Api from "../../api/api";
 import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
