@@ -128,7 +128,8 @@
     "selectBox": "Select box",
     "radioButton": "Radio button",
     "button": "Button",
-    "image": "Image"
+    "image": "Image",
+    "unknownFieldType": "Unknown field type"
   }
 
 }

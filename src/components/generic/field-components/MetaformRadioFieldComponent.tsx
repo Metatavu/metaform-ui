@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { MetaformField, MetaformFieldOption } from '../../../generated/client';
-import { FieldValue, IconName } from '../../../types';
+import { FieldValue } from '../../../types';
 
 /**
  * Component props

@@ -20,6 +20,8 @@ import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { MetaformTextFieldComponent } from "../generic/field-components/MetaformTextFieldComponent";
 import { MetaformHtmlComponent } from "../generic/field-components/MetaformHtmlFieldComponent";
 import { MetaformRadioFieldComponent } from "../generic/field-components/MetaformRadioFieldComponent";
+import { MetaformSubmitFieldComponent } from "../generic/field-components/MetaformSubmitFieldComponent";
+import { MetaformNumberFieldComponent } from "../generic/field-components/MetaformNumberFieldComponent";
 
 /**
  * Component props
@@ -130,7 +132,9 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Grid item md={ 8 } className={ this.props.classes.formEditor }>
         <Box className={ this.props.classes.editableForm }>
-          <h3>{ this.state.metaform?.title }</h3>
+          <Typography variant="h3">
+            { this.state.metaform?.title }
+          </Typography>
           { this.state.sections?.map((section, i) => {
             return (
               <section key={ i }>
@@ -188,8 +192,26 @@ export class FormEditScreen extends React.Component<Props, State> {
                 field={ field }
                 value="test"
               />;
+    case MetaformFieldType.Submit:
+      return  <MetaformSubmitFieldComponent
+                fieldLabelId={ this.getFieldLabelId(field) }
+                fieldId={ this.getFieldId(field) }
+                field={ field }
+                value="test"
+              />;
+    case MetaformFieldType.Number:
+      return  <MetaformNumberFieldComponent
+                fieldLabelId={ this.getFieldLabelId(field) }
+                fieldId={ this.getFieldId(field) }
+                field={ field }
+                //value={ this.getFieldValue() }
+                //onValueChange={ this.onValueChange(field) }
+              />;
       default:
-        return <div style={{ color: "red" }}> Unknown field type { field.type } </div>;
+        return <div style={{ color: "red" }}> 
+                { strings.formEditScreen.unknownFieldType }: { field.type } 
+              </div>;
+          
     }
   }
 

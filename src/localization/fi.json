@@ -128,7 +128,8 @@
     "selectBox": "Valintaruutu",
     "radioButton": "Valintanappi",
     "button": "Nappi",
-    "image": "Kuva"
+    "image": "Kuva",
+    "unknownFieldType": "Tuntematon kenttätyyppi"
   }
 
 }
