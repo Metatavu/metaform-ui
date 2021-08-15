@@ -135,7 +135,8 @@ export interface IStrings extends LocalizedStringsMethods {
     radioButton: string,
     button: string,
     image: string,
-    unknownFieldType: string
+    unknownFieldType: string,
+    formEditorInfo: string
   }
 
 }

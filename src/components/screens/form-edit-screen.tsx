@@ -132,6 +132,10 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Grid item md={ 8 } className={ this.props.classes.formEditor }>
         <Box className={ this.props.classes.editableForm }>
+          <Typography variant="caption">
+            <InfoIcon />
+            { strings.formEditScreen.formEditorInfo }
+          </Typography>
           <Typography variant="h3">
             { this.state.metaform?.title }
           </Typography>
@@ -157,7 +161,6 @@ export class FormEditScreen extends React.Component<Props, State> {
           section.fields.map((field : MetaformField, i : number) => {
             return (
               <div key={ i } >
-                <p>name: { field.name }</p> 
                 { this.renderInput(field) }
               </div>
             )
@@ -250,46 +253,46 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Method for rendering left sidebar
    */
-  private renderLeftSideBar = () => {
-    return (
-      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.leftSideBarComponentsTab }</h5>
-        </Grid>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5> { strings.formEditScreen.leftSideBarStylingTab }</h5>
-        </Grid>
-        <hr />
-        <Typography variant="caption">
-          <InfoIcon />
-          { strings.formEditScreen.leftSideBarInfo }
+  private renderLeftSideBar = () => (
+    <Grid item md={ 2 } className={ this.props.classes.sideBar }>
+      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+        <Typography variant="h5">
+          { strings.formEditScreen.leftSideBarComponentsTab }
         </Typography>
-        { this.renderFields() }
-        { this.renderComponents() }
       </Grid>
-    );
-  }
+      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+        <Typography variant="h5">
+          { strings.formEditScreen.leftSideBarStylingTab }
+        </Typography>
+      </Grid>
+      <hr />
+      <Typography variant="caption">
+        <InfoIcon />
+        { strings.formEditScreen.leftSideBarInfo }
+      </Typography>
+      { this.renderFields() }
+      { this.renderComponents() }
+    </Grid>
+  );
 
   /**
    * Method for rendering right sidebar
    */
-  private renderRightSideBar = () => {
-    return (
-      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.rightSideBarLinksTab }</h5>
-        </Grid>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.rightSideBarVisibilityTab }</h5>
-        </Grid>
-      <hr />
-        <Typography variant="caption">
-          <InfoOutlinedIcon color="disabled" />
-          { strings.formEditScreen.chooseComponent }
-        </Typography>
+  private renderRightSideBar = () => (
+    <Grid item md={ 2 } className={ this.props.classes.sideBar }>
+      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+        <h5>{ strings.formEditScreen.rightSideBarLinksTab }</h5>
       </Grid>
-    );
-  }
+      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
+        <h5>{ strings.formEditScreen.rightSideBarVisibilityTab }</h5>
+      </Grid>
+      <hr />
+      <Typography variant="caption">
+        <InfoOutlinedIcon color="disabled" />
+        { strings.formEditScreen.chooseComponent }
+      </Typography>
+    </Grid>
+  );
 
   /**
    * Method for rendering addable fields
@@ -326,7 +329,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Method for rendering addable components
    */
-   private renderComponents = () => {
+  private renderComponents = () => {
     const listOfComponents = [
       strings.formEditScreen.dropDownMenu,
       strings.formEditScreen.selectBox,
@@ -363,7 +366,6 @@ export class FormEditScreen extends React.Component<Props, State> {
       error: undefined,
     });
   };
-
 
 }
 

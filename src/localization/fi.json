@@ -129,7 +129,8 @@
     "radioButton": "Valintanappi",
     "button": "Nappi",
     "image": "Kuva",
-    "unknownFieldType": "Tuntematon kenttätyyppi"
+    "unknownFieldType": "Tuntematon kenttätyyppi",
+    "formEditorInfo": "Muokkaus ei vielä toimi"
   }
 
 }

@@ -129,7 +129,8 @@
     "radioButton": "Radio button",
     "button": "Button",
     "image": "Image",
-    "unknownFieldType": "Unknown field type"
+    "unknownFieldType": "Unknown field type",
+    "formEditorInfo": "Editing is not woking yet"
   }
 
 }

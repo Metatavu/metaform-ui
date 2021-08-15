@@ -1,3 +1,4 @@
+import { FormControl, Input, } from '@material-ui/core';
 import React from 'react';
 import { MetaformField } from '../../../generated/client';
 import { FieldValue } from '../../../types';
@@ -34,7 +35,6 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     super(props);
 
     this.state = {
-      
     };
   }
 
@@ -47,20 +47,19 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     }
 
     return (
-      <input
-        type="number"
-        placeholder={ this.props.field.placeholder }
-        id={ this.props.fieldId }
-        aria-labelledby={ this.props.fieldLabelId }
-        name={ this.props.field.name }
-        title={ this.props.field.title }
-        required={ this.props.field.required }
-        readOnly={ this.props.field.readonly }
-        //value={ this.props.value as number || "" }
-        min={ this.props.field.min }
-        max={ this.props.field.max }
-        step={ this.props.field.step }
-      />
+      <FormControl>
+        <Input
+          type="number"
+          placeholder={ this.props.field.placeholder }
+          id={ this.props.fieldId }
+          aria-labelledby={ this.props.fieldLabelId }
+          name={ this.props.field.name }
+          title={ this.props.field.title }
+          required={ this.props.field.required }
+          readOnly={ this.props.field.readonly }
+          //value={ this.props.value as number || "" }
+        />
+      </FormControl>
     );
   }
 
