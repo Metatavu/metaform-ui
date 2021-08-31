@@ -132,6 +132,10 @@
     "unknownFieldType": "Tuntematon kenttätyyppi",
     "formEditorInfo": "Muokkaus ei vielä toimi",
     "formMainHeader": "Lomakkeen pääotsikko"
+  },
+
+  "editableComponents": {
+    "htmlComponent": "Html-sisältö"
   }
 
 }

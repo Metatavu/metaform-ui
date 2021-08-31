@@ -17,11 +17,11 @@ import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
-import { MetaformTextFieldComponent } from "../generic/field-components/MetaformTextFieldComponent";
-import { MetaformHtmlComponent } from "../generic/field-components/MetaformHtmlFieldComponent";
-import { MetaformRadioFieldComponent } from "../generic/field-components/MetaformRadioFieldComponent";
-import { MetaformSubmitFieldComponent } from "../generic/field-components/MetaformSubmitFieldComponent";
-import { MetaformNumberFieldComponent } from "../generic/field-components/MetaformNumberFieldComponent";
+import { MetaformTextFieldComponent } from "../generic/editable-field-components/MetaformTextFieldComponent";
+import { MetaformHtmlComponent } from "../generic/editable-field-components/MetaformHtmlFieldComponent";
+import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
+import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
+import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
 
 /**
  * Component props
@@ -178,6 +178,20 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Event handler for html value change
+   * 
+   * @param event new html value
+   * @param index new html value
+  */ 
+  private handleHtmlInputChange = (index : number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMetaform = this.state.metaform;
+    const newSections = this.state.metaform.sections;
+    this.setState({
+      metaform : newMetaform
+    })
+  }
+
+  /**
    * Method for rendering form fields
    */
   private renderFormFields = (section : any) => (
@@ -186,7 +200,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         section.fields.map((field : MetaformField, i : number) => {
           return (
             <div key={ i } >
-              { this.renderInput(field) }
+              { this.renderInput(field, i) }
             </div>
           )
         })
@@ -197,7 +211,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
   * Renders field's input
   */
-  private renderInput = (field : MetaformField) => {
+  private renderInput = (field : MetaformField, i : number) => {
   switch (field.type) {
     case MetaformFieldType.Text:
       return  <MetaformTextFieldComponent
@@ -208,6 +222,8 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
+                index={ i }
+                //htmlChange={this.handleHtmlInputChange(index, value)}
               />;
     case MetaformFieldType.Radio:
       return  <MetaformRadioFieldComponent

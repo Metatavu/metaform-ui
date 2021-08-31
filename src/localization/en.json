@@ -132,6 +132,10 @@
     "unknownFieldType": "Unknown field type",
     "formEditorInfo": "Editing is not woking yet",
     "formHeader": "Form main header"
+  },
+
+  "editableComponents": {
+    "htmlComponent": "Html content"
   }
 
 }
