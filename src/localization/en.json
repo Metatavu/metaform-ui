@@ -130,7 +130,8 @@
     "button": "Button",
     "image": "Image",
     "unknownFieldType": "Unknown field type",
-    "formEditorInfo": "Editing is not woking yet"
+    "formEditorInfo": "Editing is not woking yet",
+    "formHeader": "Form main header"
   }
 
 }

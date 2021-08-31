@@ -8,7 +8,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import InfoIcon from '@material-ui/icons/Info';
 
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, Input, TextField, InputLabel, OutlinedInput, FilledInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, FieldValue, } from '../../types';
@@ -39,8 +39,8 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   error?: string | Error | Response;
   loading: boolean;
-  metaform?: Metaform;
-  value:string;
+  metaform: Metaform;
+  value: string;
   readOnly: boolean;
   sections?: MetaformSection[],
   metaformId?: string
@@ -62,6 +62,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       value: "",
       readOnly: true,
       sections: [],
+      metaform: {}
     };
   }
 
@@ -132,13 +133,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Grid item md={ 8 } className={ this.props.classes.formEditor }>
         <Box className={ this.props.classes.editableForm }>
-          <Typography variant="caption">
-            <InfoIcon />
-            { strings.formEditScreen.formEditorInfo }
-          </Typography>
-          <Typography variant="h3">
-            { this.state.metaform?.title }
-          </Typography>
+          { this.renderMainHeader() }
           { this.state.sections?.map((section, i) => {
             return (
               <section key={ i }>
@@ -152,29 +147,57 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Renders main header
+   * 
+   * @returns Metaform main header
+   */
+  private renderMainHeader = () => (
+    <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
+      <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
+      <OutlinedInput
+        label={ strings.formEditScreen.formMainHeader }
+        id="mainHeaderField"
+        color="secondary"
+        value={ this.state.metaform.title }
+        onChange={ this.handleInputTitleChange }
+      />
+    </FormControl>
+  )
+
+  /**
+   * Event handler for main header change
+   * 
+   * @param event new main header value
+   */
+  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMetaform = this.state.metaform;
+    newMetaform.title = event.target.value;
+    this.setState({
+      metaform : newMetaform
+    })
+  }
+
+  /**
    * Method for rendering form fields
    */
-  private renderFormFields = (section : any) => {
-    return (
-      <fieldset>
-        {
-          section.fields.map((field : MetaformField, i : number) => {
-            return (
-              <div key={ i } >
-                { this.renderInput(field) }
-              </div>
-            )
-          })
-        }
-      </fieldset>
-    );
-  }
+  private renderFormFields = (section : any) => (
+    <fieldset>
+      {
+        section.fields.map((field : MetaformField, i : number) => {
+          return (
+            <div key={ i } >
+              { this.renderInput(field) }
+            </div>
+          )
+        })
+      }
+    </fieldset>
+  );
 
   /**
   * Renders field's input
   */
   private renderInput = (field : MetaformField) => {
-    console.log(field.type)
   switch (field.type) {
     case MetaformFieldType.Text:
       return  <MetaformTextFieldComponent
@@ -185,7 +208,6 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
-                //getFieldValue={ this.getFieldValue(field)}
               />;
     case MetaformFieldType.Radio:
       return  <MetaformRadioFieldComponent
@@ -207,8 +229,6 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
-                //value={ this.getFieldValue() }
-                //onValueChange={ this.onValueChange(field) }
               />;
       default:
         return <div style={{ color: "red" }}> 
