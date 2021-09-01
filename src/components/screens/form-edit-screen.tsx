@@ -8,7 +8,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import InfoIcon from '@material-ui/icons/Info';
 
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, Input, TextField, InputLabel, OutlinedInput, FilledInput, FormControl } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, FieldValue, } from '../../types';
@@ -98,7 +98,6 @@ export class FormEditScreen extends React.Component<Props, State> {
         error: e
       });
     }
-    console.log(this.state.sections)
   };
 
   /**
@@ -178,26 +177,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for html value change
-   * 
-   * @param event new html value
-   * @param index new html value
-  */ 
-  private handleHtmlInputChange = (index : number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.state.metaform;
-    const newSections = this.state.metaform.sections;
-    this.setState({
-      metaform : newMetaform
-    })
-  }
-
-  /**
    * Method for rendering form fields
    */
-  private renderFormFields = (section : any) => (
+  private renderFormFields = (section : MetaformSection) => (
     <fieldset>
       {
-        section.fields.map((field : MetaformField, i : number) => {
+        section.fields?.map((field : MetaformField, i : number) => {
           return (
             <div key={ i } >
               { this.renderInput(field, i) }
@@ -222,8 +207,9 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
-                index={ i }
-                //htmlChange={this.handleHtmlInputChange(index, value)}
+                metaform={ this.state.metaform }
+                classes={ this.props.classes }
+                fieldName={ field.name }
               />;
     case MetaformFieldType.Radio:
       return  <MetaformRadioFieldComponent

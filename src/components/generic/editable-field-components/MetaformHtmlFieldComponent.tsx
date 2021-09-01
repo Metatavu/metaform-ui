@@ -1,8 +1,7 @@
 import { FormControl, InputLabel, OutlinedInput } from '@material-ui/core';
 import React from 'react';
-import { MetaformField } from '../../../generated/client';
+import { Metaform, MetaformField } from '../../../generated/client';
 import strings from '../../../localization/strings';
-import { FieldValue } from '../../../types';
 
 /**
  * Component props
@@ -11,16 +10,16 @@ interface Props {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  getFieldValue?: (field: MetaformField) => FieldValue;
-  index : number;
-  htmlChange?: (index: number, value: React.ChangeEvent<HTMLInputElement>) => React.ChangeEvent<HTMLInputElement>;
+  metaform: Metaform;
+  classes: any;
+  fieldName?: string;
 }
 
 /**
  * Component state
  */
 interface State {
-
+  metaform: Metaform;
 }
 
 /**
@@ -37,7 +36,7 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-    
+      metaform: this.props.metaform
     };
   }
 
@@ -49,26 +48,39 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
       return null;
     }
 
-    const dangerousInnerHTML = this.props.field.html || "";
-
     return (
-      <>
-      <div
-        id={ this.props.fieldId }
-        aria-labelledby={ this.props.fieldLabelId }
-        dangerouslySetInnerHTML={{ __html: dangerousInnerHTML }}>
-      </div>
-      <FormControl variant="outlined">
-      <InputLabel htmlFor="htmlField">{ strings.editableComponents.htmlComponent }</InputLabel>
-      <OutlinedInput
-        label={ strings.editableComponents.htmlComponent }
-        id="htmlField"
-        color="secondary"
-        value={ this.props.field.html }
-        //onChange={ this.props.htmlChange(this.props.index, event?.target.value) }
-      />
-    </FormControl>
-      </>
+      <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
+        <InputLabel htmlFor={ this.props.fieldId }>{ strings.editableComponents.htmlComponent }</InputLabel>
+        <OutlinedInput
+          label={ strings.editableComponents.htmlComponent }
+          id={ this.props.fieldId }
+          color="secondary"
+          value={ this.props.field.html }
+          onChange={ this.handleHtmlInputChange }
+        />
+      </FormControl>
     );
+  }
+
+  /**
+   * Event handler for html value change
+   * 
+   * @param event new html value
+   * @param index new html value
+  */ 
+  private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMetaform = this.props.metaform;
+    if (newMetaform.sections){
+      newMetaform.sections.forEach(section => {
+        section.fields?.forEach(field => {
+          if( field.type === "html" && field.name === this.props.fieldName){
+            field.html = event.target.value;
+          }
+        })
+      });
+    }
+    this.setState({
+      metaform : newMetaform
+    })
   }
 }
