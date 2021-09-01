@@ -135,9 +135,9 @@ export class FormEditScreen extends React.Component<Props, State> {
           { this.renderMainHeader() }
           { this.state.sections?.map((section, i) => {
             return (
-              <section key={ i }>
+              <div key={ i } className={ this.props.classes.editableSections }>
                 { this.renderFormFields(section) }
-              </section> 
+              </div> 
             );
           })}
         </Box>
@@ -180,17 +180,17 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form fields
    */
   private renderFormFields = (section : MetaformSection) => (
-    <fieldset>
+    <FormControl>
       {
         section.fields?.map((field : MetaformField, i : number) => {
           return (
-            <div key={ i } >
+            <div key={ i } className={ this.props.classes.editableField }>
               { this.renderInput(field, i) }
             </div>
           )
         })
       }
-    </fieldset>
+    </FormControl>
   );
 
   /**

@@ -22,6 +22,24 @@ export default createStyles({
     padding: "2rem",
   },
 
+  editableSections: {
+    marginBottom: 10,
+    borderRadius: 5,
+    "& .MuiFormControl-root": {
+      width: "100%"
+    },
+    backgroundColor: "rgba(225,105,40,0.1)"
+  },
+
+  editableField: {
+    padding: 10,
+    marginTop: 20,
+    borderRadius: 5,
+    marginBottom: 20,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    width: "100%"
+  },
+
   sideBar: {
     backgroundColor: "#fff",
     minHeight: "100vw"
@@ -36,7 +54,7 @@ export default createStyles({
 
   mainHeader: {
     marginBottom: 20,
-    width: "80%",
+    width: "100%",
     textAlign: "center",
   },
 
