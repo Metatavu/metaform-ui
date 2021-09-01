@@ -50,9 +50,9 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
 
     return (
       <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
-        <InputLabel htmlFor={ this.props.fieldId }>{ strings.editableComponents.htmlComponent }</InputLabel>
+        <InputLabel htmlFor={ this.props.fieldId }>{ strings.editableFields.htmlField }</InputLabel>
         <OutlinedInput
-          label={ strings.editableComponents.htmlComponent }
+          label={ strings.editableFields.htmlField}
           id={ this.props.fieldId }
           color="secondary"
           value={ this.props.field.html }

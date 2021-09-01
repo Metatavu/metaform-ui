@@ -225,6 +225,7 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldId={ this.getFieldId(field) }
                 field={ field }
                 value="test"
+                metaform={ this.state.metaform }
               />;
     case MetaformFieldType.Number:
       return  <MetaformNumberFieldComponent

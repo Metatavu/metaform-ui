@@ -140,8 +140,9 @@ export interface IStrings extends LocalizedStringsMethods {
     formMainHeader: string;
   },
 
-  editableComponents: {
-    htmlComponent: string;
+  editableFields: {
+    htmlField: string;
+    submitFieldText: string;
   }
 
 }

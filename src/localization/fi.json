@@ -134,8 +134,9 @@
     "formMainHeader": "Lomakkeen pääotsikko"
   },
 
-  "editableComponents": {
-    "htmlComponent": "Html-sisältö"
+  "editableFields": {
+    "htmlField": "Html-sisältö",
+    "submitFieldText": "Lähetä-napin teksti"
   }
 
 }
