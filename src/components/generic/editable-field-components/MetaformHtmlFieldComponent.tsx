@@ -83,4 +83,5 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
       metaform : newMetaform
     })
   }
+  
 }

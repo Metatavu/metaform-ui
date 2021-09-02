@@ -137,7 +137,9 @@
   "editableFields": {
     "htmlField": "Html-sisältö",
     "submitFieldText": "Lähetä-napin teksti",
-    "numberField": "Numerokenttä"
+    "numberField": "Numerokenttä",
+    "numberFieldMin": "Aseta minimiarvo",
+    "numberFieldMax": "Aseta maksimiarvo"
   }
 
 }

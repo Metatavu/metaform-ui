@@ -144,6 +144,8 @@ export interface IStrings extends LocalizedStringsMethods {
     htmlField: string;
     submitFieldText: string;
     numberField: string;
+    numberFieldMin: string;
+    numberFieldMax: string;
   }
 
 }

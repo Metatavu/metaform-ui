@@ -231,6 +231,7 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
+                metaform={ this.state.metaform }
                 classes={ this.props.classes }
               />;
       default:
