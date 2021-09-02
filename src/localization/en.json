@@ -136,7 +136,8 @@
 
   "editableFields": {
     "htmlField": "Html content",
-    "submitFieldText": "Submit button text"
+    "submitFieldText": "Submit button text",
+    "numberField": "Number field"
   }
 
 }

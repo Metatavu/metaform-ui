@@ -40,6 +40,10 @@ export default createStyles({
     width: "100%"
   },
 
+  numberField: {
+    width: "30%"
+  },
+
   sideBar: {
     backgroundColor: "#fff",
     minHeight: "100vw"

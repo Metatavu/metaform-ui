@@ -136,7 +136,8 @@
 
   "editableFields": {
     "htmlField": "Html-sisältö",
-    "submitFieldText": "Lähetä-napin teksti"
+    "submitFieldText": "Lähetä-napin teksti",
+    "numberField": "Numerokenttä"
   }
 
 }

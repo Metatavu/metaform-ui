@@ -224,7 +224,6 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
-                value="test"
                 metaform={ this.state.metaform }
               />;
     case MetaformFieldType.Number:
@@ -232,6 +231,7 @@ export class FormEditScreen extends React.Component<Props, State> {
                 fieldLabelId={ this.getFieldLabelId(field) }
                 fieldId={ this.getFieldId(field) }
                 field={ field }
+                classes={ this.props.classes }
               />;
       default:
         return <div style={{ color: "red" }}> 

@@ -1,8 +1,7 @@
-import { Button, FormControl, Input, InputLabel, OutlinedInput } from '@material-ui/core';
+import { Button, FormControl, InputLabel, OutlinedInput } from '@material-ui/core';
 import React from 'react';
 import { Metaform, MetaformField } from '../../../generated/client';
 import strings from '../../../localization/strings';
-import { FieldValue } from '../../../types';
 
 /**
  * Component props
@@ -11,7 +10,6 @@ interface Props {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  value: FieldValue;
   metaform: Metaform;
 }
 

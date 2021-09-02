@@ -1,17 +1,16 @@
-import { FormControl, Input, } from '@material-ui/core';
+import { FormControl, Input, InputLabel, WithStyles, } from '@material-ui/core';
 import React from 'react';
 import { MetaformField } from '../../../generated/client';
-import { FieldValue } from '../../../types';
+import strings from '../../../localization/strings';
+import styles from "../../../styles/form-edit-screen";
 
 /**
  * Component props
  */
-interface Props {
-  field: MetaformField,
-  fieldId: string,
-  fieldLabelId: string,
-  //value: FieldValue,
-  //onValueChange: (value: FieldValue) => void,
+interface Props extends WithStyles<typeof styles> {
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
 }
 
 /**
@@ -46,8 +45,21 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
       return null;
     }
 
+    /**
+     * Props for number input
+     */
+    const inputProps = {
+      min: this.props.field.min,
+      max: this.props.field.max,
+    }
+
     return (
       <FormControl>
+        <InputLabel
+          htmlFor={ this.props.fieldId }
+        >
+          { strings.editableFields.numberField }
+        </InputLabel>
         <Input
           type="number"
           placeholder={ this.props.field.placeholder }
@@ -57,7 +69,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           title={ this.props.field.title }
           required={ this.props.field.required }
           readOnly={ this.props.field.readonly }
-          //value={ this.props.value as number || "" }
+          inputProps={ inputProps }
+          className={ this.props.classes.numberField }
         />
       </FormControl>
     );

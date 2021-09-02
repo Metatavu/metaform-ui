@@ -1,17 +1,17 @@
-import { FormControl, InputLabel, OutlinedInput } from '@material-ui/core';
+import { FormControl, InputLabel, OutlinedInput, WithStyles } from '@material-ui/core';
 import React from 'react';
 import { Metaform, MetaformField } from '../../../generated/client';
 import strings from '../../../localization/strings';
+import styles from "../../../styles/form-edit-screen";
 
 /**
  * Component props
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
   metaform: Metaform;
-  classes: any;
   fieldName?: string;
 }
 

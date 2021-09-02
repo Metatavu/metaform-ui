@@ -143,6 +143,7 @@ export interface IStrings extends LocalizedStringsMethods {
   editableFields: {
     htmlField: string;
     submitFieldText: string;
+    numberField: string;
   }
 
 }
