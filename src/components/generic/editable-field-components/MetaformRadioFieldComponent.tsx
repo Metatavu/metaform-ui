@@ -9,7 +9,6 @@ interface Props {
   field: MetaformField,
   fieldId: string,
   fieldLabelId: string,
-  formReadOnly: boolean,
   value: FieldValue,
 }
 
@@ -17,7 +16,6 @@ interface Props {
  * Component state
  */
 interface State {
-  
 }
 
 /**
@@ -34,7 +32,6 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      
     };
   }
 
@@ -42,19 +39,20 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
+    const { field, value } = this.props;
+
     if (!this.props.field.name) {
       return null;
     }
 
-    const options = this.props.field.options || [];
-    const value = this.props.value as string;
+    const options = field.options || [];
 
     return (
       <div>
         {
           options.map((option, i) =>  (
             <div key={ `${this.props.fieldId}-${option.name}-container` }>
-              { this.renderOption(option, value) }
+              { this.renderOption(option, value as string) }
             </div>
           ))
         }
@@ -64,10 +62,14 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
 
   /**
    * Renders field option's label
+   * 
+   * @param option metaform field option
+   * @param value value
    */
   private renderOption = (option: MetaformFieldOption, value: string) => {
+    const { fieldId } = this.props;
     return (
-      <label className="metaform-radio-field-label" key={ `${this.props.fieldId}-${option.name}-label` } htmlFor={ `${this.props.fieldId}-${option.name}` }>
+      <label className="metaform-radio-field-label" key={ `${fieldId}-${option.name}-label` } htmlFor={ `${fieldId}-${option.name}` }>
         { this.renderOptionValue(option, value) }
         <span> { option.text } </span>
       </label>
@@ -76,24 +78,25 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
 
   /**
    * Renders field option's value
+   * 
+   * @param option metaform field option
+   * @param value value
    */
   private renderOptionValue = (option: MetaformFieldOption, value: string) => {
-    const readOnly = this.props.formReadOnly || this.props.field.readonly;
-    const checked: boolean = ((value && value === option.name) || (!value && option.checked)) || false;
+    const { field, fieldId, fieldLabelId } = this.props;
 
-    return <input 
-      key={ `${this.props.fieldId}-${option.name}-input` }
-      type="radio" 
-      id={ `${this.props.fieldId}-${option.name}` }  
-      aria-labelledby={ this.props.fieldLabelId } 
-      name={ this.props.field.name }
-      title={ this.props.field.title }
-      required={ this.props.field.required }
-      readOnly={ this.props.formReadOnly || this.props.field.readonly }
-      value={ option.name }
-      checked={ checked }
+    return (
+      <input 
+        key={ `${ fieldId }-${ option.name }-input` }
+        type="radio" 
+        id={ `${ fieldId }-${ option.name }` }  
+        aria-labelledby={ fieldLabelId } 
+        name={ field.name }
+        title={ field.title }
+        required={ field.required }
+        value={ option.name }
       />
-    
+    )
   }
 
 }

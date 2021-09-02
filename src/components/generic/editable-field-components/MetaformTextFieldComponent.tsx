@@ -20,7 +20,6 @@ interface Props {
  * Component state
  */
 interface State {
-  
 }
 
 /**
@@ -37,28 +36,27 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      
     };
   }
+  
   /**
    * Component render method
    */
   public render() {
-    if (!this.props.field.name) {
-      return null;
-    }
+    const { field, fieldId, fieldLabelId, formReadOnly, value, onFocus } = this.props;
+
     return (
       <input
         type="text"
-        placeholder={ this.props.field.placeholder }
-        id={ this.props.fieldId }
-        aria-labelledby={ this.props.fieldLabelId }
-        name={ this.props.field.name } 
-        title={ this.props.field.title }
-        required={ this.props.field.required }
-        readOnly={ this.props.formReadOnly || this.props.field.readonly }
-        value={ this.props.value as string || "" }
-        onFocus={ this.props.onFocus }
+        placeholder={ field.placeholder }
+        id={ fieldId }
+        aria-labelledby={ fieldLabelId }
+        name={ field.name } 
+        title={ field.title }
+        required={ field.required }
+        readOnly={ formReadOnly || field.readonly }
+        value={ value as string || "" }
+        onFocus={ onFocus }
       />
     );
   }

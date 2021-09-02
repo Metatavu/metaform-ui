@@ -13,6 +13,7 @@ interface Props extends WithStyles<typeof styles> {
   fieldLabelId: string;
   metaform: Metaform;
   fieldName?: string;
+  onMetaformUpdate: (metaform: Metaform) => void;
 }
 
 /**
@@ -44,18 +45,16 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    if (!this.props.field.name) {
-      return null;
-    }
+    const { field, fieldId, classes } = this.props;
 
     return (
-      <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
-        <InputLabel htmlFor={ this.props.fieldId }>{ strings.editableFields.htmlField }</InputLabel>
+      <FormControl variant="outlined" className={ classes.mainHeader }>
+        <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
         <OutlinedInput
-          label={ strings.editableFields.htmlField}
-          id={ this.props.fieldId }
+          label={ strings.editableFields.htmlField }
+          id={ fieldId }
           color="secondary"
-          value={ this.props.field.html }
+          value={ field.html }
           onChange={ this.handleHtmlInputChange }
         />
       </FormControl>
@@ -66,22 +65,20 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * Event handler for html value change
    * 
    * @param event new html value
-   * @param index new html value
   */ 
   private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.props.metaform;
-    if (newMetaform.sections){
-      newMetaform.sections.forEach(section => {
+    const changedMetaform = { ...this.props.metaform };
+
+    if (changedMetaform.sections) {
+      changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
-          if( field.type === "html" && field.name === this.props.fieldName){
+          if (field.type === "html" && field.name === this.props.fieldName) {
             field.html = event.target.value;
           }
         })
       });
     }
-    this.setState({
-      metaform : newMetaform
-    })
+
+    this.props.onMetaformUpdate(changedMetaform);
   }
-  
 }

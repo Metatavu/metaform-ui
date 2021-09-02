@@ -11,7 +11,7 @@ import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken, FieldValue, } from '../../types';
+import { AccessToken } from '../../types';
 import Api from "../../api/api";
 import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
@@ -42,7 +42,6 @@ interface State {
   metaform: Metaform;
   value: string;
   readOnly: boolean;
-  sections?: MetaformSection[],
   metaformId?: string
 }
 
@@ -61,7 +60,6 @@ export class FormEditScreen extends React.Component<Props, State> {
       loading: false,
       value: "",
       readOnly: true,
-      sections: [],
       metaform: {}
     };
   }
@@ -89,8 +87,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       this.setState({
         loading: false,
         metaform: metaform,
-        metaformId: metaform.id,
-        sections: metaform.sections || []
+        metaformId: metaform.id
       });
     } catch (e) {
       this.setState({
@@ -129,20 +126,23 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form editor
    */
   private renderFormEditor = () => {
+    const { classes } = this.props;
+    const { metaform } = this.state;
+
     return (
-      <Grid item md={ 8 } className={ this.props.classes.formEditor }>
-        <Box className={ this.props.classes.editableForm }>
+      <Grid item md={ 8 } className={ classes.formEditor }>
+        <Box className={ classes.editableForm }>
           { this.renderMainHeader() }
-          { this.state.sections?.map((section, i) => {
+          { metaform.sections?.map((section, i) => {
             return (
-              <div key={ i } className={ this.props.classes.editableSections }>
+              <div key={ i } className={ classes.editableSections }>
                 { this.renderFormFields(section) }
               </div> 
             );
           })}
         </Box>
       </Grid>
-    )
+    );
   }
 
   /**
@@ -150,19 +150,22 @@ export class FormEditScreen extends React.Component<Props, State> {
    * 
    * @returns Metaform main header
    */
-  private renderMainHeader = () => (
-    <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
-      <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
-      <OutlinedInput
-        label={ strings.formEditScreen.formMainHeader }
-        id="mainHeaderField"
-        color="secondary"
-        value={ this.state.metaform.title }
-        onChange={ this.handleInputTitleChange }
-      />
-    </FormControl>
-  )
-
+  private renderMainHeader = () => {
+    const { metaform } = this.state;
+    
+    return (
+      <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
+        <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
+        <OutlinedInput
+          label={ strings.formEditScreen.formMainHeader }
+          id="mainHeaderField"
+          color="secondary"
+          value={ metaform.title }
+          onChange={ this.handleInputTitleChange }
+        />
+      </FormControl>
+    );
+  }
   /**
    * Event handler for main header change
    * 
@@ -173,150 +176,167 @@ export class FormEditScreen extends React.Component<Props, State> {
     newMetaform.title = event.target.value;
     this.setState({
       metaform : newMetaform
-    })
+    });
   }
 
   /**
    * Method for rendering form fields
+   * 
+   * @param section metaform section
    */
-  private renderFormFields = (section : MetaformSection) => (
-    <FormControl>
-      {
-        section.fields?.map((field : MetaformField, i : number) => {
-          return (
-            <div key={ i } className={ this.props.classes.editableField }>
-              { this.renderInput(field, i) }
-            </div>
-          )
-        })
-      }
-    </FormControl>
-  );
-
-  /**
-  * Renders field's input
-  */
-  private renderInput = (field : MetaformField, i : number) => {
-  switch (field.type) {
-    case MetaformFieldType.Text:
-      return  <MetaformTextFieldComponent
-                field={ field }
-              />;
-    case MetaformFieldType.Html:
-      return  <MetaformHtmlComponent
-                fieldLabelId={ this.getFieldLabelId(field) }
-                fieldId={ this.getFieldId(field) }
-                field={ field }
-                metaform={ this.state.metaform }
-                classes={ this.props.classes }
-                fieldName={ field.name }
-              />;
-    case MetaformFieldType.Radio:
-      return  <MetaformRadioFieldComponent
-                formReadOnly={ this.state.readOnly }
-                fieldLabelId={ this.getFieldLabelId(field) }
-                fieldId={ this.getFieldId(field) }
-                field={ field }
-                value="test"
-              />;
-    case MetaformFieldType.Submit:
-      return  <MetaformSubmitFieldComponent
-                fieldLabelId={ this.getFieldLabelId(field) }
-                fieldId={ this.getFieldId(field) }
-                field={ field }
-                metaform={ this.state.metaform }
-              />;
-    case MetaformFieldType.Number:
-      return  <MetaformNumberFieldComponent
-                fieldLabelId={ this.getFieldLabelId(field) }
-                fieldId={ this.getFieldId(field) }
-                field={ field }
-                metaform={ this.state.metaform }
-                classes={ this.props.classes }
-              />;
-      default:
-        return <div style={{ color: "red" }}> 
-                { strings.formEditScreen.unknownFieldType }: { field.type } 
-              </div>;
-          
-    }
+  private renderFormFields = (section: MetaformSection) => {
+    const { classes } = this.props;
+    
+    return (
+      <FormControl>
+        {
+          section.fields?.map((field: MetaformField, i : number) => {
+            return (
+              <div key={ i } className={ classes.editableField }>
+                { this.renderInput(field) }
+              </div>
+            )
+          })
+        }
+      </FormControl>
+    );
   }
 
   /**
+  * Renders field's input
+  * 
+  * @param field metaform field
+  */
+  private renderInput = (field: MetaformField) => {
+    const { classes } = this.props;
+    const { metaform } = this.state;
+
+    switch (field.type) {
+      case MetaformFieldType.Text:
+        return  <MetaformTextFieldComponent
+                  field={ field }
+                />
+      case MetaformFieldType.Html:
+        return  <MetaformHtmlComponent
+                  fieldLabelId={ this.getFieldLabelId(field) }
+                  fieldId={ this.getFieldId(field) }
+                  field={ field }
+                  metaform={ metaform }
+                  classes={ classes }
+                  fieldName={ field.name }
+                  onMetaformUpdate={ this.onMetaformUpdate }
+                />
+      case MetaformFieldType.Radio:
+        return  <MetaformRadioFieldComponent
+                  fieldLabelId={ this.getFieldLabelId(field) }
+                  fieldId={ this.getFieldId(field) }
+                  field={ field }
+                  value="test"
+                />
+      case MetaformFieldType.Submit:
+        return  <MetaformSubmitFieldComponent
+                  fieldId={ this.getFieldId(field) }
+                  field={ field }
+                  metaform={ metaform }
+                  onMetaformUpdate={ this.onMetaformUpdate }
+                />
+      case MetaformFieldType.Number:
+        return  <MetaformNumberFieldComponent
+                  fieldLabelId={ this.getFieldLabelId(field) }
+                  fieldId={ this.getFieldId(field) }
+                  field={ field }
+                  metaform={ metaform }
+                  classes={ classes }
+                  onMetaformUpdate={ this.onMetaformUpdate }
+                />
+        default:
+          return <div style={{ color: "red" }}> 
+                  { strings.formEditScreen.unknownFieldType }: { field.type } 
+                </div>
+    }
+  }
+  
+  private onMetaformUpdate = (updatedMetaform: Metaform) => {
+    this.setState({
+      metaform: updatedMetaform
+    });
+  } 
+
+  /**
   * Returns field's id
+  * 
+  * @param field metaform field
   */
   private getFieldId = (field : MetaformField) => {
-    return `${ this.state.metaformId }-field-${ field.name }`;
+    const { metaformId } = this.state;
+
+    return `${ metaformId }-field-${ field.name }`;
   }
 
   /**
   * Returns field label's id
+  * 
+  * @param field metaform field
   */
   private getFieldLabelId = (field : MetaformField) => {
     return `${this.getFieldId(field)}-label`;
   }
 
   /**
-   * Returns field's value
-   * 
-   * @returns field's value
-   */
-  private getFieldValue = (field : MetaformField): FieldValue => {
-    if (!field) {
-      return null;
-    }
-
-    const result = this.getFieldValue(field);
-    if (!result && field._default) {
-      return field._default;
-    }
-
-    return result;
-  }
-
-  /**
    * Method for rendering left sidebar
    */
-  private renderLeftSideBar = () => (
-    <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-        <Typography variant="h5">
-          { strings.formEditScreen.leftSideBarComponentsTab }
+  private renderLeftSideBar = () => {
+    const { classes } = this.props;
+
+    return (
+      <Grid item md={ 2 } className={ classes.sideBar }>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.leftSideBarComponentsTab }
+          </Typography>
+        </Grid>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.leftSideBarStylingTab }
+          </Typography>
+        </Grid>
+        <hr />
+        <Typography variant="caption">
+          <InfoIcon />
+          { strings.formEditScreen.leftSideBarInfo }
         </Typography>
+        { this.renderFields() }
+        { this.renderComponents() }
       </Grid>
-      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-        <Typography variant="h5">
-          { strings.formEditScreen.leftSideBarStylingTab }
-        </Typography>
-      </Grid>
-      <hr />
-      <Typography variant="caption">
-        <InfoIcon />
-        { strings.formEditScreen.leftSideBarInfo }
-      </Typography>
-      { this.renderFields() }
-      { this.renderComponents() }
-    </Grid>
-  );
+    );
+  }
 
   /**
    * Method for rendering right sidebar
    */
-  private renderRightSideBar = () => (
-    <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-        <h5>{ strings.formEditScreen.rightSideBarLinksTab }</h5>
+  private renderRightSideBar = () => {
+    const { classes } = this.props;
+
+    return (
+      <Grid item md={ 2 } className={ classes.sideBar }>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.rightSideBarLinksTab }
+          </Typography>
+        </Grid>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+          { strings.formEditScreen.rightSideBarVisibilityTab }
+          </Typography>
+        </Grid>
+        <hr />
+        <Typography variant="caption">
+          <InfoOutlinedIcon color="disabled" />
+          { strings.formEditScreen.chooseComponent }
+        </Typography>
       </Grid>
-      <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-        <h5>{ strings.formEditScreen.rightSideBarVisibilityTab }</h5>
-      </Grid>
-      <hr />
-      <Typography variant="caption">
-        <InfoOutlinedIcon color="disabled" />
-        { strings.formEditScreen.chooseComponent }
-      </Typography>
-    </Grid>
-  );
+    );
+  }
 
   /**
    * Method for rendering addable fields
@@ -330,9 +350,11 @@ export class FormEditScreen extends React.Component<Props, State> {
       strings.formEditScreen.conditionalField
     ];
 
+    const { classes } = this.props;
+
     return (
       <List>
-        <Box border={ 1 } className={ this.props.classes.fieldHeader }>
+        <Box border={ 1 } className={ classes.fieldHeader }>
           <ListItemText>
             <Typography>
               { strings.formEditScreen.leftSideBarFieldHeader }
@@ -340,7 +362,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           </ListItemText>
         </Box>
         { listOfFields.map((field: string, index: number) => (
-          <Box border={ 1 } className={ this.props.classes.fields } key={ index } >
+          <Box border={ 1 } className={ classes.fields } key={ index } >
             <ListItemText>
               <Typography>{ field }</Typography>
             </ListItemText>
@@ -362,9 +384,11 @@ export class FormEditScreen extends React.Component<Props, State> {
       strings.formEditScreen.image
     ];
 
+    const { classes } = this.props;
+
     return (
       <List>
-        <Box border={ 1 } className={ this.props.classes.componentHeader }>
+        <Box border={ 1 } className={ classes.componentHeader }>
           <ListItemText>
             <Typography>
               { strings.formEditScreen.leftSideBarComponentHeader }
@@ -372,7 +396,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           </ListItemText>
         </Box>
         { listOfComponents.map((component: string, index: number) => (
-          <Box border={ 1 } className={ this.props.classes.fields } key={ index }>
+          <Box border={ 1 } className={ classes.fields } key={ index }>
             <ListItemText>
               <Typography>{ component }</Typography>
             </ListItemText>

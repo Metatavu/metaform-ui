@@ -9,15 +9,14 @@ import strings from '../../../localization/strings';
 interface Props {
   field: MetaformField;
   fieldId: string;
-  fieldLabelId: string;
   metaform: Metaform;
+  onMetaformUpdate: (metaform: Metaform) => void;
 }
 
 /**
  * Component state
  */
 interface State {
-  
 }
 
 /**
@@ -34,7 +33,6 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
     super(props);
 
     this.state = {
-      
     };
   }
 
@@ -42,28 +40,24 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * Component render method
    */
   public render() {
-    const { field } = this.props;
-
-    if (!field.name) {
-      return null;
-    }
+    const { field, fieldId } = this.props;
 
     return ( 
       <>
         <FormControl>
-          <InputLabel htmlFor={ this.props.fieldId }>{ strings.editableFields.submitFieldText }</InputLabel>
+          <InputLabel htmlFor={ fieldId }>{ strings.editableFields.submitFieldText }</InputLabel>
           <OutlinedInput
             label={ strings.editableFields.submitFieldText }
-            id={ this.props.fieldId }
+            id={ fieldId }
             color="secondary"
-            value={ this.props.field.text }
+            value={ field.text }
             onChange={ this.handleButtonTextChange }
           />
           <Button
             variant="contained"
             color="primary"
           >
-            { this.props.field.text }
+            { field.text }
           </Button>  
         </FormControl>
       </>
@@ -74,12 +68,11 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * Event handler for submit button value change
    * 
    * @param event new button text value
-   * @param index new button text value
   */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.props.metaform;
-    if (newMetaform.sections){
-      newMetaform.sections.forEach(section => {
+    const changedMetaform = { ...this.props.metaform };
+    if (changedMetaform.sections){
+      changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
           if( field.type === "submit"){
             field.text = event.target.value;
@@ -87,9 +80,8 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
         })
       });
     }
-    this.setState({
-      metaform : newMetaform
-    })
+
+    this.props.onMetaformUpdate(changedMetaform);
   }
 
 }

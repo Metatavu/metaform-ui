@@ -12,13 +12,13 @@ interface Props extends WithStyles<typeof styles> {
   fieldId: string;
   fieldLabelId: string;
   metaform: Metaform;
+  onMetaformUpdate: (metaform: Metaform) => void;
 }
 
 /**
  * Component state
  */
 interface State {
-  
 }
 
 /**
@@ -42,16 +42,11 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * Component render method
    */
   public render() {
-    if (!this.props.field.name) {
-      return null;
-    }
+    const { classes, field, fieldId } = this.props;
 
-    /**
-     * Props for number input
-     */
     const inputProps = {
-      min: this.props.field.min,
-      max: this.props.field.max,
+      min: field.min,
+      max: field.max,
       step: 1
     }
 
@@ -59,46 +54,45 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
       <>
         <FormControl>
           <InputLabel
-            htmlFor={ this.props.fieldId }
+            htmlFor={ fieldId }
           >
             { strings.editableFields.numberField }
           </InputLabel>
           <Input
             type="number"
-            placeholder={ this.props.field.placeholder }
-            id={ this.props.fieldId }
-            aria-labelledby={ this.props.fieldLabelId }
-            name={ this.props.field.name }
-            title={ this.props.field.title }
-            required={ this.props.field.required }
-            readOnly={ this.props.field.readonly }
+            placeholder={ field.placeholder }
+            id={ fieldId }
+            name={ field.name }
+            title={ field.title }
+            required={ field.required }
+            readOnly={ field.readonly }
             inputProps={ inputProps }
-            className={ this.props.classes.numberField }
+            className={ classes.numberField }
           />
         </FormControl>
         <FormControl>
           <InputLabel
-            htmlFor={ this.props.fieldId }
+            htmlFor={ fieldId }
           >
             { strings.editableFields.numberFieldMin }
           </InputLabel>
           <Input
             type="number"
-            id={ this.props.fieldId }
-            className={ this.props.classes.numberField }
+            id={ fieldId }
+            className={ classes.numberField }
             onChange={ this.handleNumberMinValueChange }
           />
         </FormControl>
         <FormControl>
           <InputLabel
-            htmlFor={ this.props.fieldId }
+            htmlFor={ fieldId }
           >
             { strings.editableFields.numberFieldMax }
           </InputLabel>
           <Input
             type="number"
-            id={ this.props.fieldId }
-            className={ this.props.classes.numberField }
+            id={ fieldId }
+            className={ classes.numberField }
             onChange={ this.handleNumberMaxValueChange }
           />
         </FormControl>
@@ -112,9 +106,9 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * @param event new min number value
   */ 
   private handleNumberMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.props.metaform;
-    if (newMetaform.sections){
-      newMetaform.sections.forEach(section => {
+    const changedMetaform = { ...this.props.metaform };
+    if(changedMetaform.sections){
+      changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
           if( field.type === "number"){
             field.min = event.target.value as unknown as number;
@@ -122,9 +116,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
         })
       });
     }
-    this.setState({
-      metaform : newMetaform
-    })
+    
+    this.props.onMetaformUpdate(changedMetaform);
   }
 
   /**
@@ -133,9 +126,9 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * @param event new max number value
   */ 
   private handleNumberMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.props.metaform;
-    if (newMetaform.sections){
-      newMetaform.sections.forEach(section => {
+    const changedMetaform = { ...this.props.metaform };
+    if (changedMetaform.sections){
+      changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
           if( field.type === "number"){
             field.max = event.target.value as unknown as number;
@@ -143,9 +136,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
         })
       });
     }
-    this.setState({
-      metaform : newMetaform
-    })
+
+    this.props.onMetaformUpdate(changedMetaform);
   }
 
 }
