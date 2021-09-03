@@ -274,6 +274,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    * 
    * @param sectionIndex  section index
    * @param fieldIndex field index
+   *
    * @returns updated Metaform state
    */
   private onNumberValueUpdate = (sectionIndex: number, fieldIndex: number) => (key: string, value: number) => {
