@@ -260,12 +260,12 @@ export class FormEditScreen extends React.Component<Props, State> {
             onValueUpdate={ this.onNumberValueUpdate(sectionIndex, fieldIndex) }
           />
         );
-        default:
-          return (
-            <div style={{ color: "red" }}> 
-              { strings.formEditScreen.unknownFieldType }: { field.type } 
-            </div>
-          );
+      default:
+        return (
+          <div style={{ color: "red" }}> 
+            { strings.formEditScreen.unknownFieldType }: { field.type } 
+          </div>
+        );
     }
   }
 
