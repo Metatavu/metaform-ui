@@ -1,6 +1,6 @@
-import React from 'react';
-import { MetaformField } from '../../../generated/client';
-import { FieldValue } from '../../../types';
+import React from "react";
+import { MetaformField } from "../../../generated/client";
+import { FieldValue } from "../../../types";
 
 /**
  * Component props

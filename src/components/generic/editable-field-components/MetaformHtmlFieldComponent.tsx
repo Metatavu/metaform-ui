@@ -1,7 +1,7 @@
-import { FormControl, InputLabel, OutlinedInput, WithStyles } from '@material-ui/core';
-import React from 'react';
-import { Metaform, MetaformField } from '../../../generated/client';
-import strings from '../../../localization/strings';
+import { FormControl, InputLabel, OutlinedInput, WithStyles } from "@material-ui/core";
+import React from "react";
+import { Metaform, MetaformField } from "../../../generated/client";
+import strings from "../../../localization/strings";
 import styles from "../../../styles/form-edit-screen";
 
 /**
@@ -20,7 +20,6 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  metaform: Metaform;
 }
 
 /**
@@ -37,7 +36,6 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      metaform: this.props.metaform
     };
   }
 

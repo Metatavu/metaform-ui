@@ -1,15 +1,15 @@
-import React from 'react';
-import { MetaformField, MetaformFieldOption } from '../../../generated/client';
-import { FieldValue } from '../../../types';
+import React from "react";
+import { MetaformField, MetaformFieldOption } from "../../../generated/client";
+import { FieldValue } from "../../../types";
 
 /**
  * Component props
  */
 interface Props {
-  field: MetaformField,
-  fieldId: string,
-  fieldLabelId: string,
-  value: FieldValue,
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
+  value: FieldValue;
 }
 
 /**
@@ -39,9 +39,9 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, value } = this.props;
+    const { field, value, fieldId } = this.props;
 
-    if (!this.props.field.name) {
+    if (!field.name) {
       return null;
     }
 
@@ -51,7 +51,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
       <div>
         {
           options.map((option, i) =>  (
-            <div key={ `${this.props.fieldId}-${option.name}-container` }>
+            <div key={ `${ fieldId }-${ option.name }-container` }>
               { this.renderOption(option, value as string) }
             </div>
           ))
@@ -61,7 +61,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
   }
 
   /**
-   * Renders field option's label
+   * Renders field option"s label
    * 
    * @param option metaform field option
    * @param value value
@@ -77,7 +77,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
   }
 
   /**
-   * Renders field option's value
+   * Renders field option"s value
    * 
    * @param option metaform field option
    * @param value value

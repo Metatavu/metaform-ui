@@ -1,7 +1,7 @@
-import { Button, FormControl, InputLabel, OutlinedInput } from '@material-ui/core';
-import React from 'react';
-import { Metaform, MetaformField } from '../../../generated/client';
-import strings from '../../../localization/strings';
+import { Button, FormControl, InputLabel, OutlinedInput } from "@material-ui/core";
+import React from "react";
+import { Metaform, MetaformField } from "../../../generated/client";
+import strings from "../../../localization/strings";
 
 /**
  * Component props

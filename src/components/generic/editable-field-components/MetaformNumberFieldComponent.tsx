@@ -12,7 +12,7 @@ interface Props extends WithStyles<typeof styles> {
   fieldId: string;
   fieldLabelId: string;
   metaform: Metaform;
-  onMetaformUpdate: (metaform: Metaform) => void;
+  onValueUpdate: (key: string, number: number) => void;
 }
 
 /**
@@ -41,14 +41,14 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   /**
    * Component render method
    */
-  public render() {
+  public render = () => {
     const { classes, field, fieldId } = this.props;
 
     const inputProps = {
       min: field.min,
       max: field.max,
       step: 1
-    }
+    };
 
     return (
       <>
@@ -80,7 +80,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
             type="number"
             id={ fieldId }
             className={ classes.numberField }
-            onChange={ this.handleNumberMinValueChange }
+            onChange={ this.handleNumberValueChange }
+            name="min"
           />
         </FormControl>
         <FormControl>
@@ -93,7 +94,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
             type="number"
             id={ fieldId }
             className={ classes.numberField }
-            onChange={ this.handleNumberMaxValueChange }
+            onChange={ this.handleNumberValueChange }
+            name="max"
           />
         </FormControl>
       </>
@@ -105,41 +107,14 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * 
    * @param event new min number value
   */ 
-  private handleNumberMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { metaform, onMetaformUpdate } = this.props;
-    const changedMetaform = { ...metaform };
-    
-    if(changedMetaform.sections){
-      changedMetaform.sections.forEach(section => {
-        section.fields?.forEach(field => {
-          if( field.type === "number"){
-            field.min = event.target.value as unknown as number;
-          }
-        })
-      });
-    }
-    
-    onMetaformUpdate(changedMetaform);
-  }
+  private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { onValueUpdate } = this.props;
+    const { value, name } = event.target;
 
-  /**
-   * Event handler for maximum number value change
-   * 
-   * @param event new max number value
-  */ 
-  private handleNumberMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const changedMetaform = { ...this.props.metaform };
-    if (changedMetaform.sections){
-      changedMetaform.sections.forEach(section => {
-        section.fields?.forEach(field => {
-          if( field.type === "number"){
-            field.max = event.target.value as unknown as number;
-          }
-        })
-      });
+    if (!name) {
+      return;
     }
 
-    this.props.onMetaformUpdate(changedMetaform);
+    onValueUpdate(name, Number(value));
   }
-
 }

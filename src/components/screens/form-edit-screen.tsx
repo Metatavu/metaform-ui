@@ -4,14 +4,14 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import InfoIcon from '@material-ui/icons/Info';
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import InfoIcon from "@material-ui/icons/Info";
 
 import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from '../../types';
+import { AccessToken } from "../../types";
 import Api from "../../api/api";
 import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
@@ -22,6 +22,7 @@ import { MetaformHtmlComponent } from "../generic/editable-field-components/Meta
 import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
 import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
+import produce from "immer";
 
 /**
  * Component props
@@ -136,7 +137,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           { metaform.sections?.map((section, i) => {
             return (
               <div key={ i } className={ classes.editableSections }>
-                { this.renderFormFields(section) }
+                { this.renderFormFields(section, i) }
               </div> 
             );
           })}
@@ -148,13 +149,13 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Renders main header
    * 
-   * @returns Metaform main header
    */
   private renderMainHeader = () => {
     const { metaform } = this.state;
+    const { classes } = this.props;
     
     return (
-      <FormControl variant="outlined" className={ this.props.classes.mainHeader }>
+      <FormControl variant="outlined" className={ classes.mainHeader }>
         <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
         <OutlinedInput
           label={ strings.formEditScreen.formMainHeader }
@@ -172,10 +173,10 @@ export class FormEditScreen extends React.Component<Props, State> {
    * @param event new main header value
    */
   private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMetaform = this.state.metaform;
-    newMetaform.title = event.target.value;
+    const { metaform }= this.state;
+    metaform.title = event.target.value;
     this.setState({
-      metaform : newMetaform
+      metaform : metaform
     });
   }
 
@@ -184,16 +185,16 @@ export class FormEditScreen extends React.Component<Props, State> {
    * 
    * @param section metaform section
    */
-  private renderFormFields = (section: MetaformSection) => {
+  private renderFormFields = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
     
     return (
       <FormControl>
         {
-          section.fields?.map((field: MetaformField, i : number) => {
+          section.fields?.map((field, i) => {
             return (
               <div key={ i } className={ classes.editableField }>
-                { this.renderInput(field) }
+                { this.renderInput(field, sectionIndex, i) }
               </div>
             )
           })
@@ -203,59 +204,111 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-  * Renders field's input
+  * Renders field"s input
   * 
   * @param field metaform field
   */
-  private renderInput = (field: MetaformField) => {
+  private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
     const { classes } = this.props;
     const { metaform } = this.state;
 
     switch (field.type) {
       case MetaformFieldType.Text:
-        return  <MetaformTextFieldComponent
-                  field={ field }
-                />
+        return (
+          <MetaformTextFieldComponent
+            field={ field }
+          />
+        );
       case MetaformFieldType.Html:
-        return  <MetaformHtmlComponent
-                  fieldLabelId={ this.getFieldLabelId(field) }
-                  fieldId={ this.getFieldId(field) }
-                  field={ field }
-                  metaform={ metaform }
-                  classes={ classes }
-                  fieldName={ field.name }
-                  onMetaformUpdate={ this.onMetaformUpdate }
-                />
+        return  (
+          <MetaformHtmlComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            classes={ classes }
+            fieldName={ field.name }
+            onMetaformUpdate={ this.onMetaformUpdate }
+          />
+        );
       case MetaformFieldType.Radio:
-        return  <MetaformRadioFieldComponent
-                  fieldLabelId={ this.getFieldLabelId(field) }
-                  fieldId={ this.getFieldId(field) }
-                  field={ field }
-                  value="test"
-                />
+        return (
+          <MetaformRadioFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            value="test"
+          />
+        );
       case MetaformFieldType.Submit:
-        return  <MetaformSubmitFieldComponent
-                  fieldId={ this.getFieldId(field) }
-                  field={ field }
-                  metaform={ metaform }
-                  onMetaformUpdate={ this.onMetaformUpdate }
-                />
+        return (
+          <MetaformSubmitFieldComponent
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            onMetaformUpdate={ this.onMetaformUpdate }
+          />
+        );
       case MetaformFieldType.Number:
-        return  <MetaformNumberFieldComponent
-                  fieldLabelId={ this.getFieldLabelId(field) }
-                  fieldId={ this.getFieldId(field) }
-                  field={ field }
-                  metaform={ metaform }
-                  classes={ classes }
-                  onMetaformUpdate={ this.onMetaformUpdate }
-                />
+        return (
+          <MetaformNumberFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            classes={ classes }
+            onValueUpdate={ this.onNumberValueUpdate(sectionIndex, fieldIndex) }
+          />
+        );
         default:
-          return <div style={{ color: "red" }}> 
-                  { strings.formEditScreen.unknownFieldType }: { field.type } 
-                </div>
+          return (
+            <div style={{ color: "red" }}> 
+              { strings.formEditScreen.unknownFieldType }: { field.type } 
+            </div>
+          );
     }
   }
-  
+
+  /**
+   * Event handler for min/max number change
+   * 
+   * @param sectionIndex  section index
+   * @param fieldIndex field index
+   * @returns 
+   */
+  private onNumberValueUpdate = (sectionIndex: number, fieldIndex: number) => (key: string, value: number) => {
+    this.setState(
+      produce((draft: State) => {
+        const { metaform } = draft;
+
+        if (!metaform.sections) {
+          return;
+        }
+    
+        const section = metaform.sections[sectionIndex];
+    
+        if (!section.fields) {
+          return;
+        }
+    
+        const field = section.fields[fieldIndex];
+
+        if (key === "min") {
+          field.min = value;
+        }
+
+        if (key === "max") {
+          field.max = value;
+        }
+      })
+    );
+  }
+
+  /**
+   * Updates Metaform data to state
+   * 
+   * @param updatedMetaform updated Metaform
+   */
   private onMetaformUpdate = (updatedMetaform: Metaform) => {
     this.setState({
       metaform: updatedMetaform
@@ -263,7 +316,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   } 
 
   /**
-  * Returns field's id
+  * Returns field"s id
   * 
   * @param field metaform field
   */
@@ -274,7 +327,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-  * Returns field label's id
+  * Returns field label"s id
   * 
   * @param field metaform field
   */
