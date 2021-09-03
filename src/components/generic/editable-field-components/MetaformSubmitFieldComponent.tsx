@@ -70,7 +70,9 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * @param event new button text value
   */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const changedMetaform = { ...this.props.metaform };
+    const { metaform, onMetaformUpdate } = this.props;
+    const changedMetaform = { ...metaform };
+
     if (changedMetaform.sections){
       changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
@@ -81,7 +83,7 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
       });
     }
 
-    this.props.onMetaformUpdate(changedMetaform);
+    onMetaformUpdate(changedMetaform);
   }
 
 }
