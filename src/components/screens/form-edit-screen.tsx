@@ -220,7 +220,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           />
         );
       case MetaformFieldType.Html:
-        return  (
+        return (
           <MetaformHtmlComponent
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
