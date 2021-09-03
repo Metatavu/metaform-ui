@@ -76,7 +76,7 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
     if (changedMetaform.sections){
       changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
-          if( field.type === "submit"){
+          if(field.type === "submit"){
             field.text = event.target.value;
           }
         })
