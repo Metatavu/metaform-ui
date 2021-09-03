@@ -67,18 +67,19 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * @param event new html value
   */ 
   private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const changedMetaform = { ...this.props.metaform };
+    const { metaform, fieldName, onMetaformUpdate } = this.props;
+    const changedMetaform = { ...metaform };
 
     if (changedMetaform.sections) {
       changedMetaform.sections.forEach(section => {
         section.fields?.forEach(field => {
-          if (field.type === "html" && field.name === this.props.fieldName) {
+          if (field.type === "html" && field.name === fieldName) {
             field.html = event.target.value;
           }
         })
       });
     }
 
-    this.props.onMetaformUpdate(changedMetaform);
+    onMetaformUpdate(changedMetaform);
   }
 }
