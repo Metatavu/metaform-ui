@@ -204,9 +204,11 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-  * Renders field"s input
+  * Renders field's input
   * 
   * @param field metaform field
+  * @param sectionIndex section index
+  * @param fieldIndex field index
   */
   private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
     const { classes } = this.props;
