@@ -1,7 +1,7 @@
-import { FormControl, Input, InputLabel, WithStyles, } from '@material-ui/core';
-import React from 'react';
-import { Metaform, MetaformField } from '../../../generated/client';
-import strings from '../../../localization/strings';
+import { FormControl, Input, InputLabel, WithStyles, } from "@material-ui/core";
+import React from "react";
+import { Metaform, MetaformField } from "../../../generated/client";
+import strings from "../../../localization/strings";
 import styles from "../../../styles/form-edit-screen";
 
 /**
