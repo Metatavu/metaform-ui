@@ -184,6 +184,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form fields
    * 
    * @param section metaform section
+   * @param sectionIndex section index
    */
   private renderFormFields = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
