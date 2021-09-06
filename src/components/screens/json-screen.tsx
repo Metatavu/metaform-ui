@@ -86,7 +86,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       /**
        * Create mutable copy of metaform json
        */
-      const metaformJson = JSON.stringify(metaform, null, 2)
+      const metaformJson = JSON.stringify(metaform, null, 2);
 
       this.setState({
         loading: false,
@@ -199,7 +199,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    signedToken: state.auth.signedToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken,
   };
 }
 
