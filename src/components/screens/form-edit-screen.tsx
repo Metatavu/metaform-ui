@@ -265,7 +265,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       default:
         return (
           <div style={{ color: "red" }}> 
-            { strings.formEditScreen.unknownFieldType }: { field.type } 
+            `${ strings.formEditScreen.unknownFieldType }: ${ field.type }` 
           </div>
         );
     }
