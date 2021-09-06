@@ -317,10 +317,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   } 
 
   /**
-  * Returns field"s id
-  * 
-  * @param field metaform field
-  */
+   * Returns field's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
   private getFieldId = (field : MetaformField) => {
     const { metaformId } = this.state;
 
