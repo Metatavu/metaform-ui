@@ -148,7 +148,6 @@ export class FormEditScreen extends React.Component<Props, State> {
 
   /**
    * Renders main header
-   * 
    */
   private renderMainHeader = () => {
     const { metaform } = this.state;
