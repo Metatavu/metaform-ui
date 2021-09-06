@@ -68,7 +68,7 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * Event handler for submit button value change
    * 
    * @param event new button text value
-  */ 
+   */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { metaform, onMetaformUpdate } = this.props;
     const changedMetaform = { ...metaform };
