@@ -175,7 +175,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { metaform } = this.state;
     metaform.title = event.target.value;
     this.setState({
-      metaform : metaform
+      metaform: metaform
     });
   }
 
