@@ -330,10 +330,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-  * Returns field label"s id
-  * 
-  * @param field metaform field
-  */
+   * Returns field label's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field label's id 
+   */
   private getFieldLabelId = (field : MetaformField) => {
     return `${this.getFieldId(field)}-label`;
   }
