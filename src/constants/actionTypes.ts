@@ -23,13 +23,13 @@ export const LOAD_METAFORM = "LOAD_METAFORM";
 export type LOAD_METAFORM = typeof LOAD_METAFORM;
 
 /**
- * Metaform finish loading
+ * Set the metaform data
  */
 export const SET_METAFORM = "SET_METAFORM";
 export type SET_METAFORM = typeof SET_METAFORM;
 
 /**
- * Metaform finish loading
+ * Set the metaform json data
  */
 export const SET_METAFORM_JSON = "SET_METAFORM_JSON";
 export type SET_METAFORM_JSON = typeof SET_METAFORM_JSON;

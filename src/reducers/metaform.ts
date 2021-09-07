@@ -25,6 +25,7 @@ const initialState: MetaformState = {
  * 
  * @param metaformState metaform state 
  * @param metaformAction metaform action
+ * 
  * @returns changed metaform state
  */
 export function metaformReducer(metaformState: MetaformState = initialState, action: MetaformAction): MetaformState {

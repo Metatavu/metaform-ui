@@ -24,10 +24,6 @@ export default class MetaformUtils {
    * @returns metaform data
    */
   public static jsonToMetaform = (metaformJson: string): Metaform => {
-    console.log("converted metaform", {
-      ...JSON.parse(metaformJson)
-    } as Metaform)
-
     return {
       ...JSON.parse(metaformJson)
     } as Metaform;
