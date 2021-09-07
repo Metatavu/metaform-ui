@@ -17,7 +17,8 @@ import { Metaform } from "../../generated/client";
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
-import { loadMetaform, setMetaform } from "../../actions/metaform";
+import { loadMetaform, setMetaform, setMetaformJson } from "../../actions/metaform";
+import MetaformUtils from "../../utils/metaform";
 
 /**
  * Component props
@@ -30,6 +31,7 @@ interface Props extends WithStyles<typeof styles> {
   metaformIsLoading: boolean;
   onLoadMetaform: () => void;
   onSetMetaform: (metaform?: Metaform) => void;
+  onSetMetaformJson: (metaformJson: string) =>  void;
 }
 
 /**
@@ -66,8 +68,9 @@ export class FormEditScreen extends React.Component<Props, State> {
       metaform,
       signedToken, 
       metaformIsLoading,
-      onLoadMetaform, 
-      onSetMetaform
+      onLoadMetaform,
+      onSetMetaform,
+      onSetMetaformJson
     } = this.props;
 
     if (metaformIsLoading || metaform) {
@@ -84,13 +87,16 @@ export class FormEditScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
 
+      const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
       onSetMetaform(loadedMetaform);
+      onSetMetaformJson(convertedMetaformJson);
     } catch (e) {
       this.setState({
         error: e
       });
 
       onSetMetaform(undefined);
+      onSetMetaformJson("");
     }
   };
 
@@ -279,7 +285,8 @@ function mapStateToProps(state: ReduxState) {
 function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
     onLoadMetaform: () => dispatch(loadMetaform()),
-    onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform))
+    onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform)),
+    onSetMetaformJson: (metaformJson: string) => dispatch(setMetaformJson(metaformJson))
   };
 }
 

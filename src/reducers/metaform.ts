@@ -30,28 +30,24 @@ const initialState: MetaformState = {
 export function metaformReducer(metaformState: MetaformState = initialState, action: MetaformAction): MetaformState {
   switch (action.type) {
     case LOAD_METAFORM:
-      return { ...metaformState, isLoading: true };
+      return { 
+        ...metaformState, 
+        isLoading: true 
+      };
     case SET_METAFORM:
       const { metaform } = action;
-
-      const convertedMetaformJson = metaform ? JSON.stringify(metaform, null, 2) : "";
 
       return { 
         ...metaformState, 
         metaform,
-        metaformJson: convertedMetaformJson,
         isLoading: false
       };
     case SET_METAFORM_JSON:
       const { metaformJson } = action;
 
-      // TODO set the metaform
-      // const convertedMetaform
-
       return { 
         ...metaformState, 
         metaformJson,
-        // metaform: convertedMetaform,
         isLoading: false
       };
     default:

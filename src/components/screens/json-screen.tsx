@@ -22,6 +22,7 @@ import "codemirror/mode/xml/xml";
 import "codemirror/mode/javascript/javascript";
 import codemirror from "codemirror";
 import { loadMetaform, setMetaform, setMetaformJson } from "../../actions/metaform";
+import MetaformUtils from "../../utils/metaform";
 
 /**
  * Component props
@@ -74,7 +75,8 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       signedToken, 
       metaformIsLoading,
       onLoadMetaform, 
-      onSetMetaform
+      onSetMetaform,
+      onSetMetaformJson
     } = this.props;
 
     if (metaformIsLoading || metaform) {
@@ -91,14 +93,16 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
 
-
+      const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
       onSetMetaform(loadedMetaform);
+      onSetMetaformJson(convertedMetaformJson);
     } catch (e) {
       this.setState({
         error: e
       });
 
       onSetMetaform(undefined);
+      onSetMetaformJson("");
     }
   }
   
@@ -146,7 +150,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
             <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
             <CodeMirror 
               className={ classes.codeMirror }
-              value={metaformJson}
+              value={ metaformJson }
               options={ jsonEditorOptions }
               onBeforeChange={this.onCodeMirrorBeforeJsonChange}
             />
@@ -166,9 +170,9 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * @param value code
    */
   private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
-    this.setState({
-      metaformJson: value
-    });
+    const { onSetMetaformJson } = this.props;
+
+    onSetMetaformJson(value);
   }
 
   /**
@@ -176,6 +180,12 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    */
   private toggleMutableJson = () => {
     const { readOnly } = this.state;
+    const { metaformJson, onSetMetaform } = this.props;
+
+    if (!readOnly) {
+      onSetMetaform(MetaformUtils.jsonToMetaform(metaformJson));
+    }
+
     this.setState({ 
       readOnly: !readOnly
     });
