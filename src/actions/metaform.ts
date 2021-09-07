@@ -1,5 +1,5 @@
-import * as actionTypes from '../constants/actionTypes';
-import { Metaform } from '../generated/client/models';
+import * as actionTypes from "../constants/actionTypes";
+import { Metaform } from "../generated/client/models";
 
 /**
  * Interface for load metaform action type
