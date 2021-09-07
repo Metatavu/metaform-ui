@@ -1,6 +1,6 @@
-import { MetaformAction } from '../actions/metaform';
-import { LOAD_METAFORM, SET_METAFORM, SET_METAFORM_JSON } from '../constants/actionTypes';
-import { Metaform } from '../generated/client';
+import { MetaformAction } from "../actions/metaform";
+import { LOAD_METAFORM, SET_METAFORM, SET_METAFORM_JSON } from "../constants/actionTypes";
+import { Metaform } from "../generated/client";
 
 /**
  * Redux metaform state
