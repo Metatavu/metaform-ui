@@ -173,9 +173,10 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { metaform } = this.state;
-    metaform.title = event.target.value;
     this.setState({
-      metaform: metaform
+      metaform: { ...metaform, 
+        title: event.target.value
+      }
     });
   }
 
