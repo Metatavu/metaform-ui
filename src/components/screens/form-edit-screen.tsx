@@ -1,23 +1,27 @@
 import * as React from "react";
-
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import InfoIcon from '@material-ui/icons/Info';
-
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import InfoIcon from "@material-ui/icons/Info";
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from '../../types';
+import { AccessToken } from "../../types";
 import Api from "../../api/api";
-import { Metaform } from "../../generated/client";
+import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { loadMetaform, setMetaform, setMetaformJson } from "../../actions/metaform";
+import { MetaformTextFieldComponent } from "../generic/editable-field-components/MetaformTextFieldComponent";
+import { MetaformHtmlComponent } from "../generic/editable-field-components/MetaformHtmlFieldComponent";
+import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
+import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
+import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
+import produce from "immer";
 import MetaformUtils from "../../utils/metaform";
 
 /**
@@ -29,6 +33,7 @@ interface Props extends WithStyles<typeof styles> {
   signedToken: AccessToken;
   metaform?: Metaform;
   metaformIsLoading: boolean;
+  contexts?: string[];
   onLoadMetaform: () => void;
   onSetMetaform: (metaform?: Metaform) => void;
   onSetMetaformJson: (metaformJson: string) =>  void;
@@ -133,28 +138,246 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form editor
    */
   private renderFormEditor = () => {
-    const { metaform } = this.props;
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
 
     return (
-      <Grid item md={ 8 } className={ this.props.classes.formEditor }>
-        <Box className={ this.props.classes.editableForm }>
-          { metaform?.title } 
+      <Grid item md={ 8 } className={ classes.formEditor }>
+        <Box className={ classes.editableForm }>
+          { this.renderMainHeader() }
+          { metaform.sections?.map((section, i) => {
+            return (
+              <div key={ i } className={ classes.editableSections }>
+                { this.renderFormFields(section, i) }
+              </div> 
+            );
+          })}
         </Box>
       </Grid>
-    )
+    );
+  }
+
+  /**
+   * Renders main header
+   */
+  private renderMainHeader = () => {
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
+
+    return (
+      <FormControl variant="outlined" className={ classes.mainHeader }>
+        <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
+        <OutlinedInput
+          label={ strings.formEditScreen.formMainHeader }
+          id="mainHeaderField"
+          color="secondary"
+          value={ metaform.title }
+          onChange={ this.handleInputTitleChange }
+        />
+      </FormControl>
+    );
+  }
+
+  /**
+   * Event handler for main header change
+   * 
+   * @param event new main header value
+   */
+  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { metaform, onSetMetaform } = this.props;
+
+    onSetMetaform({
+      ...metaform, 
+      title: event.target.value
+    } as Metaform);
+  }
+
+  /**
+   * Method for rendering form fields
+   * 
+   * @param section metaform section
+   * @param sectionIndex section index
+   */
+  private renderFormFields = (section: MetaformSection, sectionIndex: number) => {
+    const { classes } = this.props;
+    
+    return (
+      <FormControl>
+        {
+          section.fields?.map((field, i) => {
+            return (
+              <div key={ i } className={ classes.editableField }>
+                { this.renderInput(field, sectionIndex, i) }
+              </div>
+            )
+          })
+        }
+      </FormControl>
+    );
+  }
+
+  /**
+  * Renders field's input
+  * 
+  * @param field metaform field
+  * @param sectionIndex section index
+  * @param fieldIndex field index
+  */
+  private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
+
+    switch (field.type) {
+      case MetaformFieldType.Text:
+        return (
+          <MetaformTextFieldComponent
+            field={ field }
+          />
+        );
+      case MetaformFieldType.Html:
+        return (
+          <MetaformHtmlComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            classes={ classes }
+            fieldName={ field.name }
+            onMetaformUpdate={ this.onMetaformUpdate }
+          />
+        );
+      case MetaformFieldType.Radio:
+        return (
+          <MetaformRadioFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+          />
+        );
+      case MetaformFieldType.Submit:
+        return (
+          <MetaformSubmitFieldComponent
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            onMetaformUpdate={ this.onMetaformUpdate }
+          />
+        );
+      case MetaformFieldType.Number:
+        return (
+          <MetaformNumberFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            metaform={ metaform }
+            classes={ classes }
+            onValueUpdate={ this.onNumberValueUpdate(sectionIndex, fieldIndex) }
+          />
+        );
+      default:
+        return (
+          <div style={{ color: "red" }}> 
+            `${ strings.formEditScreen.unknownFieldType }: ${ field.type }` 
+          </div>
+        );
+    }
+  }
+
+  /**
+   * Event handler for min/max number change
+   * 
+   * @param sectionIndex  section index
+   * @param fieldIndex field index
+   */
+  private onNumberValueUpdate = (sectionIndex: number, fieldIndex: number) => (key: string, value: number) => {
+    this.setState(
+      produce((draft: State) => {
+        const { metaform } = draft;
+
+        if (!metaform.sections) {
+          return;
+        }
+    
+        const section = metaform.sections[sectionIndex];
+    
+        if (!section.fields) {
+          return;
+        }
+    
+        const field = section.fields[fieldIndex];
+
+        if (key === "min") {
+          field.min = value;
+        }
+
+        if (key === "max") {
+          field.max = value;
+        }
+      })
+    );
+  }
+
+  /**
+   * Updates Metaform data to state
+   * 
+   * @param updatedMetaform updated Metaform
+   */
+  private onMetaformUpdate = (updatedMetaform: Metaform) => {
+    this.setState({
+      metaform: updatedMetaform
+    });
+  } 
+
+  /**
+   * Returns field's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private getFieldId = (field : MetaformField) => {
+    const { metaform } = this.props;
+
+    return `${ metaform.id }-field-${ field.name }`;
+  }
+
+  /**
+   * Returns field label's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field label's id 
+   */
+  private getFieldLabelId = (field : MetaformField) => {
+    return `${this.getFieldId(field)}-label`;
   }
 
   /**
    * Method for rendering left sidebar
    */
   private renderLeftSideBar = () => {
+    const { classes } = this.props;
+
     return (
-      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.leftSideBarComponentsTab }</h5>
+      <Grid item md={ 2 } className={ classes.sideBar }>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.leftSideBarComponentsTab }
+          </Typography>
         </Grid>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5> { strings.formEditScreen.leftSideBarStylingTab }</h5>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.leftSideBarStylingTab }
+          </Typography>
         </Grid>
         <hr />
         <Typography variant="caption">
@@ -171,15 +394,21 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering right sidebar
    */
   private renderRightSideBar = () => {
+    const { classes } = this.props;
+
     return (
-      <Grid item md={ 2 } className={ this.props.classes.sideBar }>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.rightSideBarLinksTab }</h5>
+      <Grid item md={ 2 } className={ classes.sideBar }>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+            { strings.formEditScreen.rightSideBarLinksTab }
+          </Typography>
         </Grid>
-        <Grid item md={ 6 } className={ this.props.classes.sideBarTabs }>
-          <h5>{ strings.formEditScreen.rightSideBarVisibilityTab }</h5>
+        <Grid item md={ 6 } className={ classes.sideBarTabs }>
+          <Typography variant="h5">
+          { strings.formEditScreen.rightSideBarVisibilityTab }
+          </Typography>
         </Grid>
-      <hr />
+        <hr />
         <Typography variant="caption">
           <InfoOutlinedIcon color="disabled" />
           { strings.formEditScreen.chooseComponent }
@@ -200,9 +429,11 @@ export class FormEditScreen extends React.Component<Props, State> {
       strings.formEditScreen.conditionalField
     ];
 
+    const { classes } = this.props;
+
     return (
       <List>
-        <Box border={ 1 } className={ this.props.classes.fieldHeader }>
+        <Box border={ 1 } className={ classes.fieldHeader }>
           <ListItemText>
             <Typography>
               { strings.formEditScreen.leftSideBarFieldHeader }
@@ -210,7 +441,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           </ListItemText>
         </Box>
         { listOfFields.map((field: string, index: number) => (
-          <Box border={ 1 } className={ this.props.classes.fields } key={ index } >
+          <Box border={ 1 } className={ classes.fields } key={ index } >
             <ListItemText>
               <Typography>{ field }</Typography>
             </ListItemText>
@@ -223,7 +454,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Method for rendering addable components
    */
-   private renderComponents = () => {
+  private renderComponents = () => {
     const listOfComponents = [
       strings.formEditScreen.dropDownMenu,
       strings.formEditScreen.selectBox,
@@ -232,9 +463,11 @@ export class FormEditScreen extends React.Component<Props, State> {
       strings.formEditScreen.image
     ];
 
+    const { classes } = this.props;
+
     return (
       <List>
-        <Box border={ 1 } className={ this.props.classes.componentHeader }>
+        <Box border={ 1 } className={ classes.componentHeader }>
           <ListItemText>
             <Typography>
               { strings.formEditScreen.leftSideBarComponentHeader }
@@ -242,7 +475,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           </ListItemText>
         </Box>
         { listOfComponents.map((component: string, index: number) => (
-          <Box border={ 1 } className={ this.props.classes.fields } key={ index }>
+          <Box border={ 1 } className={ classes.fields } key={ index }>
             <ListItemText>
               <Typography>{ component }</Typography>
             </ListItemText>
@@ -289,6 +522,5 @@ function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
     onSetMetaformJson: (metaformJson: string) => dispatch(setMetaformJson(metaformJson))
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FormEditScreen));
