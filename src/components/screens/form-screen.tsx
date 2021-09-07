@@ -24,7 +24,6 @@ import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
 import { FileFieldValue, ValidationErrors } from "metaform-react/dist/types";
 import Utils from "../../utils";
-import MetaformUtils from "../../utils/metaform";
 
 const AUTOSAVE_COOLDOWN = 500;
 
@@ -37,11 +36,6 @@ interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
   signedToken?: AccessToken;
   anonymousToken?: AccessToken;
-  metaform?: Metaform;
-  metaformIsLoading: boolean;
-  onLoadMetaform: () => void;
-  onSetMetaform: (metaform?: Metaform) => void;
-  onSetMetaformJson: (metaformJson: string) =>  void;
 }
 
 /**
@@ -50,6 +44,7 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   snackbarMessage?: SnackbarMessage;
   error?: string | Error | Response;
+  loading: boolean;
   saving: boolean;
   autosaving: boolean;
   formValid: boolean;
@@ -63,6 +58,7 @@ interface State {
   replyDeleteConfirmVisible: boolean;
   reply?: Reply;
   ownerKey: string | null;
+  metaform?: Metaform;
   formValues: Dictionary<FieldValue>;
   redirectTo?: string;
 }
@@ -82,6 +78,7 @@ export class FormScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {      
+      loading: false,
       saving: false,
       autosaving: false,
       formValid: true,
@@ -102,13 +99,7 @@ export class FormScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { 
-      location, 
-      signedToken,
-      onLoadMetaform,
-      onSetMetaform,
-      onSetMetaformJson
-    } = this.props;
+    const { location, signedToken } = this.props;
 
     const accessToken = this.getAccessToken();
     const query = new URLSearchParams(location.search);
@@ -117,31 +108,26 @@ export class FormScreen extends React.Component<Props, State> {
     const replyId = query.get("reply");
     const ownerKey = query.get("owner-key");
 
-    this.setState({
-      draftId: draftId
-    });
-
     const metaformId = Config.getMetaformId();    
 
     try {
-      onLoadMetaform();
+      this.setState({
+        loading: true,
+        draftId: draftId
+      });
 
       const metaformsApi = Api.getMetaformsApi(accessToken);
 
-      const loadedMetaform = await metaformsApi.findMetaform({
+      const metaform = await metaformsApi.findMetaform({
         metaformId: metaformId,
         replyId: replyId || undefined,
         ownerKey: ownerKey || undefined
       });
       
-      const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
-      onSetMetaform(loadedMetaform);
-      onSetMetaformJson(convertedMetaformJson);
-
       const formValues = { ...this.state.formValues };
-      document.title = loadedMetaform.title ? loadedMetaform.title : "Metaform";
+      document.title = metaform.title ? metaform.title : "Metaform";
 
-      loadedMetaform.sections?.forEach(section => {        
+      metaform.sections?.forEach(section => {        
         section.fields?.forEach(field => {
           const { name, _default, options } = field;
           if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
@@ -163,7 +149,7 @@ export class FormScreen extends React.Component<Props, State> {
       if (replyId && ownerKey) {
         const reply = await this.findReply(replyId, ownerKey);
         if (reply) {
-          const replyData = await this.processReplyData(loadedMetaform, reply, ownerKey);
+          const replyData = await this.processReplyData(metaform, reply, ownerKey);
           if (replyData) {
             Object.keys(replyData as any).forEach(replyKey => {
               formValues[replyKey] = replyData[replyKey] as any;
@@ -192,7 +178,9 @@ export class FormScreen extends React.Component<Props, State> {
       }
 
       this.setState({
+        metaform: metaform,
         formValues: formValues,
+        loading: false
       });
     } catch (e) {
       if (e.status === 403 && !signedToken) {
@@ -201,11 +189,9 @@ export class FormScreen extends React.Component<Props, State> {
         });
       } else {
         this.setState({
+          loading: false,
           error: e
         });
-
-        onSetMetaform(undefined);
-        onSetMetaformJson("");
       }
     }
   }
@@ -214,12 +200,12 @@ export class FormScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes, metaformIsLoading } = this.props;
-    const { redirectTo, saving, snackbarMessage, error } = this.state;
+    const { classes } = this.props;
+    const { redirectTo, loading, saving, snackbarMessage, error } = this.state;
 
     return (
       <BasicLayout 
-        loading={ metaformIsLoading || saving } 
+        loading={ loading || saving } 
         loadMessage={ saving ? strings.formScreen.savingReply : undefined } 
         snackbarMessage={ snackbarMessage } 
         error={ error } 
@@ -246,7 +232,7 @@ export class FormScreen extends React.Component<Props, State> {
    * Renders the form
    */
   private renderForm = () => {
-    const { metaform } = this.props;
+    const { metaform } = this.state;
 
     if (!metaform) {
       return null
@@ -479,15 +465,14 @@ export class FormScreen extends React.Component<Props, State> {
    * @param fieldValue field value
    */
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
-    const { formValues, formValid } = this.state;
-    const { metaform } = this.props;
+    const { formValues, metaform, formValid } = this.state;
 
     if (formValues[fieldName] !== fieldValue) {
       formValues[fieldName] = fieldValue;
       
       this.setState({
         formValues: formValues,
-        draftSaveVisible: !!metaform?.allowDrafts
+        draftSaveVisible: !!this.state.metaform?.allowDrafts
       });
 
       if (formValid && metaform?.autosave) {
@@ -562,21 +547,19 @@ export class FormScreen extends React.Component<Props, State> {
    * Save the reply as draft
    */
   private saveDraft = async () => {
-    const { formValues, draftId } = this.state;
-    const { metaform, onLoadMetaform } = this.props;
-    const accessToken = this.getAccessToken();
-
-    if (!metaform || !metaform.id) {
-      return;
-    }
-
-    onLoadMetaform();
-
-    this.setState({
-      draftSaveVisible: false
-    });
-
     try {
+      const { metaform, formValues, draftId } = this.state;
+      const accessToken = this.getAccessToken();
+      
+      if (!metaform || !metaform.id) {
+        return;
+      }
+
+      this.setState({
+        loading: true,
+        draftSaveVisible: false
+      });
+
       const draftsApi = Api.getDraftsApi(accessToken);
       let draft;
 
@@ -1127,9 +1110,7 @@ function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
     signedToken: state.auth.signedToken,
-    anonymousToken: state.auth.anonymousToken,
-    metaform: state.metaform.metaform,
-    metaformIsLoading: state.metaform.isLoading
+    anonymousToken: state.auth.anonymousToken
   };
 }
 
@@ -1140,9 +1121,6 @@ function mapStateToProps(state: ReduxState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
-    onLoadMetaform: () => dispatch(loadMetaform()),
-    onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform)),
-    onSetMetaformJson: (metaformJson: string) => dispatch(setMetaformJson(metaformJson))
   };
 }
 
