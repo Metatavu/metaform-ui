@@ -128,7 +128,18 @@
     "selectBox": "Valintaruutu",
     "radioButton": "Valintanappi",
     "button": "Nappi",
-    "image": "Kuva"
+    "image": "Kuva",
+    "unknownFieldType": "Tuntematon kenttätyyppi",
+    "formEditorInfo": "Muokkaus ei vielä toimi",
+    "formMainHeader": "Lomakkeen pääotsikko"
+  },
+
+  "editableFields": {
+    "htmlField": "Html-sisältö",
+    "submitFieldText": "Lähetä-napin teksti",
+    "numberField": "Numerokenttä",
+    "numberFieldMin": "Aseta minimiarvo",
+    "numberFieldMax": "Aseta maksimiarvo"
   }
 
 }

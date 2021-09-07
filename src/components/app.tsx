@@ -20,6 +20,7 @@ import AdminReplyScreen from "./screens/admin-reply-screen";
 import AdminInviteScreen from "./screens/admin-invite-screen";
 import FormEditJsonScreen from "./screens/json-screen";
 import FormEditScreen from "./screens/form-edit-screen";
+import * as immer from "immer";
 
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
 
@@ -50,6 +51,7 @@ class App extends React.Component<Props, State> {
    */
   public componentDidMount = () => {
     moment.locale(strings.getLanguage());
+    immer.enableAllPlugins();
   }
 
   /**
