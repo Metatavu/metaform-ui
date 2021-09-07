@@ -240,7 +240,6 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            value="test"
           />
         );
       case MetaformFieldType.Submit:

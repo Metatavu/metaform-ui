@@ -47,7 +47,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     const inputProps = {
       min: field.min,
       max: field.max,
-      step: 1
+      step: field.step || 1
     };
 
     return (
@@ -110,11 +110,12 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { onValueUpdate } = this.props;
     const { value, name } = event.target;
+    const valueAsNumber = Number(value);
 
-    if (!name) {
+    if (!name || isNaN(valueAsNumber)) {
       return;
     }
 
-    onValueUpdate(name, Number(value));
+    onValueUpdate(name, valueAsNumber);
   }
 }

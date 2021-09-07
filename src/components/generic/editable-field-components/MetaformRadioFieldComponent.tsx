@@ -1,6 +1,5 @@
 import React from "react";
 import { MetaformField, MetaformFieldOption } from "../../../generated/client";
-import { FieldValue } from "../../../types";
 
 /**
  * Component props
@@ -9,7 +8,6 @@ interface Props {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  value: FieldValue;
 }
 
 /**
@@ -39,7 +37,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, value, fieldId } = this.props;
+    const { field, fieldId } = this.props;
 
     if (!field.name) {
       return null;
@@ -52,7 +50,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
         {
           options.map((option, i) =>  (
             <div key={ `${ fieldId }-${ option.name }-container` }>
-              { this.renderOption(option, value as string) }
+              { this.renderOption(option) }
             </div>
           ))
         }
@@ -66,11 +64,11 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * @param option metaform field option
    * @param value value
    */
-  private renderOption = (option: MetaformFieldOption, value: string) => {
+  private renderOption = (option: MetaformFieldOption) => {
     const { fieldId } = this.props;
     return (
       <label className="metaform-radio-field-label" key={ `${fieldId}-${option.name}-label` } htmlFor={ `${fieldId}-${option.name}` }>
-        { this.renderOptionValue(option, value) }
+        { this.renderOptionValue(option) }
         <span> { option.text } </span>
       </label>
     );
@@ -82,7 +80,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * @param option metaform field option
    * @param value value
    */
-  private renderOptionValue = (option: MetaformFieldOption, value: string) => {
+  private renderOptionValue = (option: MetaformFieldOption) => {
     const { field, fieldId, fieldLabelId } = this.props;
 
     return (
