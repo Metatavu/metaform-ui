@@ -17,6 +17,7 @@ import { Metaform } from "../../generated/client";
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
+import { loadMetaform, setMetaform } from "../../actions/metaform";
 
 /**
  * Component props
@@ -25,6 +26,10 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
   signedToken: AccessToken;
+  metaform?: Metaform;
+  metaformIsLoading: boolean;
+  onLoadMetaform: () => void;
+  onSetMetaform: (metaform?: Metaform) => void;
 }
 
 /**
@@ -32,8 +37,6 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   error?: string | Error | Response;
-  loading: boolean;
-  metaform?: Metaform;
   value:string;
   readOnly: boolean;
 }
@@ -50,7 +53,6 @@ export class FormEditScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: false,
       value: "",
       readOnly: true,
     };
@@ -60,31 +62,35 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { signedToken } = this.props;
+    const {
+      metaform,
+      signedToken, 
+      metaformIsLoading,
+      onLoadMetaform, 
+      onSetMetaform
+    } = this.props;
+
+    if (metaformIsLoading || metaform) {
+      return;
+    }
 
     try {
-      this.setState({
-        loading: true
-      });
+      onLoadMetaform();
 
       const metaformsApi = Api.getMetaformsApi(signedToken);
 
-      /**
-       * Load test metaform
-       */
-      const metaform = await metaformsApi.findMetaform({
+      // Load test metaform
+      const loadedMetaform = await metaformsApi.findMetaform({
         metaformId: Config.getMetaformId()
       });
 
-      this.setState({
-        loading: false,
-        metaform: metaform
-      });
+      onSetMetaform(loadedMetaform);
     } catch (e) {
       this.setState({
-        loading: false,
         error: e
       });
+
+      onSetMetaform(undefined);
     }
   };
 
@@ -92,15 +98,19 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { metaform, loading, error } = this.state;
-
-    const { classes, keycloak } = this.props;
+    const { error } = this.state;
+    const {
+      classes,
+      keycloak,
+      metaform,
+      metaformIsLoading
+    } = this.props;
 
     return (
       <AdminLayoutV2
         keycloak={ keycloak }
         metaform={ metaform }
-        loading={ loading || !metaform }
+        loading={ metaformIsLoading || !metaform }
         error={ error }
         clearError={ this.clearError }
       >
@@ -117,10 +127,12 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form editor
    */
   private renderFormEditor = () => {
+    const { metaform } = this.props;
+
     return (
       <Grid item md={ 8 } className={ this.props.classes.formEditor }>
         <Box className={ this.props.classes.editableForm }>
-          { this.state.metaform?.title } 
+          { metaform?.title } 
         </Box>
       </Grid>
     )
@@ -253,7 +265,9 @@ export class FormEditScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    signedToken: state.auth.signedToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken,
+    metaform: state.metaform.metaform,
+    metaformIsLoading: state.metaform.isLoading
   };
 }
 
@@ -264,6 +278,8 @@ function mapStateToProps(state: ReduxState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
+    onLoadMetaform: () => dispatch(loadMetaform()),
+    onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform))
   };
 }
 

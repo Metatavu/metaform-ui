@@ -27,3 +27,9 @@ export type LOAD_METAFORM = typeof LOAD_METAFORM;
  */
 export const SET_METAFORM = "SET_METAFORM";
 export type SET_METAFORM = typeof SET_METAFORM;
+
+/**
+ * Metaform finish loading
+ */
+export const SET_METAFORM_JSON = "SET_METAFORM_JSON";
+export type SET_METAFORM_JSON = typeof SET_METAFORM_JSON;

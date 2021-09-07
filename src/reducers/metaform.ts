@@ -1,5 +1,5 @@
 import { MetaformAction } from '../actions/metaform';
-import { LOAD_METAFORM, SET_METAFORM } from '../constants/actionTypes';
+import { LOAD_METAFORM, SET_METAFORM, SET_METAFORM_JSON } from '../constants/actionTypes';
 import { Metaform } from '../generated/client';
 
 /**
@@ -8,6 +8,7 @@ import { Metaform } from '../generated/client';
 export interface MetaformState {
   isLoading: boolean;
   metaform?: Metaform;
+  metaformJson: string; 
 }
 
 /**
@@ -15,7 +16,8 @@ export interface MetaformState {
  */
 const initialState: MetaformState = {
   isLoading: false,
-  metaform: undefined
+  metaform: undefined,
+  metaformJson: ""
 }
 
 /**
@@ -30,7 +32,28 @@ export function metaformReducer(metaformState: MetaformState = initialState, act
     case LOAD_METAFORM:
       return { ...metaformState, isLoading: true };
     case SET_METAFORM:
-      return { ...metaformState, isLoading: false, metaform: action.metaform };
+      const { metaform } = action;
+
+      const convertedMetaformJson = metaform ? JSON.stringify(metaform, null, 2) : "";
+
+      return { 
+        ...metaformState, 
+        metaform,
+        metaformJson: convertedMetaformJson,
+        isLoading: false
+      };
+    case SET_METAFORM_JSON:
+      const { metaformJson } = action;
+
+      // TODO set the metaform
+      // const convertedMetaform
+
+      return { 
+        ...metaformState, 
+        metaformJson,
+        // metaform: convertedMetaform,
+        isLoading: false
+      };
     default:
       return metaformState;
   }
