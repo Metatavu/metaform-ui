@@ -8,6 +8,7 @@ interface Props {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**

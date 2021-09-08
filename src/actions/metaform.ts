@@ -17,15 +17,6 @@ export interface SetMetaformAction {
 }
 
 /**
- * Interface for set metaform json action type
- */
-export interface SetMetaformJsonAction {
-  type: actionTypes.SET_METAFORM_JSON;
-  metaformJson: string;
-}
-
-
-/**
  * Store update method for loading metaform
  */
 export function loadMetaform(): LoadingMetaformAction {
@@ -46,16 +37,4 @@ export function setMetaform(metaform?: Metaform): SetMetaformAction {
   };
 }
 
-/**
- * Store update method for setting metaform json
- *
- * @param metaformJson metaform json
- */
-export function setMetaformJson(metaformJson: string): SetMetaformJsonAction {
-  return {
-    type: actionTypes.SET_METAFORM_JSON,
-    metaformJson: metaformJson
-  };
-}
-
-export type MetaformAction = LoadingMetaformAction | SetMetaformAction | SetMetaformJsonAction;
+export type MetaformAction = LoadingMetaformAction | SetMetaformAction;

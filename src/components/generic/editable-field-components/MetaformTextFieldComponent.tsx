@@ -1,3 +1,4 @@
+import { Input } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import { FieldValue } from "../../../types";
@@ -12,7 +13,7 @@ interface Props {
   formReadOnly?: boolean;
   value?: FieldValue;
   getFieldValue?: (fieldName: string) => FieldValue;
-  onValueChange?: (value: FieldValue) => void;
+  onFieldUpdate?: (metaformField: MetaformField) => void;
   onFocus?: () => void;
 }
 
@@ -46,7 +47,7 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
     const { field, fieldId, fieldLabelId, formReadOnly, value, onFocus } = this.props;
 
     return (
-      <input
+      <Input
         type="text"
         placeholder={ field.placeholder }
         id={ fieldId }
@@ -60,5 +61,4 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
       />
     );
   }
-
 }

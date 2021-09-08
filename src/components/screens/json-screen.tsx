@@ -21,7 +21,7 @@ import 'codemirror/theme/material.css';
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/javascript/javascript";
 import codemirror from "codemirror";
-import { loadMetaform, setMetaform, setMetaformJson } from "../../actions/metaform";
+import { loadMetaform, setMetaform } from "../../actions/metaform";
 import MetaformUtils from "../../utils/metaform";
 
 /**
@@ -32,11 +32,9 @@ interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
   signedToken: AccessToken;
   metaform?: Metaform;
-  metaformJson: string;
   metaformIsLoading: boolean;
   onLoadMetaform: () => void;
   onSetMetaform: (metaform?: Metaform) => void;
-  onSetMetaformJson: (metaformJson: string) =>  void;
 }
 
 /**
@@ -46,6 +44,7 @@ interface State {
   error?: string | Error | Response;
   value:string;
   readOnly: boolean;
+  metaformJson: string;
 }
 
 /**
@@ -62,7 +61,8 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
     super(props);
     this.state = {      
       value: "",
-      readOnly: true
+      readOnly: true,
+      metaformJson: ""
     };
   }
   
@@ -73,13 +73,16 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
     const {
       metaform,
       signedToken, 
-      metaformIsLoading,
       onLoadMetaform, 
       onSetMetaform,
-      onSetMetaformJson
     } = this.props;
 
-    if (metaformIsLoading || metaform) {
+    if (metaform) {
+      const convertedMetaformJson = MetaformUtils.metaformToJson(metaform);
+
+      this.setState({
+        metaformJson: convertedMetaformJson
+      });
       return;
     }
 
@@ -93,16 +96,22 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         metaformId: Config.getMetaformId()
       });
 
-      const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
       onSetMetaform(loadedMetaform);
-      onSetMetaformJson(convertedMetaformJson);
+
+      const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
+
+      this.setState({
+        metaformJson: convertedMetaformJson
+      });
     } catch (e) {
       this.setState({
         error: e
       });
 
       onSetMetaform(undefined);
-      onSetMetaformJson("");
+      this.setState({
+        metaformJson: ""
+      })
     }
   }
   
@@ -110,12 +119,11 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { error } = this.state;
+    const { error, metaformJson } = this.state;
     const { 
       classes, 
       keycloak, 
       metaform, 
-      metaformJson, 
       metaformIsLoading 
     } = this.props;
 
@@ -170,17 +178,17 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * @param value code
    */
   private onCodeMirrorBeforeJsonChange = (editor: codemirror.Editor, data: codemirror.EditorChange, value: string) => {
-    const { onSetMetaformJson } = this.props;
-
-    onSetMetaformJson(value);
+    this.setState({
+      metaformJson: value
+    });
   }
 
   /**
    * Toggle json readOnly/Writable
    */
   private toggleMutableJson = () => {
-    const { readOnly } = this.state;
-    const { metaformJson, onSetMetaform } = this.props;
+    const { readOnly, metaformJson } = this.state;
+    const { onSetMetaform } = this.props;
 
     if (!readOnly) {
       onSetMetaform(MetaformUtils.jsonToMetaform(metaformJson));
@@ -212,7 +220,6 @@ function mapStateToProps(state: ReduxState) {
     keycloak: state.auth.keycloak as KeycloakInstance,
     signedToken: state.auth.signedToken as AccessToken,
     metaform: state.metaform.metaform,
-    metaformJson: state.metaform.metaformJson,
     metaformIsLoading: state.metaform.isLoading
   };
 }
@@ -226,7 +233,6 @@ function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
     onLoadMetaform: () => dispatch(loadMetaform()),
     onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform)),
-    onSetMetaformJson: (metaformJson: string) => dispatch(setMetaformJson(metaformJson))
   };
 }
 

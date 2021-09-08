@@ -1,6 +1,6 @@
 import { FormControl, Input, InputLabel, WithStyles, } from "@material-ui/core";
 import React from "react";
-import { Metaform, MetaformField } from "../../../generated/client";
+import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
 import styles from "../../../styles/form-edit-screen";
 
@@ -11,8 +11,7 @@ interface Props extends WithStyles<typeof styles> {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  metaform: Metaform;
-  onValueUpdate: (key: string, number: number) => void;
+  onFieldUpdate: (metafromfield: MetaformField) => void;
 }
 
 /**
@@ -79,6 +78,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           <Input
             type="number"
             id={ fieldId }
+            value={ field.min?.toString() || "" }
             className={ classes.numberField }
             onChange={ this.handleNumberValueChange }
             name="min"
@@ -93,6 +93,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           <Input
             type="number"
             id={ fieldId }
+            value={ field.max?.toString() || "" }
             className={ classes.numberField }
             onChange={ this.handleNumberValueChange }
             name="max"
@@ -103,19 +104,32 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   }
 
   /**
-   * Event handler for minimum number value change
+   * Event handler for field change
    * 
    * @param event new min number value
   */ 
   private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { onValueUpdate } = this.props;
+    const { field, onFieldUpdate } = this.props;
     const { value, name } = event.target;
-    const valueAsNumber = Number(value);
 
-    if (!name || isNaN(valueAsNumber)) {
-      return;
+    const updatedField = {
+      ...field
+    } as MetaformField; 
+
+    switch (name) {
+      case "default":
+        updatedField._default = value;
+        break;
+      case "min":
+        updatedField.min = parseFloat(value);
+        break;
+      case "max":
+        updatedField.max = parseFloat(value);
+        break;
+      default:
+        break;
     }
 
-    onValueUpdate(name, valueAsNumber);
+    onFieldUpdate(updatedField);
   }
 }

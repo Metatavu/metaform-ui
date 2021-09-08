@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, OutlinedInput, WithStyles } from "@material-ui/core";
 import React from "react";
-import { Metaform, MetaformField } from "../../../generated/client";
+import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
 import styles from "../../../styles/form-edit-screen";
 
@@ -11,9 +11,8 @@ interface Props extends WithStyles<typeof styles> {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  metaform: Metaform;
   fieldName?: string;
-  onMetaformUpdate: (metaform: Metaform) => void;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -65,19 +64,13 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * @param event new html value
   */ 
   private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { metaform, fieldName, onMetaformUpdate } = this.props;
-    const changedMetaform = { ...metaform };
+    const { field, onFieldUpdate } = this.props;
+    const updatedField = { 
+      ...field 
+    } as MetaformField;
 
-    if (changedMetaform.sections) {
-      changedMetaform.sections.forEach(section => {
-        section.fields?.forEach(field => {
-          if (field.type === "html" && field.name === fieldName) {
-            field.html = event.target.value;
-          }
-        })
-      });
-    }
+    updatedField.html = event.target.value;
 
-    onMetaformUpdate(changedMetaform);
+    onFieldUpdate(updatedField);
   }
 }
