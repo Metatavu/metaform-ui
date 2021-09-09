@@ -9,7 +9,7 @@ import { History } from "history";
 import { WithStyles, withStyles, Button, Typography, Grid } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from '../../types';
+import { AccessToken, EditorNavigationLinks } from '../../types';
 import Api from "../../api/api";
 import { Metaform } from "../../generated/client";
 import strings from "../../localization/strings";
@@ -146,6 +146,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         loading={ isLoading || !metaform } 
         error={ error } 
         clearError={ this.clearError }
+        activeNavigationLink={ EditorNavigationLinks.json }
       >
         <Grid container className={classes.root}>
           <Grid item md={ 2 } className={ classes.sideBar }>

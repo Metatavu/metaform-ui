@@ -11,6 +11,8 @@ import { Metaform } from "../../generated/client";
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import CodeIcon from '@material-ui/icons/Code';
+import { EditorNavigationLinks } from "../../types";
+import classNames from "classnames";
 
 /**
  * Interface representing component properties
@@ -22,6 +24,7 @@ interface Props extends WithStyles<typeof styles> {
   error?: string | Error | Response;
   loading?: boolean;
   loadMessage?: string;
+  activeNavigationLink: EditorNavigationLinks;
   clearError?: () => void;
   clearSnackbar?: () => void;
 }
@@ -112,7 +115,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
    * Renders links for the navigation bara
    */
   private renderNavLinks = () => {
-    const { classes } = this.props;
+    const { classes, activeNavigationLink } = this.props;
 
     return (
       <List
@@ -122,7 +125,9 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <ListItem
           component={ Link }
           to="/admin/edit-form/form"
-          className={ classes.navBarLink }
+          className={ 
+            classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.form && classes.activeNavbarLink) 
+          }
         >
           <FormatAlignJustifyIcon />
           <ListItemText>{ strings.adminLayoutV2.form }</ListItemText>
@@ -130,7 +135,9 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <ListItem
           component={ Link }
           to="/admin/edit-form/preview"
-          className={ classes.navBarLink }
+          className={
+            classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.preview && classes.activeNavbarLink) 
+          }
         >
           <VisibilityIcon />
           <ListItemText>{ strings.adminLayoutV2.preview }</ListItemText>
@@ -138,7 +145,9 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <ListItem
           component={ Link }
           to="/admin/edit-form/json"
-          className={ classes.navBarLink }
+          className={
+            classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.json && classes.activeNavbarLink)
+          }
         >
           <CodeIcon />
           <ListItemText>{ strings.adminLayoutV2.json }</ListItemText>

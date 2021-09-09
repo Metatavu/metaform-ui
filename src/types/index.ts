@@ -80,6 +80,15 @@ export interface TableFieldRowValue {
 export type TableFieldValue = TableFieldRowValue[];
 
 /**
+ * Enum for all route of the web app
+ */
+export enum EditorNavigationLinks {
+  form,
+  preview, 
+  json
+}
+
+/**
  * Type for icon name
  */
 export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-o" | "add";

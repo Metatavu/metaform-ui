@@ -9,7 +9,7 @@ import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from "../../types";
+import { AccessToken, EditorNavigationLinks } from "../../types";
 import Api from "../../api/api";
 import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
@@ -120,6 +120,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         loading={ isLoading || !metaform }
         error={ error }
         clearError={ this.clearError }
+        activeNavigationLink={ EditorNavigationLinks.form }
       >
         <Grid container className={ classes.root }>
           { this.renderLeftSideBar() }
