@@ -1,5 +1,7 @@
 import { createStyles } from "@material-ui/core";
 
+const DRAWER_HEIGHT = 80;
+
 /**
  * Styles for admin layout (v2)
  */
@@ -9,7 +11,7 @@ export default createStyles({
     display: "flex",
     backgroundColor:  "#e0e0e0",
     width: "100%",
-    height: "calc(100vh - 80px)",
+    height: `calc(100vh - ${DRAWER_HEIGHT}px)`,
     overflow: "auto",
     overflowX: "hidden"
   },
