@@ -21,7 +21,7 @@ import 'codemirror/theme/material.css';
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/javascript/javascript";
 import codemirror from "codemirror";
-import { loadMetaform, setMetaform } from "../../actions/metaform";
+import { setMetaform } from "../../actions/metaform";
 import MetaformUtils from "../../utils/metaform";
 
 /**
@@ -32,8 +32,6 @@ interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
   signedToken: AccessToken;
   metaform?: Metaform;
-  metaformIsLoading: boolean;
-  onLoadMetaform: () => void;
   onSetMetaform: (metaform?: Metaform) => void;
 }
 
@@ -44,6 +42,7 @@ interface State {
   error?: string | Error | Response;
   value:string;
   readOnly: boolean;
+  isLoading: boolean;
   metaformJson: string;
 }
 
@@ -59,7 +58,8 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.state = {      
+    this.state = {   
+      isLoading: false,   
       value: "",
       readOnly: true,
       metaformJson: ""
@@ -73,7 +73,6 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
     const {
       metaform,
       signedToken, 
-      onLoadMetaform, 
       onSetMetaform,
     } = this.props;
 
@@ -87,8 +86,9 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
     }
 
     try {
-      onLoadMetaform();
-
+      this.setState({
+        isLoading: true
+      })
       const metaformsApi = Api.getMetaformsApi(signedToken);
 
       // Load test metaform
@@ -101,6 +101,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       const convertedMetaformJson = MetaformUtils.metaformToJson(loadedMetaform);
 
       this.setState({
+        isLoading: false,
         metaformJson: convertedMetaformJson
       });
     } catch (e) {
@@ -119,12 +120,11 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { error, metaformJson } = this.state;
+    const { error, metaformJson, isLoading } = this.state;
     const { 
       classes, 
       keycloak, 
       metaform, 
-      metaformIsLoading 
     } = this.props;
 
     const jsonEditorOptions = {
@@ -143,7 +143,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
       <AdminLayoutV2 
         keycloak={ keycloak } 
         metaform={ metaform }
-        loading={ metaformIsLoading || !metaform } 
+        loading={ isLoading || !metaform } 
         error={ error } 
         clearError={ this.clearError }
       >
@@ -220,7 +220,6 @@ function mapStateToProps(state: ReduxState) {
     keycloak: state.auth.keycloak as KeycloakInstance,
     signedToken: state.auth.signedToken as AccessToken,
     metaform: state.metaform.metaform,
-    metaformIsLoading: state.metaform.isLoading
   };
 }
 
@@ -231,7 +230,6 @@ function mapStateToProps(state: ReduxState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
-    onLoadMetaform: () => dispatch(loadMetaform()),
     onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform)),
   };
 }

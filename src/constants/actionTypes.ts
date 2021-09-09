@@ -17,12 +17,6 @@ export const ANONYMOUS_LOGIN = "ANONYMOUS_LOGIN";
 export type ANONYMOUS_LOGIN = typeof ANONYMOUS_LOGIN;
 
 /**
- * Load the metaform
- */
-export const LOAD_METAFORM = "LOAD_METAFORM";
-export type LOAD_METAFORM = typeof LOAD_METAFORM;
-
-/**
  * Set the metaform data
  */
 export const SET_METAFORM = "SET_METAFORM";
