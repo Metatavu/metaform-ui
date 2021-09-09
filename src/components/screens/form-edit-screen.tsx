@@ -1,12 +1,10 @@
 import * as React from "react";
-
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import InfoIcon from "@material-ui/icons/Info";
-
 import { History } from "history";
 import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
@@ -17,12 +15,12 @@ import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
+import { setMetaform } from "../../actions/metaform";
 import { MetaformTextFieldComponent } from "../generic/editable-field-components/MetaformTextFieldComponent";
 import { MetaformHtmlComponent } from "../generic/editable-field-components/MetaformHtmlFieldComponent";
 import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
 import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
-import produce from "immer";
 
 /**
  * Component props
@@ -31,7 +29,9 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   keycloak: KeycloakInstance;
   signedToken: AccessToken;
+  metaform?: Metaform;
   contexts?: string[];
+  onSetMetaform: (metaform?: Metaform) => void;
 }
 
 /**
@@ -39,11 +39,9 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   error?: string | Error | Response;
-  loading: boolean;
-  metaform: Metaform;
-  value: string;
+  value:string;
   readOnly: boolean;
-  metaformId?: string
+  isLoading: boolean;
 }
 
 /**
@@ -58,10 +56,9 @@ export class FormEditScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: false,
       value: "",
       readOnly: true,
-      metaform: {}
+      isLoading: false
     };
   }
 
@@ -69,32 +66,39 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { signedToken } = this.props;
+    const {
+      metaform,
+      signedToken, 
+      onSetMetaform,
+    } = this.props;
+
+    if (metaform) {
+      return;
+    }
 
     try {
       this.setState({
-        loading: true
+        isLoading: true
       });
 
       const metaformsApi = Api.getMetaformsApi(signedToken);
 
-      /**
-       * Load test metaform
-       */
-      const metaform = await metaformsApi.findMetaform({
+      // Load test metaform
+      const loadedMetaform = await metaformsApi.findMetaform({
         metaformId: Config.getMetaformId()
       });
 
+      onSetMetaform(loadedMetaform);
+
       this.setState({
-        loading: false,
-        metaform: metaform,
-        metaformId: metaform.id
+        isLoading: false
       });
     } catch (e) {
       this.setState({
-        loading: false,
         error: e
       });
+
+      onSetMetaform(undefined);
     }
   };
 
@@ -102,15 +106,18 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { metaform, loading, error } = this.state;
-
-    const { classes, keycloak } = this.props;
+    const { error, isLoading } = this.state;
+    const {
+      classes,
+      keycloak,
+      metaform,
+    } = this.props;
 
     return (
       <AdminLayoutV2
         keycloak={ keycloak }
         metaform={ metaform }
-        loading={ loading || !metaform }
+        loading={ isLoading || !metaform }
         error={ error }
         clearError={ this.clearError }
       >
@@ -127,8 +134,11 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Method for rendering form editor
    */
   private renderFormEditor = () => {
-    const { classes } = this.props;
-    const { metaform } = this.state;
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
 
     return (
       <Grid item md={ 8 } className={ classes.formEditor }>
@@ -150,9 +160,12 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Renders main header
    */
   private renderMainHeader = () => {
-    const { metaform } = this.state;
-    const { classes } = this.props;
-    
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
+
     return (
       <FormControl variant="outlined" className={ classes.mainHeader }>
         <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
@@ -165,19 +178,6 @@ export class FormEditScreen extends React.Component<Props, State> {
         />
       </FormControl>
     );
-  }
-  /**
-   * Event handler for main header change
-   * 
-   * @param event new main header value
-   */
-  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { metaform } = this.state;
-    this.setState({
-      metaform: { ...metaform, 
-        title: event.target.value
-      }
-    });
   }
 
   /**
@@ -212,14 +212,18 @@ export class FormEditScreen extends React.Component<Props, State> {
   * @param fieldIndex field index
   */
   private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
-    const { classes } = this.props;
-    const { metaform } = this.state;
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
 
     switch (field.type) {
       case MetaformFieldType.Text:
         return (
           <MetaformTextFieldComponent
             field={ field }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
       case MetaformFieldType.Html:
@@ -228,10 +232,9 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            metaform={ metaform }
             classes={ classes }
             fieldName={ field.name }
-            onMetaformUpdate={ this.onMetaformUpdate }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
       case MetaformFieldType.Radio:
@@ -240,6 +243,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
       case MetaformFieldType.Submit:
@@ -247,8 +251,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           <MetaformSubmitFieldComponent
             fieldId={ this.getFieldId(field) }
             field={ field }
-            metaform={ metaform }
-            onMetaformUpdate={ this.onMetaformUpdate }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
       case MetaformFieldType.Number:
@@ -257,9 +260,8 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            metaform={ metaform }
             classes={ classes }
-            onValueUpdate={ this.onNumberValueUpdate(sectionIndex, fieldIndex) }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
       default:
@@ -271,74 +273,6 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
   }
 
-  /**
-   * Event handler for min/max number change
-   * 
-   * @param sectionIndex  section index
-   * @param fieldIndex field index
-   */
-  private onNumberValueUpdate = (sectionIndex: number, fieldIndex: number) => (key: string, value: number) => {
-    this.setState(
-      produce((draft: State) => {
-        const { metaform } = draft;
-
-        if (!metaform.sections) {
-          return;
-        }
-    
-        const section = metaform.sections[sectionIndex];
-    
-        if (!section.fields) {
-          return;
-        }
-    
-        const field = section.fields[fieldIndex];
-
-        if (key === "min") {
-          field.min = value;
-        }
-
-        if (key === "max") {
-          field.max = value;
-        }
-      })
-    );
-  }
-
-  /**
-   * Updates Metaform data to state
-   * 
-   * @param updatedMetaform updated Metaform
-   */
-  private onMetaformUpdate = (updatedMetaform: Metaform) => {
-    this.setState({
-      metaform: updatedMetaform
-    });
-  } 
-
-  /**
-   * Returns field's id
-   * 
-   * @param field metaform field
-   *
-   * @returns field's id 
-   */
-  private getFieldId = (field : MetaformField) => {
-    const { metaformId } = this.state;
-
-    return `${ metaformId }-field-${ field.name }`;
-  }
-
-  /**
-   * Returns field label's id
-   * 
-   * @param field metaform field
-   *
-   * @returns field label's id 
-   */
-  private getFieldLabelId = (field : MetaformField) => {
-    return `${this.getFieldId(field)}-label`;
-  }
 
   /**
    * Method for rendering left sidebar
@@ -465,6 +399,74 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Event handler for main header change
+   * 
+   * @param event new main header value
+   */
+  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { metaform, onSetMetaform } = this.props;
+
+    onSetMetaform({
+      ...metaform, 
+      title: event.target.value
+    } as Metaform);
+  }
+
+  /**
+   * Event handler for field update
+   * 
+   * @param sectionIndex  section index
+   * @param fieldIndex field index
+   */
+  private onFieldUpdate = (sectionIndex: number, fieldIndex: number) => (newMetaformField: MetaformField) => {
+    const { metaform, onSetMetaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
+
+    const updatedMetaform = {
+      ...metaform
+    } as Metaform;
+
+    if (!updatedMetaform?.sections || !updatedMetaform.sections[sectionIndex]) {
+      return;
+    }
+
+    const fields = updatedMetaform.sections[sectionIndex].fields;
+
+    if (!fields || !fields[fieldIndex]) {
+      return;
+    }
+
+    fields[fieldIndex] = newMetaformField;
+
+    onSetMetaform(updatedMetaform);
+  }
+
+  /**
+   * Returns field's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private getFieldId = (field : MetaformField) => {
+    return `${ Config.getMetaformId() }-field-${ field.name }`;
+  }
+
+  /**
+   * Returns field label's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field label's id 
+   */
+  private getFieldLabelId = (field : MetaformField) => {
+    return `${this.getFieldId(field)}-label`;
+  }
+
+  /**
    * Clears error
    */
   private clearError = () => {
@@ -483,7 +485,8 @@ export class FormEditScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    signedToken: state.auth.signedToken as AccessToken
+    signedToken: state.auth.signedToken as AccessToken,
+    metaform: state.metaform.metaform,
   };
 }
 
@@ -494,6 +497,7 @@ function mapStateToProps(state: ReduxState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<ReduxActions>) {
   return {
+    onSetMetaform: (metaform?: Metaform) => dispatch(setMetaform(metaform)),
   };
 }
 

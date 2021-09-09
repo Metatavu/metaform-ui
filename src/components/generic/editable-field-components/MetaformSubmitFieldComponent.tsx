@@ -1,6 +1,6 @@
 import { Button, FormControl, InputLabel, OutlinedInput } from "@material-ui/core";
 import React from "react";
-import { Metaform, MetaformField } from "../../../generated/client";
+import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
 
 /**
@@ -9,8 +9,7 @@ import strings from "../../../localization/strings";
 interface Props {
   field: MetaformField;
   fieldId: string;
-  metaform: Metaform;
-  onMetaformUpdate: (metaform: Metaform) => void;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -70,20 +69,14 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * @param event new button text value
    */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { metaform, onMetaformUpdate } = this.props;
-    const changedMetaform = { ...metaform };
+    const { field, onFieldUpdate } = this.props;
+    const updatedField = {
+      ...field 
+    } as MetaformField;
 
-    if (changedMetaform.sections){
-      changedMetaform.sections.forEach(section => {
-        section.fields?.forEach(field => {
-          if(field.type === "submit"){
-            field.text = event.target.value;
-          }
-        })
-      });
-    }
+    updatedField.text = event.target.value;
 
-    onMetaformUpdate(changedMetaform);
+    onFieldUpdate(updatedField);
   }
 
 }
