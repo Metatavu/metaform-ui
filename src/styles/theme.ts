@@ -102,7 +102,8 @@ export default createMuiTheme({
     MuiToolbar: {
       root: {
         alignItems: "center",
-        justifyContent: "space-between"
+        height: 72,
+        width: "100%"
       }
     },
     MuiFormLabel: {
