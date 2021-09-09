@@ -32,15 +32,13 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   error?: string | Error | Response;
-  value:string;
-  readOnly: boolean;
   isLoading: boolean;
   formValid: boolean;
   formValues: Dictionary<FieldValue>;
 }
 
 /**
- * Component for editing Metaform
+ * Component for Metaform preview
  */
 export class PreviewScreen extends React.Component<Props, State> {
   /**
@@ -51,8 +49,6 @@ export class PreviewScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      value: "",
-      readOnly: true,
       isLoading: false,
       formValid: true,
       formValues: {}
