@@ -20,6 +20,7 @@ import AdminReplyScreen from "./screens/admin-reply-screen";
 import AdminInviteScreen from "./screens/admin-invite-screen";
 import FormEditJsonScreen from "./screens/json-screen";
 import FormEditScreen from "./screens/form-edit-screen";
+import PreviewScreen from "./screens/preview-screen";
 
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
 
@@ -115,6 +116,17 @@ class App extends React.Component<Props, State> {
                   render={({ history }) => (
                     <SignedTokenRefresh>
                       <FormEditScreen
+                        history={ history }
+                      />
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/edit-form/preview"
+                  exact={ true }
+                  render={({ history }) => (
+                    <SignedTokenRefresh>
+                      <PreviewScreen
                         history={ history }
                       />
                     </SignedTokenRefresh>

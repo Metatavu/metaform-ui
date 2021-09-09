@@ -7,7 +7,11 @@ export default createStyles({
 
   root: {
     display: "flex",
-    backgroundColor:  "#e0e0e0"
+    backgroundColor:  "#e0e0e0",
+    width: "100%",
+    height: "calc(100vh - 80px)",
+    overflow: "auto",
+    overflowX: "hidden"
   },
   appBar:  {
     backgroundColor:  "#333333",
