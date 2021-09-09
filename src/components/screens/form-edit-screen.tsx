@@ -6,7 +6,7 @@ import styles from "../../styles/form-edit-screen";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import InfoIcon from "@material-ui/icons/Info";
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
@@ -122,11 +122,11 @@ export class FormEditScreen extends React.Component<Props, State> {
         clearError={ this.clearError }
         activeNavigationLink={ EditorNavigationLinks.form }
       >
-        <Grid container className={ classes.root }>
-          { this.renderLeftSideBar() }
+        <Box className={ classes.root }>
           { this.renderFormEditor() }
-          { this.renderRightSideBar() }
-        </Grid>
+        </Box>
+        { this.renderLeftSideBar() }
+        { this.renderRightSideBar() }
       </AdminLayoutV2>
     );
   };
@@ -282,25 +282,34 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
-      <Grid item md={ 2 } className={ classes.sideBar }>
-        <Grid item md={ 6 } className={ classes.sideBarTabs }>
-          <Typography variant="h5">
-            { strings.formEditScreen.leftSideBarComponentsTab }
-          </Typography>
-        </Grid>
-        <Grid item md={ 6 } className={ classes.sideBarTabs }>
-          <Typography variant="h5">
-            { strings.formEditScreen.leftSideBarStylingTab }
-          </Typography>
-        </Grid>
-        <hr />
+      <Drawer
+        open
+        anchor="left"
+        variant="persistent"
+        className={ classes.drawer }
+        classes={{ paper: classes.drawerPaper }}
+      >
+        <Toolbar/>
+        <Box className={ classes.drawerTabs }>
+          <Box className={ classes.drawerTab }>
+            <Typography variant="h5">
+              { strings.formEditScreen.leftSideBarComponentsTab }
+            </Typography>
+          </Box>
+          <Box className={ classes.drawerTab }>
+            <Typography variant="h5">
+              { strings.formEditScreen.leftSideBarStylingTab }
+            </Typography>
+          </Box>
+        </Box>
+        <Divider/>
         <Typography variant="caption">
           <InfoIcon />
           { strings.formEditScreen.leftSideBarInfo }
         </Typography>
         { this.renderFields() }
         { this.renderComponents() }
-      </Grid>
+      </Drawer>
     );
   }
 
@@ -311,23 +320,32 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
-      <Grid item md={ 2 } className={ classes.sideBar }>
-        <Grid item md={ 6 } className={ classes.sideBarTabs }>
-          <Typography variant="h5">
-            { strings.formEditScreen.rightSideBarLinksTab }
-          </Typography>
-        </Grid>
-        <Grid item md={ 6 } className={ classes.sideBarTabs }>
-          <Typography variant="h5">
-          { strings.formEditScreen.rightSideBarVisibilityTab }
-          </Typography>
-        </Grid>
-        <hr />
+      <Drawer
+        open
+        anchor="right"
+        variant="persistent"
+        className={ classes.drawer }
+        classes={{ paper: classes.drawerPaper }}
+      >
+        <Toolbar/>
+        <Box className={ classes.drawerTabs }>
+          <Box className={ classes.drawerTab }>
+            <Typography variant="h5">
+              { strings.formEditScreen.rightSideBarLinksTab }
+            </Typography>
+          </Box>
+          <Box className={ classes.drawerTab }>
+            <Typography variant="h5">
+              { strings.formEditScreen.rightSideBarVisibilityTab }
+            </Typography>
+          </Box>
+        </Box>
+        <Divider/>
         <Typography variant="caption">
           <InfoOutlinedIcon color="disabled" />
           { strings.formEditScreen.chooseComponent }
         </Typography>
-      </Grid>
+      </Drawer>
     );
   }
 

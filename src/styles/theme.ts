@@ -102,7 +102,7 @@ export default createMuiTheme({
     MuiToolbar: {
       root: {
         alignItems: "center",
-        height: 72,
+        minHeight: "72px !important",
         width: "100%"
       }
     },
