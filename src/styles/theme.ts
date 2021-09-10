@@ -99,6 +99,11 @@ export default createMuiTheme({
         backgroundColor: "#000"
       }
     },
+    MuiDrawer: {
+      paper: {
+        width: 300
+      }
+    },
     MuiToolbar: {
       root: {
         alignItems: "center",

@@ -1,8 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
-const DRAWER_WIDTH = 256;
-
 /**
  * Styles for form-edit screen
  */
@@ -51,7 +49,6 @@ export default createStyles({
   },
 
   drawerPaper: {
-    width: DRAWER_WIDTH,
     height: "100%",
   },
 

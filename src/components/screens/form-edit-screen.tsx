@@ -125,8 +125,8 @@ export class FormEditScreen extends React.Component<Props, State> {
         <Box className={ classes.root }>
           { this.renderFormEditor() }
         </Box>
-        { this.renderLeftSideBar() }
-        { this.renderRightSideBar() }
+        { this.renderLeftDrawer() }
+        { this.renderRightDrawer() }
       </AdminLayoutV2>
     );
   };
@@ -274,11 +274,10 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
   }
 
-
   /**
    * Method for rendering left sidebar
    */
-  private renderLeftSideBar = () => {
+  private renderLeftDrawer = () => {
     const { classes } = this.props;
 
     return (
@@ -316,7 +315,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Method for rendering right sidebar
    */
-  private renderRightSideBar = () => {
+  private renderRightDrawer = () => {
     const { classes } = this.props;
 
     return (
