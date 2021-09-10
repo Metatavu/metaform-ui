@@ -80,7 +80,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
   }
 
   /**
-   * Renders navigation bar72
+   * Renders navigation bar
    */
   private renderNavBar = () => {
     return (
