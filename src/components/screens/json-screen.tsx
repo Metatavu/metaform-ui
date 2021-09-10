@@ -147,7 +147,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         activeNavigationLink={ EditorNavigationLinks.json }
       >
         <Grid container className={classes.root}>
-        { this.renderJsonEditor(jsonEditorOptions) }
+          { this.renderJsonEditor(jsonEditorOptions) }
         </Grid>
       </AdminLayoutV2>
     );
