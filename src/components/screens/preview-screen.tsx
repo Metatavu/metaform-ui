@@ -154,9 +154,13 @@ export class PreviewScreen extends React.Component<Props, State> {
    * Method for getting field value
    *
    * @param fieldName field name
+   * 
+   * @return field value
    */
   private getFieldValue = (fieldName: string): FieldValue => {
-    return this.state.formValues[fieldName];
+    const { formValues } = this.state;
+
+    return formValues[fieldName];
   }
 
   /**
