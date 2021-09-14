@@ -163,7 +163,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
 
     return (
       <Grid item md={ 8 } className={ classes.jsonEditor }>
-        <Typography align="center" variant="h4" >
+        <Typography align="center" variant="h4">
           { strings.jsonScreen.title }
         </Typography> 
         <Button 
