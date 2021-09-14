@@ -6,9 +6,9 @@ import styles from "../../styles/admin-layoutv2";
 import BasicLayout, { SnackbarMessage } from "./basic-layout";
 import { KeycloakInstance } from "keycloak-js";
 import { Metaform } from "../../generated/client";
-import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import CodeIcon from '@material-ui/icons/Code';
+import FormatAlignJustifyIcon from "@material-ui/icons/FormatAlignJustify";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import CodeIcon from "@material-ui/icons/Code";
 import { EditorNavigationLinks } from "../../types";
 import classNames from "classnames";
 
