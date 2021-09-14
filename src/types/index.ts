@@ -32,15 +32,6 @@ export interface AnonymousLoginConfig {
 };
 
 /**
- * Interface describing admin login configuration
- */
-export interface AdminLoginConfig {
-  url: string;
-  realm: string;
-  clientId: string;
-};
-
-/**
  * Type for field value
  */
 export type FieldValue = string | string[] | number | TableFieldValue | FileFieldValue | null;
@@ -83,3 +74,7 @@ export type TableFieldValue = TableFieldRowValue[];
  * Type for icon name
  */
 export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-o" | "add";
+
+/** LoginMode */
+
+export type LoginMode = "USER" | "ADMIN";

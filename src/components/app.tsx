@@ -79,7 +79,7 @@ class App extends React.Component<Props, State> {
                   path="/protected/form"
                   exact={ true }
                   render={({ history, location }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="USER">
                       <FormScreen
                         history={ history }
                         location={ location }
@@ -91,7 +91,7 @@ class App extends React.Component<Props, State> {
                   path="/admin"
                   exact={ true }
                   render={({ history }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <AdminScreen
                         history={ history }
                       />
@@ -102,7 +102,7 @@ class App extends React.Component<Props, State> {
                   path="/admin/edit-form/json"
                   exact={ true }
                   render={({ history }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <FormEditJsonScreen
                         history={ history }
                       />
@@ -113,7 +113,7 @@ class App extends React.Component<Props, State> {
                   path="/admin/edit-form/form"
                   exact={ true }
                   render={({ history }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <FormEditScreen
                         history={ history }
                       />
@@ -124,7 +124,7 @@ class App extends React.Component<Props, State> {
                   path="/admin/invite"
                   exact={ true }
                   render={({ history, match }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <AdminInviteScreen                            
                         history={ history }
                       />
@@ -135,7 +135,7 @@ class App extends React.Component<Props, State> {
                   path="/admin/replies/:replyId"
                   exact={ true }
                   render={({ history, match }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <AdminReplyScreen                            
                         history={ history }
                         replyId={ match.params.replyId }
