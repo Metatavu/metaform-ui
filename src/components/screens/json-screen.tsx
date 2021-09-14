@@ -177,7 +177,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
           className={ classes.codeMirror }
           value={ metaformJson }
           options={ jsonEditorOptions }
-          onBeforeChange={this.onCodeMirrorBeforeJsonChange}
+          onBeforeChange={ this.onCodeMirrorBeforeJsonChange }
         />
       </Grid>
     );
