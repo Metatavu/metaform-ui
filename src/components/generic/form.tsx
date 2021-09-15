@@ -3,7 +3,7 @@ import * as React from "react";
 import styles from "../../styles/form";
 
 import { WithStyles, withStyles, Icon, LinearProgress, Slider } from "@material-ui/core";
-import { Metaform } from "../../generated/client";
+import { Metaform, MetaformField, MetaformFieldAutocompleteOptions, MetaformFieldAutocompleteService } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
 import AddIcon from '@material-ui/icons/Add';
@@ -15,6 +15,7 @@ import { AccessToken } from "../../types";
 import Api from "../../api/api";
 import Utils from "../../utils";
 import "react-datepicker/dist/react-datepicker.css";
+import FormAutocomplete from "./form-autocomplete";
 
 /**
  * Component props
@@ -22,8 +23,8 @@ import "react-datepicker/dist/react-datepicker.css";
 interface Props extends WithStyles<typeof styles> {
   contexts: string[];
   metaform: Metaform;
-  accessToken?: AccessToken
-  ownerKey?: string
+  accessToken?: AccessToken;
+  ownerKey?: string;
   getFieldValue: (fieldName: string) => FieldValue;
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
   onSubmit: (source: Metaform) => void;
@@ -34,7 +35,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  uploadingFields: string[]
+  uploadingFields: string[];
 }
 
 /**
@@ -50,7 +51,7 @@ export class Form extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {    
-      uploadingFields: []  
+      uploadingFields: []
     };
   }
 
@@ -71,10 +72,10 @@ export class Form extends React.Component<Props, State> {
           setFieldValue={ this.props.setFieldValue }
           datePicker={ this.renderDatePicker }
           datetimePicker={ this.renderDatetimePicker }
+          renderAutocomplete={ this.renderAutocomplete }
           uploadFile={ this.uploadFile }
           onFileDelete={ this.deleteFile }
           onFileShow={ this.showFile }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
           renderIcon={ this.renderIcon }        
           renderSlider={ this.renderSlider }
           onSubmit={ this.props.onSubmit }
@@ -153,6 +154,29 @@ export class Form extends React.Component<Props, State> {
         onChange={ (_event: React.ChangeEvent<{}>, value: number | number[]) => {
           setFieldValue(fieldName, value as number);
         }}
+      />
+    );
+  }
+
+  /**
+   * Renders autocomplete component
+   * 
+   * @param field field
+   * @param onChange onChange
+   */
+  private renderAutocomplete = (field: MetaformField) => {
+    const { metaform, setFieldValue } = this.props;
+
+    // TODO: Error handling
+    
+    return (
+      <FormAutocomplete
+        minSearchLength={ 3 }
+        searchInterval={ 300 }
+        field={ field }
+        metaform={ metaform }
+        onError={ e => /* TODO */ {} }
+        setFieldValue={ setFieldValue }
       />
     );
   }
@@ -283,15 +307,6 @@ export class Form extends React.Component<Props, State> {
       const data = await attachmentApi.findAttachmentData({attachmentId: value.id, ownerKey: this.props.ownerKey});
       Utils.downloadBlob(data, value.name || "attachment");
     }
-  }
-
-  /**
-   * Method for setting autocomplete options
-   *
-   * @param path path
-   */
-  private setAutocompleteOptions = async (path: string, input?: string): Promise<string[]> => {
-    return [];
   }
   
   /**
