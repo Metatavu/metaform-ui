@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -19,7 +19,7 @@
     "jwt-decode": "^3.0.0-beta.2",
     "keycloak-js": "^11.0.2",
     "localized-strings": "^0.2.4",
-    "metaform-react": "1.1.2",
+    "metaform-react": "file://../metaform-react",
     "moment": "^2.29.0",
     "query-string": "^6.13.2",
     "react": "^16.13.1",
@@ -36,6 +36,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "build-codeserver-client": "./node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator generate -i https://koodistopalvelu.kanta.fi/codeserver/resources/apidocs/v3/openapi.yaml -o ./src/generated/codeserver-client -c generator-config.json -g typescript-fetch",
     "build-client": "./node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator generate -i metaform-api-spec/swagger.yaml -o ./src/generated/client -c generator-config.json -g typescript-fetch"
   },
   "eslintConfig": {
