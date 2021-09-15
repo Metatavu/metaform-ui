@@ -38,7 +38,7 @@ interface State {
   metaform?: Metaform;
   reply?: Reply;
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   loading: boolean;
   saving: boolean;
   formValues: Dictionary<FieldValue>;

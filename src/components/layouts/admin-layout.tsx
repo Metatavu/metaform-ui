@@ -20,7 +20,7 @@ interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
   metaform?: Metaform;
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   loading?: boolean;
   loadMessage?: string;
   clearError?: () => void;
