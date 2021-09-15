@@ -61,12 +61,16 @@ export class AttachmentsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/attachments/{attachmentId}`.replace(`{${"attachmentId"}}`, encodeURIComponent(String(requestParameters.attachmentId))),
+            path: `/v1/attachments/{attachmentId}`.replace(`{${"attachmentId"}}`, encodeURIComponent(String(requestParameters.attachmentId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -101,12 +105,16 @@ export class AttachmentsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/attachments/{attachmentId}/data`.replace(`{${"attachmentId"}}`, encodeURIComponent(String(requestParameters.attachmentId))),
+            path: `/v1/attachments/{attachmentId}/data`.replace(`{${"attachmentId"}}`, encodeURIComponent(String(requestParameters.attachmentId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
