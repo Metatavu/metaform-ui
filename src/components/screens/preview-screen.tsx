@@ -6,7 +6,7 @@ import styles from "../../styles/preview-screen";
 import { History } from "history";
 import { Box, WithStyles, withStyles } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
-import { AccessToken, Dictionary, FieldValue } from "../../types";
+import { AccessToken, Dictionary, EditorNavigationLinks, FieldValue } from "../../types";
 import Api from "../../api/api";
 import { Metaform } from "../../generated/client";
 import Config from "../../config";
@@ -108,6 +108,7 @@ export class PreviewScreen extends React.Component<Props, State> {
 
     return (
       <AdminLayoutV2
+      activeNavigationLink={ EditorNavigationLinks.preview }
         keycloak={ keycloak }
         metaform={ metaform }
         loading={ isLoading || !metaform }
