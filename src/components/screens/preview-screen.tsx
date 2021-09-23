@@ -108,7 +108,7 @@ export class PreviewScreen extends React.Component<Props, State> {
 
     return (
       <AdminLayoutV2
-      activeNavigationLink={ EditorNavigationLinks.preview }
+        activeNavigationLink={ EditorNavigationLinks.preview }
         keycloak={ keycloak }
         metaform={ metaform }
         loading={ isLoading || !metaform }
