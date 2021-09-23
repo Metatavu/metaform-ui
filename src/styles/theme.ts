@@ -83,7 +83,6 @@ export default createMuiTheme({
           width: "0.25em"
         },
         "::-webkit-scrollbar-thumb": {
-          backgroundColor: "#F9473B !important",
           borderRadius: 3
         }
       }
