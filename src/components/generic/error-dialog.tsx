@@ -8,7 +8,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
  * Interface representing component properties
  */
 interface Props {
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   onClose: () => void;
 }
 
@@ -107,7 +107,7 @@ export default class ErrorDialog extends React.Component<Props, State> {
     } else if (this.props.error instanceof Response) {
       return await this.props.error.text()
     } else {
-      return this.props.error || "";
+      return String(this.props.error) || "";
     }
   }
 
@@ -115,7 +115,7 @@ export default class ErrorDialog extends React.Component<Props, State> {
    * Reload button click event handler
    */
   private onReloadClick = () => {
-    window.location.reload(true);
+    window.location.reload();
   }
 
 }

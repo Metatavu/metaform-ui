@@ -1,49 +1,59 @@
 import { createStyles } from "@material-ui/core";
+import theme from "./theme";
 
-const DRAWER_HEIGHT = 80;
+const HEADER_HEIGHT = 72;
 
 /**
  * Styles for admin layout (v2)
  */
 export default createStyles({
 
-  root: {
+  content: {
     display: "flex",
     backgroundColor:  "#e0e0e0",
     width: "100%",
-    height: `calc(100vh - ${DRAWER_HEIGHT}px)`,
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     overflow: "auto",
     overflowX: "hidden"
   },
+
   appBar:  {
     backgroundColor:  "#333333",
     height: "5rem",
     display: `flex`
   },
+
   navDisplayFlex:  {
     display: `flex`,
-    justifyContent: `space-between`  
+    height: HEADER_HEIGHT,
   },
+
   navBarLink: {
     color: "#fff",
-    paddingRight: "2rem",
-    paddingLeft: "2rem",
-    marginLeft: "1.5rem",
-    marginRight: "1.5rem",
-    display: "inline",
-    textAlign: "center"
+    display: "flex",
+    padding: `0px ${theme.spacing(3)}px`,
+    margin: `0px ${theme.spacing(4)}px`,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    height: "100%"
   },
+
+  activeNavbarLink: {
+    color: theme.palette.secondary.main,
+    borderBottom: `2px solid ${theme.palette.secondary.main}`
+  },
+
   formLogo: {
-    color: "#e16928",
+    color: theme.palette.secondary.main,
     display: "flex",
     float: "left",
   },
-  toolBar: {
-    justifyContent: "left",
-    whiteSpace: "nowrap"
-  },
+
   logoTypography: {
-    marginRight: "15%"
+    marginRight: theme.spacing(12),
+    fontSize: 32,
+    display: "flex"
   }
 
 });

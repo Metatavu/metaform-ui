@@ -1,16 +1,16 @@
 import * as React from "react";
-
 import { Link } from "react-router-dom";
 import strings from "../../localization/strings";
-
-import { AppBar, List, ListItem, ListItemText, Toolbar, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, WithStyles, withStyles, Box } from "@material-ui/core";
 import styles from "../../styles/admin-layoutv2";
 import BasicLayout, { SnackbarMessage } from "./basic-layout";
 import { KeycloakInstance } from "keycloak-js";
 import { Metaform } from "../../generated/client";
-import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import CodeIcon from '@material-ui/icons/Code';
+import FormatAlignJustifyIcon from "@material-ui/icons/FormatAlignJustify";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import CodeIcon from "@material-ui/icons/Code";
+import { EditorNavigationLinks } from "../../types";
+import classNames from "classnames";
 
 /**
  * Interface representing component properties
@@ -22,6 +22,7 @@ interface Props extends WithStyles<typeof styles> {
   error?: string | Error | Response;
   loading?: boolean;
   loadMessage?: string;
+  activeNavigationLink: EditorNavigationLinks;
   clearError?: () => void;
   clearSnackbar?: () => void;
 }
@@ -70,7 +71,10 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         clearSnackbar={ clearSnackbar }
       >
         { this.renderNavBar() }
-        <div className={ classes.root }>{ this.props.children }</div>
+        <Toolbar/>
+        <Box className={ classes.content }>
+          { this.props.children }
+        </Box>
       </BasicLayout>
     );
   }
@@ -79,11 +83,9 @@ class AdminLayoutV2 extends React.Component<Props, State> {
    * Renders navigation bar
    */
   private renderNavBar = () => {
-    const { classes } = this.props;
-
     return (
-      <AppBar position="static" className={ classes.appBar }>
-        <Toolbar className={ classes.toolBar }>
+      <AppBar style={{ zIndex: 1201 }}>
+        <Toolbar>
           { this.renderLogo() }
           { this.renderNavLinks() }
         </Toolbar>
@@ -99,7 +101,6 @@ class AdminLayoutV2 extends React.Component<Props, State> {
 
     return (
       <Typography
-        variant="h3"
         className={ classes.logoTypography }
         //Placeholder, can be replaced with logo etc.
       >
@@ -112,38 +113,44 @@ class AdminLayoutV2 extends React.Component<Props, State> {
    * Renders links for the navigation bara
    */
   private renderNavLinks = () => {
-    const { classes } = this.props;
+    const { classes, activeNavigationLink } = this.props;
 
     return (
-      <List
+      <Box
         aria-labelledby={ strings.adminLayoutV2.metaformNavigation }
         className={ classes.navDisplayFlex }
       >
-        <ListItem
-          component={ Link }
-          to="/admin/edit-form/form"
-          className={ classes.navBarLink }
-        >
-          <FormatAlignJustifyIcon />
-          <ListItemText>{ strings.adminLayoutV2.form }</ListItemText>
-        </ListItem>
-        <ListItem
-          component={ Link }
-          to="/admin/edit-form/preview"
-          className={ classes.navBarLink }
-        >
-          <VisibilityIcon />
-          <ListItemText>{ strings.adminLayoutV2.preview }</ListItemText>
-        </ListItem>
-        <ListItem
-          component={ Link }
-          to="/admin/edit-form/json"
-          className={ classes.navBarLink }
-        >
-          <CodeIcon />
-          <ListItemText>{ strings.adminLayoutV2.json }</ListItemText>
-        </ListItem>
-      </List>
+        <Link to="/admin/edit-form/form">
+          <Box
+            className={ 
+              classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.form && classes.activeNavbarLink) 
+            }
+          >
+            <FormatAlignJustifyIcon/>
+            <Typography>{ strings.adminLayoutV2.form }</Typography>
+          </Box>
+        </Link>
+        <Link to="/admin/edit-form/preview">
+          <Box
+            className={
+              classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.preview && classes.activeNavbarLink) 
+            }
+          >
+            <VisibilityIcon/>
+            <Typography>{ strings.adminLayoutV2.preview }</Typography>
+          </Box>
+        </Link>
+        <Link to="/admin/edit-form/json">
+          <Box
+            className={
+              classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.json && classes.activeNavbarLink) 
+            }
+          >
+            <CodeIcon/>
+            <Typography>{ strings.adminLayoutV2.json }</Typography>
+          </Box>
+        </Link>
+      </Box>
     );
   };
 }

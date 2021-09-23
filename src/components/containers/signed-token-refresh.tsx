@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { ReduxState, ReduxActions } from "../../store";
 import { signedLogin } from "../../actions/auth";
 
-import { AccessToken } from "../../types";
+import { AccessToken, LoginMode } from "../../types";
 import ErrorDialog from "../generic/error-dialog";
 import { KeycloakInstance } from "keycloak-js";
 import Keycloak from "keycloak-js";
@@ -14,6 +14,7 @@ import Config from "../../config";
  * Component props
  */
 interface Props {
+  loginMode: LoginMode;
   signedToken?: AccessToken;
   onSignedLogin: (keycloak: KeycloakInstance, signedToken: AccessToken) => void;
 }
@@ -22,7 +23,7 @@ interface Props {
  * Component state
  */
 interface State {
-  error?: Error;
+  error?: Error | unknown;
 }
 
 /**
@@ -40,7 +41,8 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.keycloak = Keycloak(Config.getAdminLoginConfig());
+    this.keycloak = Keycloak(Config.getSignedKeycloakConfig());
+    
     this.state = { };
   }
 
@@ -48,9 +50,12 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
+    const { loginMode } = this.props;
+
     const auth = await this.keycloakInit();
 
     if (!auth) {
+      await this.keycloak.login(Config.getSignedKeycloakLoginOptions(loginMode));
       window.location.reload();
     } else {
       if (this.keycloak) {
@@ -62,7 +67,7 @@ class SignedTokenRefresh extends React.Component<Props, State> {
         }
       }
 
-      this.refreshAccessToken();
+      await this.refreshAccessToken();
 
       this.timer = setInterval(() => {
         this.refreshAccessToken();
@@ -93,9 +98,9 @@ class SignedTokenRefresh extends React.Component<Props, State> {
   /**
    * Refreshes access token
    */
-  private refreshAccessToken() {
+  private refreshAccessToken = async () => {
     try {
-      const refreshed = this.keycloak.updateToken(70);
+      const refreshed = await this.keycloak.updateToken(70);
       if (refreshed) {
         const signedToken = this.buildToken(this.keycloak);
         if (signedToken) {
@@ -112,10 +117,10 @@ class SignedTokenRefresh extends React.Component<Props, State> {
   /**
    * Initializes Keycloak client
    */
-  private keycloakInit = () => {
-    return new Promise(resolve => {
-      this.keycloak.init({ onLoad: "login-required", checkLoginIframe: false }).success(resolve);
-    });
+  private keycloakInit = async () => {
+    return await this.keycloak.init({
+      checkLoginIframe: false
+    })
   }
 
   /**
