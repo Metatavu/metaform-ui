@@ -1,7 +1,7 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
-const DRAWER_HEIGHT = 72;
+const HEADER_HEIGHT = 72;
 
 /**
  * Styles for admin layout (v2)
@@ -12,14 +12,20 @@ export default createStyles({
     display: "flex",
     backgroundColor:  "#e0e0e0",
     width: "100%",
-    height: `calc(100vh - ${DRAWER_HEIGHT}px)`,
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     overflow: "auto",
-    overflowX: "hidden"  
+    overflowX: "hidden"
+  },
+
+  appBar:  {
+    backgroundColor:  "#333333",
+    height: "5rem",
+    display: `flex`
   },
 
   navDisplayFlex:  {
     display: `flex`,
-    height: DRAWER_HEIGHT,
+    height: HEADER_HEIGHT,
   },
 
   navBarLink: {
