@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Autocomplete } from '@material-ui/lab';
-import { TextField } from "@material-ui/core";
+import { CircularProgress, TextField, Typography } from "@material-ui/core";
 import CodeServerClient from "../../codeserver/client";
 import { Metaform, MetaformField, MetaformFieldAutocompleteService, MetaformFieldSourceType } from "../../generated/client";
 import { Attribute, Qfield } from "../../generated/codeserver-client";
@@ -84,6 +84,10 @@ export default class FormAutocomplete extends React.Component<Props, State> {
 
     // TODO: loader
 
+    if (!items) {
+      return this.renderLoader();
+    }
+
     return (
       <Autocomplete<AutocompleteItem>
         id={ field.name }
@@ -96,6 +100,21 @@ export default class FormAutocomplete extends React.Component<Props, State> {
   }
 
   /**
+   * Renders loader
+   */
+  private renderLoader = () => {
+
+    return (
+      <div>        
+        <div>
+          <CircularProgress size={ 20 }></CircularProgress>
+          <Typography>louding</Typography>
+        </div>
+      </div>
+    );
+  }
+
+  /**
    * Loads autocomplete items
    * 
    * @returns autocomplete items
@@ -103,7 +122,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
   private loadItems = async () => {
     const { field } = this.props;
     const { autocomplete } = field;
-
+    
     if (!autocomplete) {
       throw new Error("Autocomplete not configured");
     }
