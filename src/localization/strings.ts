@@ -9,6 +9,7 @@ export interface IStrings extends LocalizedStringsMethods {
     loading: string;
     cancel: string;
     confirm: string;
+    loadingAutoCompleteOptions: string;
   };
 
   form: {

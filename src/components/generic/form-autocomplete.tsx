@@ -1,12 +1,14 @@
 import * as React from "react";
 
 import { Autocomplete } from '@material-ui/lab';
-import { CircularProgress, TextField, Typography } from "@material-ui/core";
+import { CircularProgress, TextField, Typography, WithStyles } from "@material-ui/core";
 import CodeServerClient from "../../codeserver/client";
 import { Metaform, MetaformField, MetaformFieldAutocompleteService, MetaformFieldSourceType } from "../../generated/client";
 import { Attribute, Qfield } from "../../generated/codeserver-client";
 import { FieldValue } from "metaform-react";
 import Config from "../../config";
+import strings from "../../localization/strings";
+import styles from "../../styles/form";
 
 /**
  * Autocomplete item
@@ -16,7 +18,7 @@ type AutocompleteItem = { id: string, [key: string]: string };
 /**
  * Interface representing component properties
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   minSearchLength: number;
   searchInterval: number;
   metaform: Metaform;
@@ -71,7 +73,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
         loading: false
       });
 
-      onError(e);    
+      onError(e);
     }
   }
 
@@ -81,10 +83,8 @@ export default class FormAutocomplete extends React.Component<Props, State> {
   public render() {
     const { field } = this.props;
     const { items } = this.state;
-
-    // TODO: loader
-
-    if (!items) {
+console.log(items)
+    if (!items.length) {
       return this.renderLoader();
     }
 
@@ -94,7 +94,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
         options={ items }
         getOptionLabel={ this.getAutocompleteOptionLabel }
         onChange={ this.onAutocompleteChange }
-        renderInput={(params) => <TextField {...params}  InputProps={{ ...params.InputProps }}/> }
+        renderInput={(params) => <TextField {...params} variant="filled" InputProps={{ ...params.InputProps }}/> }
       />  
     );
   }
@@ -103,13 +103,12 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    * Renders loader
    */
   private renderLoader = () => {
+    const { classes } = this.props;
 
     return (
-      <div>        
-        <div>
-          <CircularProgress size={ 20 }></CircularProgress>
-          <Typography>louding</Typography>
-        </div>
+      <div className={ classes.autoCompleteLoader }>        
+        <CircularProgress size={ 20 }></CircularProgress>
+        <Typography>{ strings.generic.loadingAutoCompleteOptions }</Typography>
       </div>
     );
   }

@@ -165,12 +165,13 @@ export class Form extends React.Component<Props, State> {
    * @param onChange onChange
    */
   private renderAutocomplete = (field: MetaformField) => {
-    const { metaform, setFieldValue } = this.props;
+    const { classes, metaform, setFieldValue } = this.props;
 
     // TODO: Error handling
     
     return (
       <FormAutocomplete
+        classes={ classes }
         minSearchLength={ 3 }
         searchInterval={ 300 }
         field={ field }
