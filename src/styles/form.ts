@@ -70,6 +70,14 @@ export default createStyles({
       "& input[type='submit']:hover": {
         background: "#0069d9",
       },
+
+      "& .MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']": {
+        padding: 0
+      },
+
+      "& .MuiFormControl-fullWidth": {
+        minWidth: "214px" //TODO: Remove min width when styling is fixed to match other fields
+      }
     }
   },
 
