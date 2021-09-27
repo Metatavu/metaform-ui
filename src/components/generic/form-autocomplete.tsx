@@ -84,7 +84,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
     const { field } = this.props;
     const { items } = this.state;
 
-    if (!items.length) {
+    if (!items) {
       return this.renderLoader();
     }
 

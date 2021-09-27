@@ -71,18 +71,22 @@ export default createStyles({
         background: "#0069d9",
       },
 
-      "& .MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']": {
+      "& .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']": {
         padding: 0
       },
 
-      "& .MuiFormControl-fullWidth": {
-        minWidth: "214px" //TODO: Remove min width when styling is fixed to match other fields
+      "& .MuiAutocomplete-input:first-child": {
+        paddingLeft: "10px"
+      },
+
+      "& .MuiAutocomplete-endAdornment": {
+        background: "#fff"
       }
     }
   },
 
   autoCompleteLoader: {
-    paddingTop: "5px",
+    paddingTop: "10px",
     paddingLeft: "20px",
     "& p": {
       fontSize: "0.875rem",
@@ -96,10 +100,6 @@ export default createStyles({
         }
       },
     },
-    "& MuiCircularProgress-root": {
-      paddingTop: "5px",
-      paddingLeft: "20px"
-    }
   }
 
 });
