@@ -1,4 +1,5 @@
 import { createStyles } from "@material-ui/core";
+import theme from "./theme";
 
 /**
  * Styles for json screen
@@ -6,27 +7,27 @@ import { createStyles } from "@material-ui/core";
 export default createStyles({
 
   root: {
-    margin: "0",
-    maxWidth: "100%",
-    padding: "0",
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
+
   jsonEditor: {
-      marginTop: "1rem",
-      height: "100%",
-      maxWidth: "100%",
-      padding: "5%"
+    marginTop: theme.spacing(2),
+    height: "100%",
+    padding: theme.spacing(12)
   },
+
   codeMirror: {
     paddingBottom: "0.5rem",
     "& .CodeMirror": {
       height: "100%"
     }
   },
+
   toggleReadOnlyButton: {
 
   },
-  sideBar: {
-    backgroundColor: "#fff",
-  }
 
 });
