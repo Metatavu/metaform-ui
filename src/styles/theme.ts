@@ -58,7 +58,6 @@ export default createMuiTheme({
     },
     body2: {
       fontSize: 14,
-      fontWeight: 800
     }
   },
 
