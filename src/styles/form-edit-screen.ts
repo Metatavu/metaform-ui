@@ -1,4 +1,5 @@
 import { createStyles } from "@material-ui/core";
+import theme from "./theme";
 
 /**
  * Styles for form-edit screen
@@ -6,14 +7,13 @@ import { createStyles } from "@material-ui/core";
 export default createStyles({
 
   root: {
-    margin: "0",
-    maxWidth: "100%",
-    padding: "0",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
 
   formEditor: {
-    height: "100%",
-    padding: "5rem",
+    padding: theme.spacing(10),
   },
 
   editableForm: {
@@ -44,16 +44,24 @@ export default createStyles({
     width: "30%"
   },
 
-  sideBar: {
-    backgroundColor: "#fff",
-    minHeight: "100vw"
+  drawer: {
+    height: "100%",
   },
 
-  sideBarTabs: {
-    float: "left",
-    borderBottom: "5px black",
-    minWidth: "50%",
-    textAlign: "center",
+  drawerPaper: {
+    height: "100%",
+  },
+
+  drawerTabs: {
+    width: "100%",
+    display: "flex"
+  },
+
+  drawerTab: {
+    width: "50%",
+    padding: theme.spacing(1),
+    display: "flex",
+    justifyContent: "center"
   },
 
   mainHeader: {

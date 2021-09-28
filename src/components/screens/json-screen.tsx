@@ -1,15 +1,13 @@
 import * as React from "react";
-
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/json-screen";
-
 import { History } from "history";
-import { WithStyles, withStyles, Button, Typography, Grid } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Typography, Grid, Drawer, Toolbar } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken } from '../../types';
+import { AccessToken, EditorNavigationLinks } from '../../types';
 import Api from "../../api/api";
 import { Metaform } from "../../generated/client";
 import strings from "../../localization/strings";
@@ -120,7 +118,7 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { error, metaformJson, isLoading } = this.state;
+    const { error, isLoading } = this.state;
     const { 
       classes, 
       keycloak, 
@@ -146,30 +144,45 @@ export class FormEditJsonScreen extends React.Component<Props, State> {
         loading={ isLoading || !metaform } 
         error={ error } 
         clearError={ this.clearError }
+        activeNavigationLink={ EditorNavigationLinks.json }
       >
         <Grid container className={classes.root}>
-          <Grid item md={ 2 } className={ classes.sideBar }>
-        
-          </Grid>
-          <Grid item md={ 8 } className={ classes.jsonEditor }>
-            <Typography align="center" variant="h4" >
-              { strings.jsonScreen.title }
-            </Typography> 
-            <Button color="primary" variant="outlined" className={ classes.toggleReadOnlyButton } onClick={ this.toggleMutableJson }>{ this.state.readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }</Button>
-            <CodeMirror 
-              className={ classes.codeMirror }
-              value={ metaformJson }
-              options={ jsonEditorOptions }
-              onBeforeChange={this.onCodeMirrorBeforeJsonChange}
-            />
-          </Grid>
-          <Grid item md={ 2 } className={ classes.sideBar }>
-          </Grid>
+          { this.renderJsonEditor(jsonEditorOptions) }
         </Grid>
       </AdminLayoutV2>
     );
   }
-  
+
+
+  /**
+   * Method for rendering json editor
+   */
+  private renderJsonEditor = (jsonEditorOptions: codemirror.EditorConfiguration) => {
+    const { classes } = this.props;
+    const { metaformJson, readOnly } = this.state;
+
+    return (
+      <Grid item md={ 8 } className={ classes.jsonEditor }>
+        <Typography align="center" variant="h4">
+          { strings.jsonScreen.title }
+        </Typography> 
+        <Button 
+          color="primary" 
+          variant="outlined" 
+          className={ classes.toggleReadOnlyButton } 
+          onClick={ this.toggleMutableJson }>
+            { readOnly ? `${ strings.jsonScreen.toggleReadOnlyButtonEdit }` : `${ strings.jsonScreen.toggleReadOnlyButtonPreview }` }
+          </Button>
+        <CodeMirror 
+          className={ classes.codeMirror }
+          value={ metaformJson }
+          options={ jsonEditorOptions }
+          onBeforeChange={ this.onCodeMirrorBeforeJsonChange }
+        />
+      </Grid>
+    );
+  }
+
   /**
    * Event handler for CodeMirror before JSON code change event
    *
