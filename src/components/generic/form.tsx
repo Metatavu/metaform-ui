@@ -3,7 +3,7 @@ import * as React from "react";
 import styles from "../../styles/form";
 
 import { WithStyles, withStyles, Icon, LinearProgress, Slider } from "@material-ui/core";
-import { Metaform, MetaformField, MetaformFieldAutocompleteOptions, MetaformFieldAutocompleteService } from "../../generated/client";
+import { Metaform, MetaformField } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
 import AddIcon from '@material-ui/icons/Add';
@@ -166,8 +166,6 @@ export class Form extends React.Component<Props, State> {
    */
   private renderAutocomplete = (field: MetaformField) => {
     const { classes, metaform, setFieldValue } = this.props;
-
-    // TODO: Error handling
     
     return (
       <FormAutocomplete
@@ -176,7 +174,6 @@ export class Form extends React.Component<Props, State> {
         searchInterval={ 300 }
         field={ field }
         metaform={ metaform }
-        onError={ e => /* TODO */ {} }
         setFieldValue={ setFieldValue }
       />
     );
