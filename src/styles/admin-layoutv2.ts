@@ -16,6 +16,10 @@ export default createStyles({
     overflowX: "hidden"
   },
 
+  link: {
+    textDecoration: "none"
+  },
+
   appBar:  {
     backgroundColor:  "#333333",
     height: "5rem",

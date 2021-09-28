@@ -58,7 +58,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <CssBaseline />
         <Provider store={store}>     
           <BrowserRouter>
@@ -104,9 +104,11 @@ class App extends React.Component<Props, State> {
                   exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <FormEditJsonScreen
-                        history={ history }
-                      />
+                      <ThemeProvider theme={theme}>
+                        <FormEditJsonScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
                     </SignedTokenRefresh>
                   )}
                 />
@@ -115,9 +117,11 @@ class App extends React.Component<Props, State> {
                   exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <FormEditScreen
-                        history={ history }
-                      />
+                      <ThemeProvider theme={theme}>
+                        <FormEditScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
                     </SignedTokenRefresh>
                   )}
                 />
@@ -126,9 +130,11 @@ class App extends React.Component<Props, State> {
                   exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh>
-                      <PreviewScreen
-                        history={ history }
-                      />
+                      <ThemeProvider theme={theme}>
+                        <PreviewScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
                     </SignedTokenRefresh>
                   )}
                 />
@@ -159,7 +165,7 @@ class App extends React.Component<Props, State> {
             </div>
           </BrowserRouter>
         </Provider>
-      </ThemeProvider>
+      </>
     );
   }
 }
