@@ -74,19 +74,6 @@ export default createMuiTheme({
   },
 
   overrides: {
-    MuiCssBaseline: {
-      "@global": {
-        a: {
-          textDecoration: "none"
-        },
-        "::-webkit-scrollbar": {
-          width: "0.25em"
-        },
-        "::-webkit-scrollbar-thumb": {
-          borderRadius: 3
-        }
-      }
-    },
     MuiAppBar: {
       root: {
         flexDirection: "row",
@@ -117,23 +104,6 @@ export default createMuiTheme({
     MuiDivider: {
       root: {
         width: "100%"
-      }
-    },
-    MuiAccordion: {
-      root: {
-        "&:before": {
-          height: "0px !important"
-        }
-      }
-    },
-    MuiAccordionSummary: {
-      content: {
-        margin: "0px !important"
-      },
-      root: {
-        "&.Mui-expanded": {
-          minHeight: "48px !important"
-        }
       }
     },
     MuiIconButton: {
