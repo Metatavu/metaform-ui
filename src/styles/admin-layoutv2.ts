@@ -9,12 +9,15 @@ const HEADER_HEIGHT = 72;
 export default createStyles({
 
   content: {
-    display: "flex",
     backgroundColor:  "#e0e0e0",
     width: "100%",
     height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     overflow: "auto",
     overflowX: "hidden"
+  },
+
+  link: {
+    textDecoration: "none"
   },
 
   appBar:  {
