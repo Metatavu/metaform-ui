@@ -100,6 +100,9 @@ export default createStyles({
         }
       },
     },
-  }
+  },
 
+  autoCompleteInput: {
+    height: 30
+  }
 });

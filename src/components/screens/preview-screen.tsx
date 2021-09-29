@@ -173,7 +173,6 @@ export class PreviewScreen extends React.Component<Props, State> {
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
     const { formValues } = this.state;
 
-    console.log("setFieldValue(previewScreen)", fieldName, fieldValue);
     if (formValues[fieldName] !== fieldValue) {
       formValues[fieldName] = fieldValue;
       

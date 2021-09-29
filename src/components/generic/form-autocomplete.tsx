@@ -59,7 +59,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { value } = this.props;
+    const { value, setFieldValue } = this.props;
 
     this.setState({
       loading: true
@@ -69,13 +69,18 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       const loadedItems = await this.loadItems();
       const defaultAutoCompleteItem = loadedItems.find(item => item.id === value as string);
 
-      console.log("defaultAutoCompleteItem", defaultAutoCompleteItem)
-      //TODO set default value for child text field
-
       this.setState({
         items: loadedItems,
         loading: false,
         defaultValue: defaultAutoCompleteItem ? { ...defaultAutoCompleteItem } : defaultAutoCompleteItem
+      });
+
+      this.getSourceFields().forEach(sourceField => {
+        if (sourceField.name) {
+          const itemProperty = sourceField.source?.options?.autocompleteItemProperty;
+          const itemValue = itemProperty && defaultAutoCompleteItem ? defaultAutoCompleteItem[itemProperty] : null;
+          setFieldValue(sourceField.name, itemValue);
+        }
       });
     } catch (e) {
       this.setState({        
@@ -94,6 +99,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       field,
       disabled,
       value,
+      classes
     } = this.props;
 
     const {
@@ -105,9 +111,6 @@ export default class FormAutocomplete extends React.Component<Props, State> {
     } = this.state;
 
     const selectedAutocompleteItem = items.find(item => item.id === value as string);
-
-    console.log("items", items)
-    console.log("selectedAutocompleteItem", selectedAutocompleteItem);
 
     if (errorMessage) {
       return this.renderErrorMessage();
@@ -125,11 +128,12 @@ export default class FormAutocomplete extends React.Component<Props, State> {
         inputValue={ inputValue }
         onInputChange={ this.onAutocompleteInputChange }
         defaultValue={ defaultValue }
-        value={ undefined }
+        value={ selectedAutocompleteItem }
         getOptionSelected={ this.getOptionSelected }
         getOptionLabel={ this.getAutocompleteOptionLabel }
         onChange={ this.onAutocompleteChange }
         renderInput={(params) => <TextField {...params} variant="outlined" InputProps={{ ...params.InputProps }}/> }
+        classes={{ input: classes.autoCompleteInput }}
       />  
     );
   }
@@ -223,10 +227,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       qvalue: codeServerParentConceptCodeId
     });
     
-    console.log("response", JSON.stringify(response, null, 2))
-
     const items: AutocompleteItem[] = (response.conceptCodes || []).map(conceptCodes => {
-    console.log("conceptCodes", conceptCodes.conceptCodeId)
       return (conceptCodes.attributes || [])
         .filter((attribute) => attribute.attributeName && attribute.attributeValue)
         .reduce((mapped: { [key: string]: string }, attribute: Attribute) => {
