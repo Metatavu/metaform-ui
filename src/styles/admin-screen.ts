@@ -22,7 +22,7 @@ export default createStyles({
   },
 
   topBarButton: {
-    marginLeft: "10px"
+    marginLeft: "10px",
   },
 
   filters: {

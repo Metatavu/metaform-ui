@@ -19,7 +19,7 @@ interface Props extends WithStyles<typeof styles> {
   keycloak: KeycloakInstance;
   metaform?: Metaform;
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   loading?: boolean;
   loadMessage?: string;
   activeNavigationLink: EditorNavigationLinks;
@@ -120,7 +120,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         aria-labelledby={ strings.adminLayoutV2.metaformNavigation }
         className={ classes.navDisplayFlex }
       >
-        <Link to="/admin/edit-form/form">
+        <Link to="/admin/edit-form/form" className={ classes.link }>
           <Box
             className={ 
               classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.form && classes.activeNavbarLink) 
@@ -130,7 +130,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
             <Typography>{ strings.adminLayoutV2.form }</Typography>
           </Box>
         </Link>
-        <Link to="/admin/edit-form/preview">
+        <Link to="/admin/edit-form/preview" className={ classes.link }>
           <Box
             className={
               classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.preview && classes.activeNavbarLink) 
@@ -140,7 +140,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
             <Typography>{ strings.adminLayoutV2.preview }</Typography>
           </Box>
         </Link>
-        <Link to="/admin/edit-form/json">
+        <Link to="/admin/edit-form/json" className={ classes.link }>
           <Box
             className={
               classNames(classes.navBarLink, activeNavigationLink === EditorNavigationLinks.json && classes.activeNavbarLink) 

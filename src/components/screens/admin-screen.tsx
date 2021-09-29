@@ -181,7 +181,6 @@ export class AdminScreen extends React.Component<Props, State> {
     return (
       <Button 
         variant="contained" 
-        color="primary"
         className={ classes.topBarButton } 
         onClick={ this.onExportXlsxClick }
       >

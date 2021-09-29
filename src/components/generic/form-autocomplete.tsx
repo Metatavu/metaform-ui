@@ -1,29 +1,26 @@
 import * as React from "react";
 
 import { Autocomplete } from '@material-ui/lab';
-import { TextField } from "@material-ui/core";
+import { CircularProgress, TextField, Typography, WithStyles } from "@material-ui/core";
 import CodeServerClient from "../../codeserver/client";
 import { Metaform, MetaformField, MetaformFieldAutocompleteService, MetaformFieldSourceType } from "../../generated/client";
 import { Attribute, Qfield } from "../../generated/codeserver-client";
 import { FieldValue } from "metaform-react";
 import Config from "../../config";
-
-/**
- * Autocomplete item
- */
-type AutocompleteItem = { id: string, [key: string]: string };
+import strings from "../../localization/strings";
+import styles from "../../styles/form";
+import { autocompleteErrorMessages, AutocompleteItem } from "../../types";
 
 /**
  * Interface representing component properties
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   minSearchLength: number;
   searchInterval: number;
   metaform: Metaform;
   field: MetaformField;
   disabled: boolean;
   value: FieldValue;
-  onError: (e: Error | string | unknown) => void;
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
 }
 
@@ -35,6 +32,7 @@ interface State {
   items: AutocompleteItem[];
   inputValue: string;
   defaultValue?: AutocompleteItem;
+  errorMessage: string;
 }
 
 /**
@@ -52,7 +50,8 @@ export default class FormAutocomplete extends React.Component<Props, State> {
     this.state = {
       loading: false,
       items: [],
-      inputValue: ""
+      inputValue: "",
+      errorMessage: ""
     };
   }
 
@@ -60,7 +59,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { onError, value } = this.props;
+    const { value } = this.props;
 
     this.setState({
       loading: true
@@ -80,10 +79,9 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       });
     } catch (e) {
       this.setState({        
-        loading: false
+        loading: false,
+        errorMessage: e.message
       });
-
-      onError(e);    
     }
     
   }
@@ -102,7 +100,8 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       items,
       inputValue,
       defaultValue,
-      loading
+      loading,
+      errorMessage
     } = this.state;
 
     const selectedAutocompleteItem = items.find(item => item.id === value as string);
@@ -110,8 +109,12 @@ export default class FormAutocomplete extends React.Component<Props, State> {
     console.log("items", items)
     console.log("selectedAutocompleteItem", selectedAutocompleteItem);
 
-    if (loading) {
-      return null;
+    if (errorMessage) {
+      return this.renderErrorMessage();
+    }
+
+    if (loading || !items && !errorMessage) {
+      return this.renderLoader();
     }
 
     return (
@@ -126,13 +129,35 @@ export default class FormAutocomplete extends React.Component<Props, State> {
         getOptionSelected={ this.getOptionSelected }
         getOptionLabel={ this.getAutocompleteOptionLabel }
         onChange={ this.onAutocompleteChange }
-        renderInput={(params) => 
-          <TextField 
-            {...params}
-            InputProps={{ ...params.InputProps }}
-          /> 
-        }
+        renderInput={(params) => <TextField {...params} variant="outlined" InputProps={{ ...params.InputProps }}/> }
       />  
+    );
+  }
+
+  /**
+   * Renders loader
+   */
+  private renderLoader = () => {
+    const { classes } = this.props;
+
+    return (
+      <div className={ classes.autoCompleteLoader }>        
+        <CircularProgress size={ 20 }></CircularProgress>
+        <Typography>{ strings.generic.loadingAutoCompleteOptions }</Typography>
+      </div>
+    );
+  }
+
+  /**
+   * Renders autocomplete error message
+   */
+  private renderErrorMessage = () => {
+    const { errorMessage } = this.state;
+
+    return (
+      <div style={{paddingLeft:"10px"}}>
+        <Typography style={{fontSize:"0.6rem"}} variant="caption" color="error">{ errorMessage }</Typography>
+      </div>
     );
   }
 
@@ -144,7 +169,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
   private loadItems = async () => {
     const { field } = this.props;
     const { autocomplete } = field;
-
+    
     if (!autocomplete) {
       throw new Error("Autocomplete not configured");
     }
@@ -162,24 +187,31 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    */
   private loadCodeServerConceptCodeItems = async () => {
     const { field } = this.props;
-    
-    const options = field.autocomplete?.options;
+    const { autocomplete } = field;
+
+    if (!autocomplete) {
+      this.setState({
+        errorMessage: autocompleteErrorMessages.MISSING_AUTO_COMPLETE
+      });
+    }
+
+    const options = autocomplete?.options;
     
     if (!options) {
-      throw new Error("Code server autocomplete not configured");
+      throw new Error(autocompleteErrorMessages.MISSING_OPTIONS);
     }
 
     const { codeServerBaseUrl, codeServerClassificationId, codeServerParentConceptCodeId } = options;
     if (!codeServerBaseUrl) {
-      throw new Error("Code server autocomplete missing codeServerBaseUrl");
+      throw new Error(autocompleteErrorMessages.MISSING_CODE_SERVER_BASE_URL);
     }
 
     if (!codeServerClassificationId) {
-      throw new Error("Code server autocomplete missing codeServerClassificationId");
+      throw new Error(autocompleteErrorMessages.MISSING_CODE_SERVER_CLASSIFICATION_ID);
     }
 
     if (!codeServerParentConceptCodeId) {
-      throw new Error("Code server autocomplete missing codeServerParentConceptCodeId");
+      throw new Error(autocompleteErrorMessages.MISSING_CODE_SERVER_PARENT_CONCEPT_CODE_ID);
     }
 
     const corsProxy = Config.getCorsProxy();
@@ -215,11 +247,10 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    * @returns label
    */
   private getAutocompleteOptionLabel = (autocompleteItem: AutocompleteItem) => {
-    const { field, onError } = this.props;
+    const { field } = this.props;
     const { autocomplete } = field;
 
     if (!autocomplete) {
-      onError("Autocomplete not configured");
       return "Unknown";
     }
 
