@@ -14,7 +14,8 @@ export default createStyles({
 
   formContainer: {
     padding: theme.spacing(6),
-    backgroundColor: "#FFF"
+    backgroundColor: "#FFF",
+    width: `calc(1140px + 2 * ${theme.spacing(4)}px)`
   }
 
 });
