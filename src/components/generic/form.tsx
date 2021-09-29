@@ -164,11 +164,13 @@ export class Form extends React.Component<Props, State> {
    * @param field field
    * @param onChange onChange
    */
-  private renderAutocomplete = (field: MetaformField) => {
+  private renderAutocomplete = (field: MetaformField, formReadOnly: boolean, value: FieldValue) => {
     const { metaform, setFieldValue } = this.props;
 
     // TODO: Error handling
     
+    console.log("value(renderAutocomplete)", value)
+
     return (
       <FormAutocomplete
         minSearchLength={ 3 }
@@ -177,6 +179,8 @@ export class Form extends React.Component<Props, State> {
         metaform={ metaform }
         onError={ e => /* TODO */ {} }
         setFieldValue={ setFieldValue }
+        disabled={ formReadOnly || !!field.readonly }
+        value={ value }
       />
     );
   }
