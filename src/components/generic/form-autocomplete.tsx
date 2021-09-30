@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete } from "@material-ui/lab";
 import { CircularProgress, TextField, Typography, WithStyles } from "@material-ui/core";
 import CodeServerClient from "../../codeserver/client";
 import { Metaform, MetaformField, MetaformFieldAutocompleteService, MetaformFieldSourceType } from "../../generated/client";
