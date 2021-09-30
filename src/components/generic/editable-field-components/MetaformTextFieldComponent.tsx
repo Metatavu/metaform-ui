@@ -7,7 +7,7 @@ import { FieldValue } from "../../../types";
  * Component props
  */
 interface Props {
-  field: MetaformField;
+  field?: MetaformField;
   fieldId?: string;
   fieldLabelId?: string;
   formReadOnly?: boolean;
@@ -45,6 +45,17 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
    */
   public render() {
     const { field, fieldId, fieldLabelId, formReadOnly, value, onFocus } = this.props;
+
+    if (!field) {
+      return (
+        <Input
+          type="text"
+          readOnly={ formReadOnly }
+          value={ value as string || "" }
+          onFocus={ onFocus }
+        />
+      );
+    }
 
     return (
       <Input

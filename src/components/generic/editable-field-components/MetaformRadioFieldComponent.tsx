@@ -5,9 +5,10 @@ import { MetaformField, MetaformFieldOption } from "../../../generated/client";
  * Component props
  */
 interface Props {
-  field: MetaformField;
-  fieldId: string;
-  fieldLabelId: string;
+  field?: MetaformField;
+  fieldId?: string;
+  fieldLabelId?: string;
+  formReadOnly?: boolean;
   onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
@@ -38,7 +39,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId } = this.props;
+    const { field, fieldId, formReadOnly } = this.props;
 
     if (!field.name) {
       return null;
