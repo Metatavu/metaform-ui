@@ -15,8 +15,6 @@ import { autocompleteErrorMessages, AutocompleteItem } from "../../types";
  * Interface representing component properties
  */
 interface Props extends WithStyles<typeof styles> {
-  minSearchLength: number;
-  searchInterval: number;
   metaform: Metaform;
   field: MetaformField;
   disabled: boolean;
@@ -196,7 +194,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       throw new Error(autocompleteErrorMessages.MISSING_AUTO_COMPLETE);
     }
 
-    const options = autocomplete?.options;
+    const options = autocomplete.options;
     
     if (!options) {
       throw new Error(autocompleteErrorMessages.MISSING_OPTIONS);
