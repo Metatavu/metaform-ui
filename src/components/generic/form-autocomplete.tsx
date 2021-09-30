@@ -194,9 +194,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
     const { autocomplete } = field;
 
     if (!autocomplete) {
-      this.setState({
-        errorMessage: autocompleteErrorMessages.MISSING_AUTO_COMPLETE
-      });
+      throw new Error(autocompleteErrorMessages.MISSING_AUTO_COMPLETE);
     }
 
     const options = autocomplete?.options;
