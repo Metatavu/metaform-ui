@@ -86,7 +86,7 @@ export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-
 
 /**
  * LoginMode 
-*/
+ */
 export type LoginMode = "USER" | "ADMIN";
 
 /**
