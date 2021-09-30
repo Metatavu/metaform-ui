@@ -133,7 +133,6 @@ export default class FormAutocomplete extends React.Component<Props, State> {
         getOptionLabel={ this.getAutocompleteOptionLabel }
         onChange={ this.onAutocompleteChange }
         renderInput={(params) => <TextField {...params} variant="outlined" InputProps={{ ...params.InputProps }}/> }
-        classes={{ input: classes.autoCompleteInput }}
       />  
     );
   }

@@ -66,10 +66,6 @@ export default createMuiTheme({
       elevation: 0,
       position: "fixed"
     },
-    MuiTextField: {
-      variant: "outlined",
-      size: "small"
-    }
   },
 
   overrides: {
@@ -95,21 +91,5 @@ export default createMuiTheme({
         width: "100%"
       }
     },
-    MuiFormLabel: {
-      root: {
-        color: "rgba(0, 0, 0, 0.54)"
-      }
-    },
-    MuiDivider: {
-      root: {
-        width: "100%"
-      }
-    },
-    MuiIconButton: {
-      root: {
-        paddingTop: "0px !important",
-        paddingBottom: "0px !important"
-      }
-    }
   }
 });
