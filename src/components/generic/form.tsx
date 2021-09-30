@@ -175,8 +175,6 @@ export class Form extends React.Component<Props, State> {
     return (
       <FormAutocomplete
         classes={ classes }
-        minSearchLength={ 3 }
-        searchInterval={ 300 }
         field={ field }
         metaform={ metaform }
         setFieldValue={ setFieldValue }
