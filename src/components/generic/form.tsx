@@ -162,7 +162,8 @@ export class Form extends React.Component<Props, State> {
    * Renders autocomplete component
    * 
    * @param field field
-   * @param onChange onChange
+   * @param formReadOnly form read only
+   * @param value autocomplete form value
    */
   private renderAutocomplete = (field: MetaformField, formReadOnly: boolean, value: FieldValue) => {
     const {
