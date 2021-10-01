@@ -117,8 +117,8 @@ export interface IStrings extends LocalizedStringsMethods {
   },
 
   formEditScreen: {
-    leftSideBarComponentsTab: string;
-    leftSideBarStylingTab: string;
+    componentsTab: string;
+    stylingTab: string;
     leftSideBarFieldHeader: string;
     leftSideBarComponentHeader: string;
     rightSideBarLinksTab: string;
@@ -143,9 +143,22 @@ export interface IStrings extends LocalizedStringsMethods {
   editableFields: {
     htmlField: string;
     submitFieldText: string;
+    radioFieldText: string;
     numberField: string;
     numberFieldMin: string;
     numberFieldMax: string;
+    default: {
+      label: string,
+      text: string;
+      radio: string;
+      select: string;
+      number: string;
+      memo: string;
+      checkList: string;
+      submit: string;
+      dateTime: string;
+      autoComplete: string;
+    }
   }
 
 }

@@ -1,5 +1,7 @@
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@material-ui/core";
 import React from "react";
 import { MetaformField, MetaformFieldOption } from "../../../generated/client";
+import strings from "../../../localization/strings";
 
 /**
  * Component props
@@ -9,7 +11,7 @@ interface Props {
   fieldId?: string;
   fieldLabelId?: string;
   formReadOnly?: boolean;
-  onFieldUpdate: (metaformField: MetaformField) => void;
+  onFieldUpdate?: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -41,6 +43,15 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
   public render() {
     const { field, fieldId, formReadOnly } = this.props;
 
+    if (!field) {
+      return (
+        <FormControl component="fieldset">
+          <FormLabel component="legend">{ strings.editableFields.default.label }</FormLabel>
+          <FormControlLabel control={<Radio disabled={ formReadOnly }/>} label={ strings.editableFields.default.radio } />
+        </FormControl>
+      );
+    }
+
     if (!field.name) {
       return null;
     }
@@ -48,15 +59,12 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
     const options = field.options || [];
 
     return (
-      <div>
-        {
-          options.map((option, i) =>  (
-            <div key={ `${ fieldId }-${ option.name }-container` }>
-              { this.renderOption(option) }
-            </div>
-          ))
-        }
-      </div>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">{ strings.editableFields.radioFieldText }</FormLabel>
+        <RadioGroup key={ `${ fieldId }-group-container` }>
+          { options.map((option, i) =>  this.renderOption(option)) }
+        </RadioGroup>
+      </FormControl>
     );
   }
 
@@ -69,10 +77,13 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
   private renderOption = (option: MetaformFieldOption) => {
     const { fieldId } = this.props;
     return (
-      <label className="metaform-radio-field-label" key={ `${fieldId}-${option.name}-label` } htmlFor={ `${fieldId}-${option.name}` }>
-        { this.renderOptionValue(option) }
-        <span> { option.text } </span>
-      </label>
+      <FormControlLabel 
+        className="metaform-radio-field-label"
+        key={ `${fieldId}-${option.name}-label` }
+        htmlFor={ `${fieldId}-${option.name}` }
+        label={ option.text } 
+        control={ this.renderOptionValue(option) } 
+      />
     );
   }
 
@@ -86,14 +97,13 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
     const { field, fieldId, fieldLabelId } = this.props;
 
     return (
-      <input 
-        key={ `${ fieldId }-${ option.name }-input` }
-        type="radio" 
-        id={ `${ fieldId }-${ option.name }` }  
-        aria-labelledby={ fieldLabelId } 
-        name={ field.name }
-        title={ field.title }
-        required={ field.required }
+      <Radio
+        key={ `${ fieldId }-${ option.name }-radio` }
+        id={ `${ fieldId }-${ option.name }` } 
+        aria-labelledby={ fieldLabelId }
+        name={ field!.name }
+        title={ field!.title }
+        required={ field!.required }
         value={ option.name }
       />
     )

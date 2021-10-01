@@ -8,10 +8,11 @@ import styles from "../../../styles/form-edit-screen";
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field: MetaformField;
-  fieldId: string;
-  fieldLabelId: string;
-  onFieldUpdate: (metafromfield: MetaformField) => void;
+  field?: MetaformField;
+  fieldId?: string;
+  fieldLabelId?: string;
+  formReadOnly?: boolean;
+  onFieldUpdate?: (metafromfield: MetaformField) => void;
 }
 
 /**
@@ -41,7 +42,28 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * Component render method
    */
   public render = () => {
-    const { classes, field, fieldId } = this.props;
+    const { 
+      classes, 
+      field, 
+      fieldId, 
+      formReadOnly 
+    } = this.props;
+
+    if (!field) {
+      return (        
+        <FormControl>
+          <InputLabel>
+            { strings.editableFields.default.label }
+          </InputLabel>
+          <Input
+            type="number"
+            placeholder={ strings.editableFields.default.number }
+            readOnly={ formReadOnly }
+            className={ classes.numberField }
+          />
+        </FormControl>
+      );
+    }
 
     const inputProps = {
       min: field.min,
@@ -64,7 +86,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
             name={ field.name }
             title={ field.title }
             required={ field.required }
-            readOnly={ field.readonly }
+            readOnly={ field.readonly || formReadOnly }
             inputProps={ inputProps }
             className={ classes.numberField }
           />
@@ -110,6 +132,11 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   */ 
   private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
+
+    if (!onFieldUpdate) {
+      return;
+    }
+
     const { value, name } = event.target;
 
     const updatedField = {

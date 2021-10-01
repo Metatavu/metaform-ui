@@ -21,6 +21,7 @@ import { MetaformHtmlComponent } from "../generic/editable-field-components/Meta
 import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
 import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
+import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided } from 'react-beautiful-dnd';
 
 /**
  * Component props
@@ -122,10 +123,12 @@ export class FormEditScreen extends React.Component<Props, State> {
         clearError={ this.clearError }
         activeNavigationLink={ EditorNavigationLinks.form }
       >
-        <Box className={ classes.root }>
-          { this.renderFormEditor() }
-        </Box>
-        { this.renderLeftDrawer() }
+        <DragDropContext onDragEnd={ (result: DropResult, provided: ResponderProvided) => {} }>
+          <Box className={ classes.root }>
+            { this.renderFormEditor() }
+          </Box>
+          { this.renderLeftDrawer() }
+        </DragDropContext>
         { this.renderRightDrawer() }
       </AdminLayoutV2>
     );
@@ -274,6 +277,62 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
   }
 
+/**
+  * Renders field's input
+  * 
+  * @param field metaform field
+  * @param sectionIndex section index
+  * @param fieldIndex field index
+  */
+  private renderReadOnlyInput = (fieldType: MetaformFieldType) => {
+    const { classes, metaform } = this.props;
+
+    if (!metaform) {
+      return;
+    }
+
+    switch (fieldType) {
+      case MetaformFieldType.Text:
+        return (
+          <MetaformTextFieldComponent
+            formReadOnly={ true }
+          />
+        );
+      case MetaformFieldType.Html:
+        return (
+          <MetaformHtmlComponent
+            formReadOnly={ true } 
+            classes={ classes }          
+          />
+        );
+      case MetaformFieldType.Radio:
+        return (
+          <MetaformRadioFieldComponent
+            formReadOnly={ true }
+          />
+        );
+      case MetaformFieldType.Submit:
+        return (
+          <MetaformSubmitFieldComponent
+            formReadOnly={ true }
+          />
+        );
+      case MetaformFieldType.Number:
+        return (
+          <MetaformNumberFieldComponent
+            formReadOnly={ true }
+            classes={ classes }
+          />
+        );
+      default:
+        return (
+          <div style={{ color: "red" }}> 
+            `${ strings.formEditScreen.unknownFieldType }: ${ fieldType }` 
+          </div>
+        );
+    }
+  }
+
   /**
    * Method for rendering left sidebar
    */
@@ -292,12 +351,12 @@ export class FormEditScreen extends React.Component<Props, State> {
         <Box className={ classes.drawerTabs }>
           <Box className={ classes.drawerTab }>
             <Typography variant="h5">
-              { strings.formEditScreen.leftSideBarComponentsTab }
+              { strings.formEditScreen.componentsTab }
             </Typography>
           </Box>
           <Box className={ classes.drawerTab }>
             <Typography variant="h5">
-              { strings.formEditScreen.leftSideBarStylingTab }
+              { strings.formEditScreen.stylingTab }
             </Typography>
           </Box>
         </Box>
@@ -306,8 +365,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           <InfoIcon />
           { strings.formEditScreen.leftSideBarInfo }
         </Typography>
-        { this.renderFields() }
-        { this.renderComponents() }
+        { this.renderDraggableComponents() }
       </Drawer>
     );
   }
@@ -349,70 +407,47 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Method for rendering addable fields
+   * Renders draggable components
    */
-  private renderFields = () => {
-    const listOfFields = [
-      strings.formEditScreen.sectionLayout,
-      strings.formEditScreen.headerField,
-      strings.formEditScreen.textField,
-      strings.formEditScreen.editableTextField,
-      strings.formEditScreen.conditionalField
-    ];
-
+  private renderDraggableComponents = () => {
     const { classes } = this.props;
 
     return (
-      <List>
-        <Box border={ 1 } className={ classes.fieldHeader }>
-          <ListItemText>
-            <Typography>
-              { strings.formEditScreen.leftSideBarFieldHeader }
-            </Typography>
-          </ListItemText>
-        </Box>
-        { listOfFields.map((field: string, index: number) => (
-          <Box border={ 1 } className={ classes.fields } key={ index } >
-            <ListItemText>
-              <Typography>{ field }</Typography>
-            </ListItemText>
-          </Box>
-        )) }
-      </List>
+        <Droppable droppableId="componentList">
+          {(provided:DroppableProvided, snapshot:DroppableStateSnapshot) => (
+            <div
+              ref={ provided.innerRef }
+              { ...provided.droppableProps }
+            >
+              { Object.values(MetaformFieldType).map(this.renderDraggableComponent) }
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
     );
   }
 
   /**
-   * Method for rendering addable components
+   * Renders single draggable component
    */
-  private renderComponents = () => {
-    const listOfComponents = [
-      strings.formEditScreen.dropDownMenu,
-      strings.formEditScreen.selectBox,
-      strings.formEditScreen.radioButton,
-      strings.formEditScreen.button,
-      strings.formEditScreen.image
-    ];
-
+  private renderDraggableComponent = (fieldType: MetaformFieldType) => {
     const { classes } = this.props;
 
+    // TODO fix the index
     return (
-      <List>
-        <Box border={ 1 } className={ classes.componentHeader }>
-          <ListItemText>
-            <Typography>
-              { strings.formEditScreen.leftSideBarComponentHeader }
-            </Typography>
-          </ListItemText>
-        </Box>
-        { listOfComponents.map((component: string, index: number) => (
-          <Box border={ 1 } className={ classes.fields } key={ index }>
-            <ListItemText>
-              <Typography>{ component }</Typography>
-            </ListItemText>
-          </Box>
-        )) }
-      </List>
+      <Draggable draggableId={ fieldType } index={ 0 }>
+        {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
+            <div>
+              <div
+                ref={ providedDraggable.innerRef }
+                { ...providedDraggable.draggableProps }
+                { ...providedDraggable.dragHandleProps }
+              >
+                { this.renderReadOnlyInput(fieldType) }
+              </div>
+            </div>
+          )}
+      </Draggable>
     );
   }
 

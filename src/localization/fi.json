@@ -111,8 +111,8 @@
   },
 
   "formEditScreen": {
-    "leftSideBarComponentsTab": "Palikat",
-    "leftSideBarStylingTab": "Muotoilu",
+    "componentsTab": "Palikat",
+    "stylingTab": "Muotoilu",
     "leftSideBarFieldHeader": "Kentät",
     "leftSideBarComponentHeader": "Komponentit",
     "rightSideBarLinksTab": "Linkit",
@@ -137,9 +137,22 @@
   "editableFields": {
     "htmlField": "Html-sisältö",
     "submitFieldText": "Lähetä-napin teksti",
+    "radioFieldText": "Radio field text",
     "numberField": "Numerokenttä",
     "numberFieldMin": "Aseta minimiarvo",
-    "numberFieldMax": "Aseta maksimiarvo"
+    "numberFieldMax": "Aseta maksimiarvo",
+    "default": {
+      "label": "label",
+      "text": "text",
+      "radio": "radio",
+      "select": "select",
+      "number": "number",
+      "memo": "memo",
+      "checkList": "checkList",
+      "submit": "submit",
+      "dateTime": "dateTime",
+      "autoComplete": "autoComplete"
+    }
   }
 
 }
