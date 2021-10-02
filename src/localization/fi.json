@@ -143,6 +143,7 @@
     "numberFieldMax": "Aseta maksimiarvo",
     "default": {
       "label": "label",
+      "html": "html",
       "text": "text",
       "radio": "radio",
       "select": "select",

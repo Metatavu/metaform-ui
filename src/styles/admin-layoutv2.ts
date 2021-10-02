@@ -9,7 +9,7 @@ const HEADER_HEIGHT = 72;
 export default createStyles({
 
   content: {
-    backgroundColor:  "#e0e0e0",
+    backgroundColor:  theme.palette.background.default,
     width: "100%",
     height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     overflow: "auto",

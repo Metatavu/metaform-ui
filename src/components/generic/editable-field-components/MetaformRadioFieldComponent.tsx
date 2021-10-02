@@ -47,7 +47,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
       return (
         <FormControl component="fieldset">
           <FormLabel component="legend">{ strings.editableFields.default.label }</FormLabel>
-          <FormControlLabel control={<Radio disabled={ formReadOnly }/>} label={ strings.editableFields.default.radio } />
+          <FormControlLabel control={<Radio color="primary" disabled={ formReadOnly }/>} label={ strings.editableFields.default.radio } />
         </FormControl>
       );
     }
@@ -98,6 +98,7 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
 
     return (
       <Radio
+        color="primary"
         key={ `${ fieldId }-${ option.name }-radio` }
         id={ `${ fieldId }-${ option.name }` } 
         aria-labelledby={ fieldLabelId }

@@ -149,6 +149,7 @@ export interface IStrings extends LocalizedStringsMethods {
     numberFieldMax: string;
     default: {
       label: string,
+      html: string,
       text: string;
       radio: string;
       select: string;

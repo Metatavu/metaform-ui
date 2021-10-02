@@ -12,32 +12,39 @@ export default createStyles({
     justifyContent: "center"
   },
 
+  componentsContainer: {
+    padding: theme.spacing(2)
+  },
+
   formEditor: {
-    padding: theme.spacing(10),
+    width: 880,
+    padding: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
 
-  editableForm: {
-    backgroundColor: "#fff",
-    borderRadius: "5px",
-    padding: "2rem",
-  },
-
-  editableSections: {
-    marginBottom: 10,
-    borderRadius: 5,
+  formEditorSection: {
+    width: "100%",
+    borderRadius: 10,
+    borderTopLeftRadius: 0,
+    padding: theme.spacing(4),
+    boxShadow: "none",
+    marginBottom: theme.spacing(4),
     "& .MuiFormControl-root": {
       width: "100%"
-    },
-    backgroundColor: "rgba(225,105,40,0.1)"
+    }
   },
 
-  editableField: {
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 5,
-    marginBottom: 20,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    width: "100%"
+  formEditorField: {
+    width: "100%",
+    paddingBottom: theme.spacing(3),
+    marginTop: `0px ${theme.spacing(2)}`,
+  },
+
+
+  singleDraggableComponent: {
+    marginBottom: theme.spacing(2)
   },
 
   numberField: {
@@ -45,11 +52,12 @@ export default createStyles({
   },
 
   drawer: {
-    height: "100%",
+    height: "100%"
   },
 
   drawerPaper: {
     height: "100%",
+    boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12)"
   },
 
   drawerTabs: {

@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, OutlinedInput, WithStyles } from "@material-ui/core";
+import { FormControl, InputLabel, OutlinedInput, Typography, WithStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
@@ -47,27 +47,22 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
 
     if (!field) {
       return (
-        <FormControl variant="outlined" className={ classes.mainHeader }>
-          <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
-          <OutlinedInput
-            disabled={ formReadOnly }
-            label={ strings.editableFields.htmlField }
-            id={ fieldId }
-            color="secondary"
-            onChange={ this.handleHtmlInputChange }
-          />
+        <FormControl variant="outlined">
+          <Typography>
+            { `"${strings.editableFields.default.html}"` }
+          </Typography>
         </FormControl>
       );
     }
 
     return (
-      <FormControl variant="outlined" className={ classes.mainHeader }>
+      <FormControl variant="outlined">
         <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
         <OutlinedInput
           disabled={ formReadOnly || field.readonly }
           label={ strings.editableFields.htmlField }
           id={ fieldId }
-          color="secondary"
+          color="primary"
           value={ field.html }
           onChange={ this.handleHtmlInputChange }
         />

@@ -1,6 +1,7 @@
-import { Input } from "@material-ui/core";
+import { FormControl, FormControlLabel, FormLabel, Input, TextField } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
+import strings from "../../../localization/strings";
 import { FieldValue } from "../../../types";
 
 /**
@@ -46,30 +47,38 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
   public render() {
     const { field, fieldId, fieldLabelId, formReadOnly, value, onFocus } = this.props;
 
+    console.log("text field", field)
+
     if (!field) {
       return (
-        <Input
-          type="text"
-          readOnly={ formReadOnly }
-          value={ value as string || "" }
-          onFocus={ onFocus }
-        />
+        <FormControl>
+          <FormLabel component="legend">{ strings.editableFields.default.label }</FormLabel>
+          <TextField
+            variant="standard"
+            placeholder={ `"${strings.editableFields.default.text}"` }
+            disabled={ formReadOnly }
+          />
+        </FormControl>
       );
     }
 
+    //TODO fix the label
     return (
-      <Input
-        type="text"
-        placeholder={ field.placeholder }
-        id={ fieldId }
-        aria-labelledby={ fieldLabelId }
-        name={ field.name } 
-        title={ field.title }
-        required={ field.required }
-        readOnly={ formReadOnly || field.readonly }
-        value={ value as string || "" }
-        onFocus={ onFocus }
-      />
+      <FormControl>
+        <FormLabel component="legend">{ field.title }</FormLabel>
+        <TextField
+          variant="standard"
+          placeholder={ field.placeholder }
+          id={ fieldId }
+          aria-labelledby={ fieldLabelId }
+          name={ field.name } 
+          title={ field.title }
+          required={ field.required }
+          disabled={ formReadOnly || field.readonly }
+          value={ value as string || "" }
+          onFocus={ onFocus }
+        />    
+      </FormControl>
     );
   }
 }

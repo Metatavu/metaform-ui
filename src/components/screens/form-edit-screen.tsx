@@ -6,7 +6,7 @@ import styles from "../../styles/form-edit-screen";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import InfoIcon from "@material-ui/icons/Info";
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
@@ -22,6 +22,7 @@ import { MetaformRadioFieldComponent } from "../generic/editable-field-component
 import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided } from 'react-beautiful-dnd';
+import classNames from "classnames";
 
 /**
  * Component props
@@ -145,18 +146,12 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
 
     return (
-      <Grid item md={ 8 } className={ classes.formEditor }>
-        <Box className={ classes.editableForm }>
-          { this.renderMainHeader() }
-          { metaform.sections?.map((section, i) => {
-            return (
-              <div key={ i } className={ classes.editableSections }>
-                { this.renderFormFields(section, i) }
-              </div> 
-            );
-          })}
-        </Box>
-      </Grid>
+      <Box className={ classes.formEditor }>
+        { this.renderMainHeader() }
+        { metaform.sections?.map((section, sectionIndex) => 
+          this.renderFormSection(section, sectionIndex)) 
+        }
+      </Box>
     );
   }
 
@@ -190,21 +185,38 @@ export class FormEditScreen extends React.Component<Props, State> {
    * @param section metaform section
    * @param sectionIndex section index
    */
-  private renderFormFields = (section: MetaformSection, sectionIndex: number) => {
+  private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
+    const { classes } = this.props;
+    
+    const fields = section.fields;
+
+    if (!fields) {
+      return null;
+    }
+
+    return (
+      <Paper className={ classes.formEditorSection }>
+        <FormControl>
+          { fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) }
+        </FormControl>
+      </Paper>
+    );
+  }
+
+  /**
+   * Method for rendering form fields
+   * 
+   * @param section metaform section
+   * @param sectionIndex section index
+   */
+  private renderFormField = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
     const { classes } = this.props;
     
     return (
-      <FormControl>
-        {
-          section.fields?.map((field, i) => {
-            return (
-              <div key={ i } className={ classes.editableField }>
-                { this.renderInput(field, sectionIndex, i) }
-              </div>
-            )
-          })
-        }
-      </FormControl>
+      <Box key={ fieldIndex } className={ classes.formEditorField }>
+        { this.renderInput(field, sectionIndex, fieldIndex) }
+      </Box>
+
     );
   }
 
@@ -413,6 +425,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
+      <Box className={ classes.componentsContainer }>
         <Droppable droppableId="componentList">
           {(provided:DroppableProvided, snapshot:DroppableStateSnapshot) => (
             <div
@@ -424,6 +437,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             </div>
           )}
         </Droppable>
+      </Box>
     );
   }
 
@@ -437,14 +451,13 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Draggable draggableId={ fieldType } index={ 0 }>
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
-            <div>
-              <div
-                ref={ providedDraggable.innerRef }
-                { ...providedDraggable.draggableProps }
-                { ...providedDraggable.dragHandleProps }
-              >
-                { this.renderReadOnlyInput(fieldType) }
-              </div>
+            <div
+              className={ classes.singleDraggableComponent }
+              ref={ providedDraggable.innerRef }
+              { ...providedDraggable.draggableProps }
+              { ...providedDraggable.dragHandleProps }
+            >
+              { this.renderReadOnlyInput(fieldType) }
             </div>
           )}
       </Draggable>

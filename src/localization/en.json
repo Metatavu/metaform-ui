@@ -143,6 +143,7 @@
     "numberFieldMax": "Set max value",
     "default": {
       "label": "label",
+      "html": "html",
       "text": "text",
       "radio": "radio",
       "select": "select",

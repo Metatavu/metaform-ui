@@ -6,7 +6,7 @@ export default createMuiTheme({
 
   palette: {
     primary: {
-      main: "#000000"
+      main: "#2196F3"
     },
     secondary: {
       main: "#F9473B",
@@ -17,6 +17,7 @@ export default createMuiTheme({
       secondary: "#ffffff"
     },
     background: {
+      default: "#f2f2f2",
       paper: "#ffffff"
     }
   },
@@ -88,6 +89,16 @@ export default createMuiTheme({
         width: 300
       }
     },
+    MuiRadio: {
+      root: {
+        color: "rgba(0, 0, 0, 0.54)"
+      }
+    },
+    MuiFormControl: {
+      root: {
+        width: "100%"
+      }
+    },
     MuiToolbar: {
       root: {
         alignItems: "center",
@@ -95,9 +106,15 @@ export default createMuiTheme({
         width: "100%"
       }
     },
+    MuiButton: {
+      root: {
+        borderRadius: 20
+      }
+    },
     MuiFormLabel: {
       root: {
-        color: "rgba(0, 0, 0, 0.54)"
+        color: "rgba(0, 0, 0, 0.54)",
+        marginBottom: 8
       }
     },
     MuiDivider: {
