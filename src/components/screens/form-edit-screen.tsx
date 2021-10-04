@@ -6,7 +6,7 @@ import styles from "../../styles/form-edit-screen";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import InfoIcon from "@material-ui/icons/Info";
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper } from "@material-ui/core";
+import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper, Tabs, Tab } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
@@ -45,6 +45,8 @@ interface State {
   value: string;
   readOnly: boolean;
   isLoading: boolean;
+  leftDrawerTabIndex: number;
+  rightDrawerTabIndex: number;
 }
 
 /**
@@ -62,6 +64,8 @@ export class FormEditScreen extends React.Component<Props, State> {
       value: "",
       readOnly: true,
       isLoading: false,
+      leftDrawerTabIndex: 0,
+      rightDrawerTabIndex: 0
     };
   }
 
@@ -364,6 +368,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderLeftDrawer = () => {
     const { classes } = this.props;
+    const { leftDrawerTabIndex } = this.state;
 
     return (
       <Drawer
@@ -374,24 +379,26 @@ export class FormEditScreen extends React.Component<Props, State> {
         classes={{ paper: classes.drawerPaper }}
       >
         <Toolbar/>
-        <Box className={ classes.drawerTabs }>
-          <Box className={ classes.drawerTab }>
-            <Typography variant="h5">
-              { strings.formEditScreen.componentsTab }
-            </Typography>
-          </Box>
-          <Box className={ classes.drawerTab }>
-            <Typography variant="h5">
-              { strings.formEditScreen.stylingTab }
-            </Typography>
-          </Box>
+        <Tabs
+          onChange={ (event, value: number) => this.setLeftDrawerTabIndex(value) }
+          value={ leftDrawerTabIndex }
+        >
+          <Tab
+            fullWidth
+            value={ 0 }
+            label={ strings.formEditScreen.componentsTab }
+          />
+          <Tab
+            fullWidth
+            value={ 1 }
+            label={ strings.formEditScreen.stylingTab }
+          />
+        </Tabs>
+        <Box className={ classes.drawerContent }>
+          { leftDrawerTabIndex === 0 &&
+            this.renderDraggableComponents()
+          }
         </Box>
-        <Divider/>
-        <Typography variant="caption">
-          <InfoIcon />
-          { strings.formEditScreen.leftSideBarInfo }
-        </Typography>
-        { this.renderDraggableComponents() }
       </Drawer>
     );
   }
@@ -401,6 +408,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderRightDrawer = () => {
     const { classes } = this.props;
+    const { rightDrawerTabIndex } = this.state;
 
     return (
       <Drawer
@@ -411,23 +419,22 @@ export class FormEditScreen extends React.Component<Props, State> {
         classes={{ paper: classes.drawerPaper }}
       >
         <Toolbar/>
-        <Box className={ classes.drawerTabs }>
-          <Box className={ classes.drawerTab }>
-            <Typography variant="h5">
-              { strings.formEditScreen.rightSideBarLinksTab }
-            </Typography>
-          </Box>
-          <Box className={ classes.drawerTab }>
-            <Typography variant="h5">
-              { strings.formEditScreen.rightSideBarVisibilityTab }
-            </Typography>
-          </Box>
-        </Box>
+        <Tabs
+          onChange={ (event, value: number) => this.setRightDrawerTabIndex(value) }
+          value={ rightDrawerTabIndex }
+        >
+          <Tab
+            fullWidth
+            value={ 0 }
+            label={ strings.formEditScreen.linksTab }
+          />
+          <Tab
+            fullWidth
+            value={ 1 }
+            label={ strings.formEditScreen.visibilityTab }
+          />
+        </Tabs>
         <Divider/>
-        <Typography variant="caption">
-          <InfoOutlinedIcon color="disabled" />
-          { strings.formEditScreen.chooseComponent }
-        </Typography>
       </Drawer>
     );
   }
@@ -577,6 +584,29 @@ export class FormEditScreen extends React.Component<Props, State> {
     updatedMetaform!.sections![toSectionId].fields?.splice(toFieldId, 0, draggedField);
 
     onSetMetaform(updatedMetaform);
+  }
+
+
+  /**
+   * Event handler for main header change
+   * 
+   * @param event new main header value
+   */
+  private setLeftDrawerTabIndex = (newLeftDrawerTabIndex: number) => {
+    this.setState({
+      leftDrawerTabIndex: newLeftDrawerTabIndex
+    });
+  }
+
+  /**
+   * Event handler for main header change
+   * 
+   * @param event new main header value
+   */
+  private setRightDrawerTabIndex = (newRightDrawerTabIndex: number) => {
+    this.setState({
+      rightDrawerTabIndex: newRightDrawerTabIndex
+    });
   }
 
   /**

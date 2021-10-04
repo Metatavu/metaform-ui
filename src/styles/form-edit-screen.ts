@@ -14,6 +14,7 @@ export default createStyles({
 
   componentsContainer: {
     padding: theme.spacing(2),
+    paddingTop: theme.spacing(4)
   },
 
   formEditor: {
@@ -67,6 +68,12 @@ export default createStyles({
   drawerTabs: {
     width: "100%",
     display: "flex"
+  },
+
+  drawerContent: {
+    flex: 1,
+    overflow: "auto",
+    overflowX: "hidden"
   },
 
   drawerTab: {

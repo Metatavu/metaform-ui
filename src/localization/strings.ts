@@ -119,12 +119,8 @@ export interface IStrings extends LocalizedStringsMethods {
   formEditScreen: {
     componentsTab: string;
     stylingTab: string;
-    leftSideBarFieldHeader: string;
-    leftSideBarComponentHeader: string;
-    rightSideBarLinksTab: string;
-    rightSideBarVisibilityTab: string;
-    leftSideBarInfo: string;
-    chooseComponent: string;
+    linksTab: string;
+    visibilityTab: string;
     sectionLayout: string;
     headerField: string;
     textField: string;
