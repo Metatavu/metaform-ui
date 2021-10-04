@@ -13,7 +13,7 @@ export default createStyles({
   },
 
   componentsContainer: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
 
   formEditor: {
@@ -44,7 +44,11 @@ export default createStyles({
 
 
   singleDraggableComponent: {
-    marginBottom: theme.spacing(2)
+    width: "inherit",
+    marginBottom: theme.spacing(2),
+    "&.clone": {
+      transform: "none !important",
+    }
   },
 
   numberField: {

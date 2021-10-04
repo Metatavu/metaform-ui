@@ -23,6 +23,7 @@ import { MetaformSubmitFieldComponent } from "../generic/editable-field-componen
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided } from 'react-beautiful-dnd';
 import classNames from "classnames";
+import MetaformUtils from "../../utils/metaform";
 
 /**
  * Component props
@@ -41,7 +42,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   error?: string | Error | Response;
-  value:string;
+  value: string;
   readOnly: boolean;
   isLoading: boolean;
 }
@@ -60,7 +61,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     this.state = {
       value: "",
       readOnly: true,
-      isLoading: false
+      isLoading: false,
     };
   }
 
@@ -124,7 +125,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         clearError={ this.clearError }
         activeNavigationLink={ EditorNavigationLinks.form }
       >
-        <DragDropContext onDragEnd={ (result: DropResult, provided: ResponderProvided) => {} }>
+        <DragDropContext onDragEnd={ this.onDragEnd }>
           <Box className={ classes.root }>
             { this.renderFormEditor() }
           </Box>
@@ -196,9 +197,13 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <Paper className={ classes.formEditorSection }>
-        <FormControl>
-          { fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) }
-        </FormControl>
+        <Droppable droppableId={ `section-${sectionIndex.toString()}` }>
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+            <div ref={ provided.innerRef } >
+              { fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) }
+            </div>
+          )}
+        </Droppable>
       </Paper>
     );
   }
@@ -213,10 +218,19 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { classes } = this.props;
     
     return (
-      <Box key={ fieldIndex } className={ classes.formEditorField }>
-        { this.renderInput(field, sectionIndex, fieldIndex) }
-      </Box>
-
+      <Draggable draggableId={ `field-${sectionIndex.toString()}-${fieldIndex.toString()}` } index={ fieldIndex }>
+        {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
+          <div
+            ref={ providedDraggable.innerRef }
+            { ...providedDraggable.draggableProps }
+            { ...providedDraggable.dragHandleProps }
+          >
+            <Box className={ classes.formEditorField }>
+              { this.renderInput(field, sectionIndex, fieldIndex) }
+            </Box>
+          </div>
+        )}
+      </Draggable>
     );
   }
 
@@ -426,14 +440,12 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <Box className={ classes.componentsContainer }>
-        <Droppable droppableId="componentList">
+        <Droppable droppableId="componentList" isDropDisabled>
           {(provided:DroppableProvided, snapshot:DroppableStateSnapshot) => (
             <div
               ref={ provided.innerRef }
-              { ...provided.droppableProps }
             >
               { Object.values(MetaformFieldType).map(this.renderDraggableComponent) }
-              {provided.placeholder}
             </div>
           )}
         </Droppable>
@@ -444,24 +456,127 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Renders single draggable component
    */
-  private renderDraggableComponent = (fieldType: MetaformFieldType) => {
+  private renderDraggableComponent = (fieldType: MetaformFieldType, index: number) => {
     const { classes } = this.props;
 
-    // TODO fix the index
     return (
-      <Draggable draggableId={ fieldType } index={ 0 }>
+      <Draggable draggableId={ fieldType } index={ index }>
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
-            <div
-              className={ classes.singleDraggableComponent }
-              ref={ providedDraggable.innerRef }
-              { ...providedDraggable.draggableProps }
-              { ...providedDraggable.dragHandleProps }
-            >
-              { this.renderReadOnlyInput(fieldType) }
-            </div>
+            <>
+              <div
+                className={ classes.singleDraggableComponent }
+                ref={ providedDraggable.innerRef }
+                { ...providedDraggable.draggableProps }
+                { ...providedDraggable.dragHandleProps }
+              >
+                { this.renderReadOnlyInput(fieldType) }
+              </div>
+              { snapshotDraggable.isDragging &&
+                <div 
+                  className={ classNames(classes.singleDraggableComponent, { clone : true }) }
+                > 
+                  { this.renderReadOnlyInput(fieldType) }
+                </div> 
+              }
+            </>
           )}
       </Draggable>
     );
+  }
+
+  /**
+   * Component on drag end event handler
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    const { draggableId, source, destination } = result;
+
+    console.log("result", result)
+
+    if (!destination) {
+      return;
+    }
+
+    switch (source.droppableId) {
+      case "componentList":
+        this.onComponentListCreate(
+          draggableId as MetaformFieldType,
+          source,
+          destination
+        );
+        break;
+      default:
+        this.onComponentListMove(
+          source,
+          destination
+        )
+        break;
+    }
+  }
+
+  /**
+   * Component on drag end event handler
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private onComponentListCreate = (fieldType: MetaformFieldType, droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
+    const { metaform, onSetMetaform } = this.props;
+    const defaultField = MetaformUtils.metaformDefaultField(fieldType);
+    const sectionIdRaw = droppableDestination.droppableId.match(/(\d+)/);
+    const fieldId = droppableDestination.index;
+
+    if (!metaform?.sections || !sectionIdRaw) {
+      return;
+    }
+
+    const sectionId = parseInt(sectionIdRaw[0]);
+
+    const updatedSection = { ...metaform.sections[sectionId] };
+    updatedSection.fields?.splice(fieldId, 0, defaultField)
+    const updatedSections = [ ...metaform.sections ];
+    updatedSections.splice(sectionId, 0, updatedSection);
+
+
+    const updatedMetaform = { 
+      ...metaform,
+      sections: updatedSections 
+    } as Metaform;
+
+    onSetMetaform(updatedMetaform);
+  }
+
+  /**
+   * Component on drag end event handler
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private onComponentListMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
+    const { metaform, onSetMetaform } = this.props;
+    const fromSectionIdRaw = droppableSource.droppableId.match(/(\d+)/);
+    const toSectionIdRaw = droppableDestination.droppableId.match(/(\d+)/);
+
+    if (!metaform?.sections || !fromSectionIdRaw || !toSectionIdRaw) {
+      return;
+    }
+
+    const fromSectionId = parseInt(fromSectionIdRaw[0]);
+    const toSectionId = parseInt(toSectionIdRaw[0]);
+    const fromFieldId = droppableSource.index;
+    const toFieldId = droppableDestination.index;
+
+    const updatedMetaform = { ...metaform };
+    const draggedField = updatedMetaform!.sections![fromSectionId].fields![fromFieldId];
+    updatedMetaform!.sections![fromSectionId].fields?.splice(fromFieldId, 1);
+    updatedMetaform!.sections![toSectionId].fields?.splice(toFieldId, 0, draggedField);
+
+    onSetMetaform(updatedMetaform);
   }
 
   /**

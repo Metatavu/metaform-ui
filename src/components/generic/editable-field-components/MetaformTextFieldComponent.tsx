@@ -47,8 +47,6 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
   public render() {
     const { field, fieldId, fieldLabelId, formReadOnly, value, onFocus } = this.props;
 
-    console.log("text field", field)
-
     if (!field) {
       return (
         <FormControl>
