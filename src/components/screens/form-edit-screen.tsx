@@ -546,7 +546,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     const updatedSection = { ...metaform.sections[sectionId] };
     updatedSection.fields?.splice(fieldId, 0, defaultField)
     const updatedSections = [ ...metaform.sections ];
-    updatedSections.splice(sectionId, 0, updatedSection);
+    updatedSections.splice(sectionId, 1, updatedSection);
 
 
     const updatedMetaform = { 
