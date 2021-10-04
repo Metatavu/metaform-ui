@@ -1,4 +1,4 @@
-import { Metaform, MetaformField, MetaformFieldType } from "../generated/client";
+import { Metaform, MetaformField, MetaformFieldType, MetaformSection } from "../generated/client";
 
 /**
  * Utility class for metaform
@@ -37,10 +37,25 @@ export default class MetaformUtils {
    * @returns metaform data
    */
   public static metaformDefaultField = (fieldType: MetaformFieldType): MetaformField => {
-    // TODO radio
+    // TODO radio, select
     return {
       title: fieldType.toString(),
       type: fieldType
+    } 
+  }
+
+  /**
+   * Convert json to metaform data
+   * 
+   * @param metaformJson metaform data in json
+   * 
+   * @returns metaform data
+   */
+  public static metaformDefaultSection = (): MetaformSection => {
+    // TODO radio, select
+    return {
+      title: "Section",
+      fields: []
     } 
   }
 }

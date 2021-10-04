@@ -3,10 +3,8 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import InfoIcon from "@material-ui/icons/Info";
 import { History } from "history";
-import { WithStyles, withStyles, Grid, Box, Typography, List, ListItemText, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper, Tabs, Tab } from "@material-ui/core";
+import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
@@ -24,6 +22,7 @@ import { MetaformNumberFieldComponent } from "../generic/editable-field-componen
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
+import AddIcon from "@material-ui/icons/Add";
 
 /**
  * Component props
@@ -156,6 +155,16 @@ export class FormEditScreen extends React.Component<Props, State> {
         { metaform.sections?.map((section, sectionIndex) => 
           this.renderFormSection(section, sectionIndex)) 
         }
+        <Button 
+          variant="text"
+          startIcon={ <AddIcon/> }
+          onClick={ this.onAddNewSectionClick }
+          className={ classes.addNewSectionButton }
+        >
+          <Typography>
+            { strings.formEditScreen.addNewSection }
+          </Typography>
+        </Button>
       </Box>
     );
   }
@@ -193,18 +202,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
     
-    const fields = section.fields;
-
-    if (!fields) {
-      return null;
-    }
-
     return (
       <Paper className={ classes.formEditorSection }>
         <Droppable droppableId={ `section-${sectionIndex.toString()}` }>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div ref={ provided.innerRef } >
-              { fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) }
+              { section.fields ? section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) : "Empty" }
             </div>
           )}
         </Droppable>
@@ -502,6 +505,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     const { draggableId, source, destination } = result;
 
     console.log("result", result)
+    console.log("provided", provided)
 
     if (!destination) {
       return;
@@ -651,6 +655,28 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
 
     fields[fieldIndex] = newMetaformField;
+
+    onSetMetaform(updatedMetaform);
+  }
+
+  /**
+   * Returns field's id
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+  private onAddNewSectionClick = () => {
+    const { metaform, onSetMetaform } = this.props;
+
+    const createdSection = MetaformUtils.metaformDefaultSection();
+    const updatedMetaform = { ...metaform } as Metaform;
+
+    if (!updatedMetaform.sections) {
+      return;
+    }
+
+    updatedMetaform.sections = [ ...updatedMetaform.sections, createdSection ];
 
     onSetMetaform(updatedMetaform);
   }

@@ -17,6 +17,10 @@ export default createStyles({
     paddingTop: theme.spacing(4)
   },
 
+  addNewSectionButton: {
+    alignSelf: "flex-end"
+  },
+
   formEditor: {
     width: 880,
     padding: theme.spacing(8),

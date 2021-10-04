@@ -121,6 +121,7 @@ export interface IStrings extends LocalizedStringsMethods {
     stylingTab: string;
     linksTab: string;
     visibilityTab: string;
+    addNewSection: string;
     sectionLayout: string;
     headerField: string;
     textField: string;
