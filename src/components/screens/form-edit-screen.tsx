@@ -23,6 +23,7 @@ import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLoca
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
 import AddIcon from "@material-ui/icons/Add";
+import FieldDragHandle from "../generic/drag-handle/fieldDragHandle";
 
 /**
  * Component props
@@ -48,6 +49,8 @@ interface State {
   rightDrawerTabIndex: number;
   draggingField: boolean;
   draggingSection: boolean;
+  selectedFieldIndex?: number;
+  selectedSectionIndex?: number;
 }
 
 /**
@@ -222,7 +225,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             { ...providedDraggable.draggableProps }
             { ...providedDraggable.dragHandleProps }
           >
-            <Paper className={ classes.formEditorSection }>
+            <Paper className={ classes.formEditorSection } onClick={ this.onSectionClick(sectionIndex) }>
               <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
                 {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <>
@@ -254,17 +257,24 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormField = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
     const { classes } = this.props;
+    const { selectedFieldIndex, selectedSectionIndex } = this.state;
+
+    const selected = selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex;
     
     return (
       <Draggable draggableId={ `field-${sectionIndex.toString()}-${fieldIndex.toString()}` } index={ fieldIndex }>
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
           <div
-            ref={ providedDraggable.innerRef }
+            ref={providedDraggable.innerRef}
             { ...providedDraggable.draggableProps }
             { ...providedDraggable.dragHandleProps }
           >
-            <Box className={ classes.formEditorField }>
-              { this.renderInput(field, sectionIndex, fieldIndex) }
+            <Box className={ classes.formEditorField } onClick={ this.onFieldClick(sectionIndex, fieldIndex) }>
+              <FieldDragHandle
+                selected={ selected }
+              >
+                { this.renderInput(field, sectionIndex, fieldIndex) }
+              </FieldDragHandle>
             </Box>
           </div>
         )}
@@ -676,6 +686,11 @@ export class FormEditScreen extends React.Component<Props, State> {
     updatedMetaform.sections[toSectionId].fields?.splice(toFieldId, 0, draggedField);
 
     onSetMetaform(updatedMetaform);
+
+    this.setState({
+      selectedFieldIndex: toFieldId,
+      selectedSectionIndex: toSectionId
+    })
   }
 
 
@@ -699,6 +714,36 @@ export class FormEditScreen extends React.Component<Props, State> {
     this.setState({
       rightDrawerTabIndex: newRightDrawerTabIndex
     });
+  }
+
+  /**
+   * Event handler for editor field click
+   * 
+   * @param event new main header value
+   */
+  private onSectionClick = (sectionIndex: number) => (event: any) => {
+    console.log("onSectionClick")
+    const { selectedSectionIndex } = this.state;
+
+    if (selectedSectionIndex !== sectionIndex) {
+      this.setState({
+        selectedSectionIndex: sectionIndex,
+        selectedFieldIndex: undefined
+      });
+    }
+  }
+
+  /**
+   * Event handler for editor field click
+   * 
+   * @param event new main header value
+   */
+  private onFieldClick = (sectionIndex: number, fieldIndex: number) => (event: any) => {
+    console.log("onFieldClick")
+    this.setState({
+      selectedSectionIndex: sectionIndex,
+      selectedFieldIndex: fieldIndex
+    })
   }
 
   /**
