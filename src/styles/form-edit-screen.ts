@@ -35,7 +35,8 @@ export default createStyles({
     borderTopLeftRadius: 0,
     padding: theme.spacing(4),
     boxShadow: "none",
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     "& .MuiFormControl-root": {
       width: "100%"
     }
