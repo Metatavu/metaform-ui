@@ -202,13 +202,23 @@ export class FormEditScreen extends React.Component<Props, State> {
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
     
+    console.log("rendering section", section)
+
     return (
       <Paper className={ classes.formEditorSection }>
-        <Droppable droppableId={ `section-${sectionIndex.toString()}` }>
+        <Droppable droppableId={ sectionIndex.toString() }>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-            <div ref={ provided.innerRef } >
-              { section.fields ? section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) : "Empty" }
-            </div>
+            <>
+              <div ref={ provided.innerRef } >
+                { (section.fields && section.fields.length > 0) ?
+                  section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
+                  !provided.placeholder && <Typography>
+                    { strings.formEditScreen.emptySection }
+                  </Typography>
+                }
+                { provided.placeholder }
+              </div>
+            </>
           )}
         </Droppable>
       </Paper>
@@ -538,14 +548,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   private onComponentListCreate = (fieldType: MetaformFieldType, droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
     const defaultField = MetaformUtils.metaformDefaultField(fieldType);
-    const sectionIdRaw = droppableDestination.droppableId.match(/(\d+)/);
+    const sectionId = parseInt(droppableDestination.droppableId);
     const fieldId = droppableDestination.index;
 
-    if (!metaform?.sections || !sectionIdRaw) {
+    if (!metaform?.sections || sectionId < 0) {
       return;
     }
-
-    const sectionId = parseInt(sectionIdRaw[0]);
 
     const updatedSection = { ...metaform.sections[sectionId] };
     updatedSection.fields?.splice(fieldId, 0, defaultField)
@@ -570,15 +578,13 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private onComponentListMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
-    const fromSectionIdRaw = droppableSource.droppableId.match(/(\d+)/);
-    const toSectionIdRaw = droppableDestination.droppableId.match(/(\d+)/);
+    const fromSectionId = parseInt(droppableSource.droppableId);
+    const toSectionId = parseInt(droppableDestination.droppableId);
 
-    if (!metaform?.sections || !fromSectionIdRaw || !toSectionIdRaw) {
+    if (!metaform?.sections || fromSectionId < 0 || toSectionId < 0) {
       return;
     }
 
-    const fromSectionId = parseInt(fromSectionIdRaw[0]);
-    const toSectionId = parseInt(toSectionIdRaw[0]);
     const fromFieldId = droppableSource.index;
     const toFieldId = droppableDestination.index;
 

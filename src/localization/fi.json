@@ -115,6 +115,7 @@
     "stylingTab": "Muotoilu",
     "linksTab": "Linkit",
     "visibilityTab": "Näkyvyys",
+    "emptySection": "Empty section",
     "addNewSection": "add new section",
     "sectionLayout": "Osion pohja",
     "headerField": "Otsikkokenttä",
