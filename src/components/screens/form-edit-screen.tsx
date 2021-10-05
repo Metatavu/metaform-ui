@@ -19,7 +19,7 @@ import { MetaformHtmlComponent } from "../generic/editable-field-components/Meta
 import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
 import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
 import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
-import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
 import AddIcon from "@material-ui/icons/Add";
@@ -46,6 +46,8 @@ interface State {
   isLoading: boolean;
   leftDrawerTabIndex: number;
   rightDrawerTabIndex: number;
+  draggingField: boolean;
+  draggingSection: boolean;
 }
 
 /**
@@ -60,6 +62,8 @@ export class FormEditScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      draggingField: false,
+      draggingSection: false,
       value: "",
       readOnly: true,
       isLoading: false,
@@ -128,7 +132,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         clearError={ this.clearError }
         activeNavigationLink={ EditorNavigationLinks.form }
       >
-        <DragDropContext onDragEnd={ this.onDragEnd }>
+        <DragDropContext onDragEnd={ this.onDragEnd } onDragStart={ this.onDragStart }>
           <Box className={ classes.root }>
             { this.renderFormEditor() }
           </Box>
@@ -144,6 +148,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormEditor = () => {
     const { classes, metaform } = this.props;
+    const { draggingField } = this.state;
 
     if (!metaform) {
       return;
@@ -152,9 +157,15 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Box className={ classes.formEditor }>
         { this.renderMainHeader() }
-        { metaform.sections?.map((section, sectionIndex) => 
-          this.renderFormSection(section, sectionIndex)) 
-        }
+        <Droppable droppableId={ "sectionList" } isDropDisabled={ draggingField }>
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+            <div ref={ provided.innerRef } style={{ width: "100%" }}>
+              { metaform.sections?.map((section, sectionIndex) => 
+                this.renderFormSection(section, sectionIndex)) 
+              }
+            </div>
+          )}
+        </Droppable>
         <Button 
           variant="text"
           startIcon={ <AddIcon/> }
@@ -201,27 +212,38 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
+    const { draggingSection } = this.state;
     
-    console.log("rendering section", section)
+    console.log("dragging section", draggingSection);
 
     return (
-      <Paper className={ classes.formEditorSection }>
-        <Droppable droppableId={ sectionIndex.toString() }>
-          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-            <>
-              <div ref={ provided.innerRef } >
-                { (section.fields && section.fields.length > 0) ?
-                  section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
-                  !provided.placeholder && <Typography>
-                    { strings.formEditScreen.emptySection }
-                  </Typography>
-                }
-                { provided.placeholder }
-              </div>
-            </>
+      <Draggable draggableId={ `section-${sectionIndex.toString()}` } index={ sectionIndex }>
+        {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
+          <div
+            ref={ providedDraggable.innerRef }
+            { ...providedDraggable.draggableProps }
+            { ...providedDraggable.dragHandleProps }
+          >
+            <Paper className={ classes.formEditorSection }>
+              <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ draggingSection }>
+                {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <>
+                    <div ref={ provided.innerRef } >
+                      { (section.fields && section.fields.length > 0) ?
+                        section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
+                        !provided.placeholder && <Typography>
+                          { strings.formEditScreen.emptySection }
+                        </Typography>
+                      }
+                      { provided.placeholder }
+                    </div>
+                  </>
+                )}
+              </Droppable>
+            </Paper>
+          </div> 
           )}
-        </Droppable>
-      </Paper>
+        </Draggable>
     );
   }
 
@@ -511,9 +533,35 @@ export class FormEditScreen extends React.Component<Props, State> {
    *
    * @returns field's id 
    */
+  private onDragStart = (initial: DragStart, provided: ResponderProvided) => {
+    const { source } = initial;
+
+    console.log("onDragStart", source.droppableId)
+    if (source.droppableId === "componentList" || !isNaN(parseInt(source.droppableId))) {
+      this.setState({
+        draggingField: true,
+        draggingSection: false
+      });
+    } else if (source.droppableId === "sectionList") {
+      this.setState({
+        draggingField: false,
+        draggingSection: true
+      });
+    }
+  }
+
+
+  /**
+   * Component on drag end event handler
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
   private onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const { draggableId, source, destination } = result;
 
+    console.log("draggableId", draggableId)
     console.log("result", result)
     console.log("provided", provided)
 
@@ -521,21 +569,35 @@ export class FormEditScreen extends React.Component<Props, State> {
       return;
     }
 
-    switch (source.droppableId) {
-      case "componentList":
-        this.onComponentListCreate(
-          draggableId as MetaformFieldType,
-          source,
-          destination
-        );
-        break;
-      default:
-        this.onComponentListMove(
-          source,
-          destination
-        )
-        break;
+    // from section list
+    if (draggableId.startsWith("section")) {
+      if (destination.droppableId != "sectionList") {
+        return;
+      }
+      this.onSectionMove(source, destination);
+      // TODO reorderList
+    // from section
+    } else if (draggableId.startsWith("field")) {
+      if (isNaN(parseInt(destination.droppableId))) {
+        return;
+      }
+      this.onSectionFieldMove(source, destination);
+      // from component list
+    } else if (source.droppableId === "componentList") {
+      if (isNaN(parseInt(destination.droppableId))) {
+        return;
+      }
+      this.onComponentListCreate(
+        draggableId as MetaformFieldType,
+        source,
+        destination
+      );
     }
+
+    this.setState({
+      draggingField: false,
+      draggingSection: false
+    });
   }
 
   /**
@@ -569,6 +631,32 @@ export class FormEditScreen extends React.Component<Props, State> {
     onSetMetaform(updatedMetaform);
   }
 
+    /**
+   * Component on drag end event handler
+   * 
+   * @param field metaform field
+   *
+   * @returns field's id 
+   */
+    private onSectionMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
+      const { metaform, onSetMetaform } = this.props;
+      const originSectionIndex = droppableSource.index;
+      const destinationSectionIndex = droppableDestination.index;
+  
+      const updatedMetaform = { ...metaform } as Metaform;
+
+      if (!updatedMetaform?.sections || originSectionIndex < 0 || destinationSectionIndex < 0) {
+        return;
+      }
+
+      const draggedSection = updatedMetaform.sections[originSectionIndex];
+      updatedMetaform.sections.splice(originSectionIndex, 1);
+      updatedMetaform.sections.splice(destinationSectionIndex, 0, draggedSection);
+  
+  
+      onSetMetaform(updatedMetaform);
+    }
+
   /**
    * Component on drag end event handler
    * 
@@ -576,22 +664,23 @@ export class FormEditScreen extends React.Component<Props, State> {
    *
    * @returns field's id 
    */
-  private onComponentListMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
+  private onSectionFieldMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
     const fromSectionId = parseInt(droppableSource.droppableId);
     const toSectionId = parseInt(droppableDestination.droppableId);
 
-    if (!metaform?.sections || fromSectionId < 0 || toSectionId < 0) {
+    const updatedMetaform = { ...metaform } as Metaform;
+
+    if (!updatedMetaform?.sections || fromSectionId < 0 || toSectionId < 0) {
       return;
     }
 
     const fromFieldId = droppableSource.index;
     const toFieldId = droppableDestination.index;
 
-    const updatedMetaform = { ...metaform };
-    const draggedField = updatedMetaform!.sections![fromSectionId].fields![fromFieldId];
-    updatedMetaform!.sections![fromSectionId].fields?.splice(fromFieldId, 1);
-    updatedMetaform!.sections![toSectionId].fields?.splice(toFieldId, 0, draggedField);
+    const draggedField = updatedMetaform.sections[fromSectionId].fields![fromFieldId];
+    updatedMetaform.sections[fromSectionId].fields?.splice(fromFieldId, 1);
+    updatedMetaform.sections[toSectionId].fields?.splice(toFieldId, 0, draggedField);
 
     onSetMetaform(updatedMetaform);
   }
