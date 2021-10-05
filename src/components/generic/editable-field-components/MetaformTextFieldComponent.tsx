@@ -69,13 +69,13 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
           placeholder={ field.placeholder }
           id={ fieldId }
           aria-labelledby={ fieldLabelId }
-          name={ field.name } 
+          name={ field.name }
           title={ field.title }
           required={ field.required }
           disabled={ formReadOnly || field.readonly }
           value={ value as string || "" }
           onFocus={ onFocus }
-        />    
+        />
       </FormControl>
     );
   }

@@ -12,7 +12,7 @@ export default createStyles({
     justifyContent: "center"
   },
 
-  componentsContainer: {
+  componentContainer: {
     padding: theme.spacing(2),
     paddingTop: theme.spacing(4)
   },
@@ -22,7 +22,6 @@ export default createStyles({
   },
 
   formEditor: {
-    width: 880,
     padding: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
@@ -30,13 +29,12 @@ export default createStyles({
   },
 
   formEditorSection: {
-    width: "100%",
+    width: 880,
     borderRadius: 10,
     borderTopLeftRadius: 0,
-    padding: theme.spacing(4),
+    padding: `${theme.spacing(3)}px ${theme.spacing(5)}px`,
     boxShadow: "none",
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    margin: `${theme.spacing(2)}px 0px`,
     "& .MuiFormControl-root": {
       width: "100%"
     }
@@ -44,12 +42,12 @@ export default createStyles({
 
   formEditorField: {
     width: "100%",
-    paddingBottom: theme.spacing(3),
-    marginTop: `0px ${theme.spacing(2)}`,
+    margin: `${theme.spacing(2)}px 0px`,
   },
 
 
   singleDraggableComponent: {
+    // TODO to be fixed
     width: "inherit",
     marginBottom: theme.spacing(2),
     "&.clone": {

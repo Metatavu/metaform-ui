@@ -30,11 +30,10 @@ export default class MetaformUtils {
   }
 
   /**
-   * Convert json to metaform data
+   * Create a default field with field Type
    * 
-   * @param metaformJson metaform data in json
-   * 
-   * @returns metaform data
+   * @param fieldType metaform field type
+   * @returns created field type
    */
   public static metaformDefaultField = (fieldType: MetaformFieldType): MetaformField => {
     // TODO radio, select
@@ -45,11 +44,9 @@ export default class MetaformUtils {
   }
 
   /**
-   * Convert json to metaform data
+   * Convert a default section
    * 
-   * @param metaformJson metaform data in json
-   * 
-   * @returns metaform data
+   * @returns created section 
    */
   public static metaformDefaultSection = (): MetaformSection => {
     // TODO radio, select
