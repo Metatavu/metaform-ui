@@ -148,7 +148,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormEditor = () => {
     const { classes, metaform } = this.props;
-    const { draggingField } = this.state;
+    const { draggingSection } = this.state;
 
     if (!metaform) {
       return;
@@ -157,7 +157,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     return (
       <Box className={ classes.formEditor }>
         { this.renderMainHeader() }
-        <Droppable droppableId={ "sectionList" } isDropDisabled={ draggingField }>
+        <Droppable droppableId={ "sectionList" } isDropDisabled={ !draggingSection }>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div ref={ provided.innerRef } style={{ width: "100%" }}>
               { metaform.sections?.map((section, sectionIndex) => 
@@ -212,7 +212,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
-    const { draggingSection } = this.state;
+    const { draggingField } = this.state;
 
     return (
       <Draggable draggableId={ `section-${sectionIndex.toString()}` } index={ sectionIndex }>
@@ -223,7 +223,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             { ...providedDraggable.dragHandleProps }
           >
             <Paper className={ classes.formEditorSection }>
-              <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ draggingSection }>
+              <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
                 {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                   <>
                     <div ref={ provided.innerRef } >
