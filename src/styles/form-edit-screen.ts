@@ -42,16 +42,16 @@ export default createStyles({
 
   formEditorField: {
     width: "100%",
-    margin: `${theme.spacing(2)}px 0px`,
+    padding: `${theme.spacing(1)}px 0px`,
   },
 
 
   singleDraggableComponent: {
-    // TODO to be fixed
-    width: "inherit",
     marginBottom: theme.spacing(2),
     "&.clone": {
-      transform: "none !important",
+      "&+ div": {
+        display: "none !important",
+      }
     }
   },
 
