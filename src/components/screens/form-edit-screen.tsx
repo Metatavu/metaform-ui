@@ -241,11 +241,10 @@ export class FormEditScreen extends React.Component<Props, State> {
                       <div ref={ provided.innerRef } >
                         { (section.fields && section.fields.length > 0) ?
                           section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
-                          !provided.placeholder && <Typography>
+                          <Typography>
                             { strings.formEditScreen.emptySection }
                           </Typography>
                         }
-                        { provided.placeholder }
                       </div>
                     </>
                   )}

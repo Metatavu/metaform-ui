@@ -1,7 +1,7 @@
 import { Box, IconButton } from "@material-ui/core";
 import { withStyles, WithStyles } from "@material-ui/styles";
 import React from "react";
-import styles from "../../../styles/generics/drag-handle/section-hrag-handle";
+import styles from "../../../styles/generics/drag-handle/section-drag-handle";
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import classNames from "classnames";

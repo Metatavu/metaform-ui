@@ -65,7 +65,6 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
       );
     }
 
-    //TODO fix the label
     return (
       <FormControl>
         <FormLabel component="legend">{ field.title }</FormLabel>
