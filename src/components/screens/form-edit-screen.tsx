@@ -792,7 +792,6 @@ export class FormEditScreen extends React.Component<Props, State> {
    * @param event new main header value
    */
   private onSectionClick = (sectionIndex: number) => (event: any) => {
-    console.log("onSectionClick")
     const { selectedSectionIndex } = this.state;
 
     if (selectedSectionIndex !== sectionIndex) {
@@ -809,7 +808,6 @@ export class FormEditScreen extends React.Component<Props, State> {
    * @param event new main header value
    */
   private onFieldClick = (sectionIndex: number, fieldIndex: number) => (event: any) => {
-    console.log("onFieldClick")
     this.setState({
       selectedSectionIndex: sectionIndex,
       selectedFieldIndex: fieldIndex
