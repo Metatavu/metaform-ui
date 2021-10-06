@@ -37,6 +37,10 @@ export default createStyles({
     margin: `${theme.spacing(2)}px 0px`,
     "& .MuiFormControl-root": {
       width: "100%"
+    },
+    "&.selected": {
+      border: `1px solid ${theme.palette.primary.main}`,
+      boxShadow: "1px 3px 6px -1px rgb(0, 0, 0, 0.35)"
     }
   },
 

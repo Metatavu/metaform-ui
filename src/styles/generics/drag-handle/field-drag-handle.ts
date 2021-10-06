@@ -8,8 +8,10 @@ export default createStyles({
   },
 
   dragHandle: {
-    display: "none",
     height: 0,
+    backgroundColor: "transparent",
+    borderRadius: "0px 0px 20px 20px",
+    transition: "height 0.3s ease-in, background-color 0.3s ease-in",
     "&.selected": {
       marginTop: theme.spacing(1),
       display: "flex",
@@ -18,8 +20,6 @@ export default createStyles({
       padding: `0px ${theme.spacing(2)}px`,
       height: 50,
       backgroundColor: theme.palette.primary.main,
-      transition: "height 0.5s ease-in-out",
-      borderRadius: "0px 0px 20px 20px",
       cursor: "grabbing",
     }
   }

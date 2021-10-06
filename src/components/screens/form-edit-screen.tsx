@@ -23,7 +23,8 @@ import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLoca
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
 import AddIcon from "@material-ui/icons/Add";
-import FieldDragHandle from "../generic/drag-handle/fieldDragHandle";
+import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
+import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 
 /**
  * Component props
@@ -215,7 +216,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
-    const { draggingField } = this.state;
+    const { draggingField, selectedSectionIndex } = this.state;
 
     return (
       <Draggable draggableId={ `section-${sectionIndex.toString()}` } index={ sectionIndex }>
@@ -225,23 +226,25 @@ export class FormEditScreen extends React.Component<Props, State> {
             { ...providedDraggable.draggableProps }
             { ...providedDraggable.dragHandleProps }
           >
-            <Paper className={ classes.formEditorSection } onClick={ this.onSectionClick(sectionIndex) }>
-              <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
-                {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <>
-                    <div ref={ provided.innerRef } >
-                      { (section.fields && section.fields.length > 0) ?
-                        section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
-                        !provided.placeholder && <Typography>
-                          { strings.formEditScreen.emptySection }
-                        </Typography>
-                      }
-                      { provided.placeholder }
-                    </div>
-                  </>
-                )}
-              </Droppable>
-            </Paper>
+            <SectionDragHandle selected={ selectedSectionIndex === sectionIndex }>
+              <Paper className={ classNames(classes.formEditorSection, { selected:  selectedSectionIndex === sectionIndex }) } onClick={ this.onSectionClick(sectionIndex) }>
+                <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
+                  {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                    <>
+                      <div ref={ provided.innerRef } >
+                        { (section.fields && section.fields.length > 0) ?
+                          section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
+                          !provided.placeholder && <Typography>
+                            { strings.formEditScreen.emptySection }
+                          </Typography>
+                        }
+                        { provided.placeholder }
+                      </div>
+                    </>
+                  )}
+                </Droppable>
+              </Paper>
+            </SectionDragHandle>
           </div> 
           )}
         </Draggable>
@@ -633,6 +636,11 @@ export class FormEditScreen extends React.Component<Props, State> {
     } as Metaform;
 
     onSetMetaform(updatedMetaform);
+
+    this.setState({
+      selectedSectionIndex: sectionId,
+      selectedFieldIndex: fieldId
+    })
   }
 
   /**
@@ -658,6 +666,9 @@ export class FormEditScreen extends React.Component<Props, State> {
 
 
     onSetMetaform(updatedMetaform);
+    this.setState({
+      selectedSectionIndex: destinationSectionIndex
+    })
   }
 
   /**
