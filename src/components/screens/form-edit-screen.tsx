@@ -226,8 +226,14 @@ export class FormEditScreen extends React.Component<Props, State> {
             { ...providedDraggable.draggableProps }
             { ...providedDraggable.dragHandleProps }
           >
-            <SectionDragHandle selected={ selectedSectionIndex === sectionIndex }>
-              <Paper className={ classNames(classes.formEditorSection, { selected:  selectedSectionIndex === sectionIndex }) } onClick={ this.onSectionClick(sectionIndex) }>
+            <SectionDragHandle 
+              selected={ selectedSectionIndex === sectionIndex } 
+              onDeleteClick={ this.onSectionDeleteClick(sectionIndex) }
+            >
+              <Paper 
+                className={ classNames(classes.formEditorSection, { selected:  selectedSectionIndex === sectionIndex }) }
+                onClick={ this.onSectionClick(sectionIndex) }
+              >
                 <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
                   {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <>
@@ -275,6 +281,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             <Box className={ classes.formEditorField } onClick={ this.onFieldClick(sectionIndex, fieldIndex) }>
               <FieldDragHandle
                 selected={ selected }
+                onDeleteClick={ this.onFieldDeleteClick(sectionIndex, fieldIndex) }
               >
                 { this.renderInput(field, sectionIndex, fieldIndex) }
               </FieldDragHandle>
@@ -704,6 +711,57 @@ export class FormEditScreen extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * Event handler for section delete click
+   * 
+   * @param sectionIndex section index
+   */
+  private onSectionDeleteClick = (sectionIndex: number) => () => {
+    const { metaform, onSetMetaform } = this.props;
+    const updatedMetaform = { ...metaform } as Metaform;
+
+    if (!updatedMetaform?.sections || updatedMetaform.sections.length <= sectionIndex) {
+      return;
+    }
+
+    updatedMetaform.sections.splice(sectionIndex, 1);
+
+    onSetMetaform(updatedMetaform);
+
+    this.setState({
+      selectedSectionIndex: undefined,
+      selectedFieldIndex: undefined
+    });
+  }
+
+  /**
+   * Event handler for section delete click
+   * 
+   * @param sectionIndex section index
+   * @param fieldIndex field index
+   */
+  private onFieldDeleteClick = (sectionIndex: number, fieldIndex: number) => () => {
+    const { metaform, onSetMetaform } = this.props;
+    const updatedMetaform = { ...metaform } as Metaform;
+
+    if (!updatedMetaform?.sections || updatedMetaform.sections.length <= sectionIndex) {
+      return;
+    }
+
+    const section = updatedMetaform.sections[sectionIndex];
+
+    if (!section.fields || section.fields.length <= fieldIndex) {
+      return;
+    }
+
+    section.fields.splice(fieldIndex, 1);
+
+    onSetMetaform(updatedMetaform);
+
+    this.setState({
+      selectedFieldIndex: undefined
+    });
+  }
 
   /**
    * Event handler for main header change

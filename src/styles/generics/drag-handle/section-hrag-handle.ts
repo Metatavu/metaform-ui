@@ -25,7 +25,7 @@ export default createStyles({
       width: 48,
       backgroundColor: theme.palette.primary.main,
       cursor: "grabbing",
-      boxShadow: "0px 3px 5px -1px rgba(0, 0, 0, 0.3)"
+      boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
     }
   }
 });

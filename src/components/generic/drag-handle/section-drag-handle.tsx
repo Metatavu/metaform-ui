@@ -11,6 +11,7 @@ import classNames from "classnames";
  */
 interface Props extends WithStyles<typeof styles> {
   selected: boolean;
+  onDeleteClick?: () => void;
 }
 
 /**
@@ -40,7 +41,12 @@ class SectionDragHandle extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { children, classes, selected } = this.props;
+    const {
+      children,
+      classes,
+      selected,
+      onDeleteClick
+    } = this.props;
 
     return (
       <Box className={ classNames(classes.root, { selected: selected }) }>
@@ -49,7 +55,11 @@ class SectionDragHandle extends React.Component<Props, State> {
           { selected && 
             <>
               <DragHandleIcon htmlColor="#fff"/>
-              <IconButton disabled style={{ color: "#fff" }}>
+              <IconButton 
+                disabled={ !!!onDeleteClick }
+                style={{ color: "#fff" }}
+                onClick={ onDeleteClick }
+              >
                 <DeleteIcon/>
               </IconButton>
             </>

@@ -1,4 +1,4 @@
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, IconButton } from "@material-ui/core";
 import { withStyles, WithStyles } from "@material-ui/styles";
 import React from "react";
 import styles from "../../../styles/generics/drag-handle/field-drag-handle";
@@ -12,6 +12,7 @@ import classNames from "classnames";
  */
 interface Props extends WithStyles<typeof styles> {
   selected: boolean;
+  onDeleteClick?: () => void;
 }
 
 /**
@@ -41,7 +42,12 @@ class FieldDragHandle extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { children, classes, selected } = this.props;
+    const {
+      children, 
+      classes,
+      selected,
+      onDeleteClick
+    } = this.props;
 
     return (
       <Box className={ classes.root }>
@@ -51,7 +57,13 @@ class FieldDragHandle extends React.Component<Props, State> {
             <>
               <Button disabled style={{ color: "#fff" }} startIcon={ <AddIcon/> }/>
               <DragHandleIcon htmlColor="#fff"/>
-              <Button disabled style={{ color: "#fff" }} startIcon={ <DeleteIcon/> }/>
+              <IconButton 
+                disabled={ !!!onDeleteClick }
+                style={{ color: "#fff" }}
+                onClick={ onDeleteClick }
+              >
+                <DeleteIcon/>
+              </IconButton>
             </>
           }
         </Box>

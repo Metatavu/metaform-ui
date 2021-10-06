@@ -39,8 +39,8 @@ export default createStyles({
       width: "100%"
     },
     "&.selected": {
-      border: `1px solid ${theme.palette.primary.main}`,
-      boxShadow: "1px 3px 6px -1px rgb(0, 0, 0, 0.35)"
+      border: `2px solid ${theme.palette.primary.main}`,
+      boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
     }
   },
 
