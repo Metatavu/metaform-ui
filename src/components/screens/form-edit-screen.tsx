@@ -114,6 +114,7 @@ export class FormEditScreen extends React.Component<Props, State> {
 
       onSetMetaform(undefined);
     }
+    document.addEventListener("click", this.onGlobalClick, false)
   };
 
   /**
@@ -877,6 +878,21 @@ export class FormEditScreen extends React.Component<Props, State> {
     updatedMetaform.sections = [ ...updatedMetaform.sections, createdSection ];
 
     onSetMetaform(updatedMetaform);
+  }
+
+  /**
+   * Event handler for empty space click
+   */
+  private onGlobalClick = (event: MouseEvent) => {
+    const eventHtml =  event.target as HTMLElement;
+    eventHtml.classList.forEach(className => {
+      if (className.startsWith("FormEditScreen-root")) {
+        this.setState({
+          selectedFieldIndex: undefined,
+          selectedSectionIndex: undefined
+        })
+      }
+    })
   }
 
   /**
