@@ -44,7 +44,7 @@ export default class MetaformUtils {
   }
 
   /**
-   * Convert a default section
+   * Convert a empty section
    * 
    * @returns created section 
    */

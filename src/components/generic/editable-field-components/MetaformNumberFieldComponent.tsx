@@ -11,7 +11,6 @@ interface Props extends WithStyles<typeof styles> {
   field?: MetaformField;
   fieldId?: string;
   fieldLabelId?: string;
-  formReadOnly?: boolean;
   onFieldUpdate?: (metafromfield: MetaformField) => void;
 }
 
@@ -46,7 +45,6 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
       classes, 
       field, 
       fieldId, 
-      formReadOnly 
     } = this.props;
 
     if (!field) {
@@ -54,10 +52,10 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
         <FormControl>
           <FormLabel>{ strings.editableFields.default.label }</FormLabel>
           <TextField
+            disabled
             type="number"
             variant="standard"
             placeholder={ `"${strings.editableFields.default.number}"` }
-            disabled={ formReadOnly }
           />
         </FormControl>
       );
@@ -85,7 +83,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
             name={ field.name }
             title={ field.title }
             required={ field.required }
-            disabled={ field.readonly || formReadOnly }
+            disabled={ field.readonly }
             inputProps={ inputProps }
             className={ classes.numberField }
           />

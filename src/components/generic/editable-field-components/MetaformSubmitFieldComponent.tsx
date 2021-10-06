@@ -9,7 +9,6 @@ import strings from "../../../localization/strings";
 interface Props {
   field?: MetaformField;
   fieldId?: string;
-  formReadOnly?: boolean;
   onFieldUpdate?: (metaformField: MetaformField) => void;
 }
 
@@ -43,17 +42,18 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
     const {
       field,
       fieldId,
-      formReadOnly 
     } = this.props;
 
     if (!field) {
       return (
         <FormControl>
-          <FormLabel htmlFor={ fieldId }>{ strings.editableFields.default.label }</FormLabel>
+          <FormLabel htmlFor={ fieldId }>
+            { strings.editableFields.default.label }
+          </FormLabel>
           <Button
+            disabled
             variant="contained"
             color="primary"
-            disabled={ formReadOnly }
           >
             { `"${strings.editableFields.default.submit}"` }
           </Button>
@@ -69,7 +69,7 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
           id={ fieldId }
           color="secondary"
           value={ field.text }
-          disabled={ formReadOnly || field.readonly }
+          disabled={ field.readonly }
           onChange={ this.handleButtonTextChange }
         />
         <Button

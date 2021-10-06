@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
 import { History } from "history";
-import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Divider, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
@@ -380,33 +380,25 @@ export class FormEditScreen extends React.Component<Props, State> {
     switch (fieldType) {
       case MetaformFieldType.Text:
         return (
-          <MetaformTextFieldComponent
-            formReadOnly={ true }
-          />
+          <MetaformTextFieldComponent/>
         );
       case MetaformFieldType.Html:
         return (
           <MetaformHtmlComponent
-            formReadOnly={ true } 
             classes={ classes }          
           />
         );
       case MetaformFieldType.Radio:
         return (
-          <MetaformRadioFieldComponent
-            formReadOnly={ true }
-          />
+          <MetaformRadioFieldComponent/>
         );
       case MetaformFieldType.Submit:
         return (
-          <MetaformSubmitFieldComponent
-            formReadOnly={ true }
-          />
+          <MetaformSubmitFieldComponent/>
         );
       case MetaformFieldType.Number:
         return (
           <MetaformNumberFieldComponent
-            formReadOnly={ true }
             classes={ classes }
           />
         );
@@ -495,7 +487,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Renders draggable component list
+   * Renders droppable component list
    */
   private renderDraggableComponents = () => {
     const { classes } = this.props;
@@ -550,7 +542,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Component on drag start event handler
+   * Event handler for drag start
    * 
    * @param initial drag start data
    * @param provided responder provided
@@ -587,7 +579,7 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     // from section list
     if (draggableId.startsWith("section")) {
-      if (destination.droppableId != "sectionList") {
+      if (destination.droppableId !== "sectionList") {
         return;
       }
       this.onSectionMove(source, destination);
@@ -682,9 +674,8 @@ export class FormEditScreen extends React.Component<Props, State> {
   /**
    * Event handler for field move
    * 
-   * @param field metaform field
-   *
-   * @returns field's id 
+   * @param droppableSource droppable source
+   * @param droppableDestination droppable destination
    */
   private onSectionFieldMove = (droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
@@ -765,9 +756,9 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for main header change
+   * Event handler for switching left drawer tab
    * 
-   * @param event new main header value
+   * @param newLeftDrawerTabIndex new left drawer tab index
    */
   private setLeftDrawerTabIndex = (newLeftDrawerTabIndex: number) => {
     this.setState({
@@ -776,9 +767,9 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for main header change
+   * Event handler for switching right drawer tab
    * 
-   * @param event new main header value
+   * @param newRightDrawerTabIndex new right drawer tab index
    */
   private setRightDrawerTabIndex = (newRightDrawerTabIndex: number) => {
     this.setState({
@@ -787,11 +778,11 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for editor field click
+   * Event handler for section click
    * 
-   * @param event new main header value
+   * @param sectionIndex section index
    */
-  private onSectionClick = (sectionIndex: number) => (event: any) => {
+  private onSectionClick = (sectionIndex: number) => () => {
     const { selectedSectionIndex } = this.state;
 
     if (selectedSectionIndex !== sectionIndex) {
@@ -803,11 +794,12 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for editor field click
+   * Event handler for field click
    * 
-   * @param event new main header value
+   * @param sectionIndex section index
+   * @param fieldIndex field index
    */
-  private onFieldClick = (sectionIndex: number, fieldIndex: number) => (event: any) => {
+  private onFieldClick = (sectionIndex: number, fieldIndex: number) => () => {
     this.setState({
       selectedSectionIndex: sectionIndex,
       selectedFieldIndex: fieldIndex

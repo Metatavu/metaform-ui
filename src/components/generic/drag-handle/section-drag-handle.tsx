@@ -21,7 +21,7 @@ interface State {
 }
 
 /**
- * Component for basic application layout
+ * Component for basic section drag handle
  */
 class SectionDragHandle extends React.Component<Props, State> {
 

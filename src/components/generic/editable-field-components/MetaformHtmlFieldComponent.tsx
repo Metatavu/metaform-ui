@@ -10,7 +10,6 @@ import styles from "../../../styles/form-edit-screen";
 interface Props extends WithStyles<typeof styles> {
   field?: MetaformField;
   fieldId?: string;
-  formReadOnly?: boolean;
   fieldLabelId?: string;
   fieldName?: string;
   onFieldUpdate?: (metaformField: MetaformField) => void;
@@ -43,7 +42,7 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId, classes, formReadOnly } = this.props;
+    const { field, fieldId } = this.props;
 
     if (!field) {
       return (
@@ -59,7 +58,7 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
       <FormControl variant="outlined">
         <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
         <OutlinedInput
-          disabled={ formReadOnly || field.readonly }
+          disabled={ field.readonly }
           label={ strings.editableFields.htmlField }
           id={ fieldId }
           color="primary"

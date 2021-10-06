@@ -22,7 +22,7 @@ interface State {
 }
 
 /**
- * Component for basic application layout
+ * Component for field drag handle
  */
 class FieldDragHandle extends React.Component<Props, State> {
 

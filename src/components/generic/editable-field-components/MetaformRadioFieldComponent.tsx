@@ -10,7 +10,6 @@ interface Props {
   field?: MetaformField;
   fieldId?: string;
   fieldLabelId?: string;
-  formReadOnly?: boolean;
   onFieldUpdate?: (metaformField: MetaformField) => void;
 }
 
@@ -41,13 +40,18 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId, formReadOnly } = this.props;
+    const { field, fieldId } = this.props;
 
     if (!field) {
       return (
         <FormControl component="fieldset">
-          <FormLabel component="legend">{ strings.editableFields.default.label }</FormLabel>
-          <FormControlLabel control={<Radio color="primary" disabled={ formReadOnly }/>} label={ `"${strings.editableFields.default.radio}"` } />
+          <FormLabel component="legend">
+            { strings.editableFields.default.label }
+          </FormLabel>
+          <FormControlLabel 
+            control={ <Radio disabled color="primary"/> } 
+            label={ `"${strings.editableFields.default.radio}"` } 
+          />
         </FormControl>
       );
     }
