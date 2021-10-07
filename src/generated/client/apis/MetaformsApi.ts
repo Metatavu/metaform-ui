@@ -71,12 +71,16 @@ export class MetaformsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms`,
+            path: `/v1/metaforms`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -108,12 +112,16 @@ export class MetaformsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -151,12 +159,16 @@ export class MetaformsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -183,12 +195,16 @@ export class MetaformsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms`,
+            path: `/v1/metaforms`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -225,12 +241,16 @@ export class MetaformsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

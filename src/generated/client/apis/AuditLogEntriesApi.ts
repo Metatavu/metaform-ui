@@ -67,12 +67,16 @@ export class AuditLogEntriesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/auditLogEntries/{auditLogEntryId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"auditLogEntryId"}}`, encodeURIComponent(String(requestParameters.auditLogEntryId))),
+            path: `/v1/metaforms/{metaformId}/auditLogEntries/{auditLogEntryId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"auditLogEntryId"}}`, encodeURIComponent(String(requestParameters.auditLogEntryId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -118,12 +122,16 @@ export class AuditLogEntriesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/auditLogEntries`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}/auditLogEntries`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
