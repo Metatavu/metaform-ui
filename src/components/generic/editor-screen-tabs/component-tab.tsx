@@ -1,9 +1,7 @@
-import { Box, IconButton } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { withStyles, WithStyles } from "@material-ui/styles";
 import React from "react";
 import styles from "../../../styles/generics/editor-screen-tabs/component-tab";
-import DragHandleIcon from "@material-ui/icons/DragHandle";
-import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import classNames from "classnames";
 import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from "react-beautiful-dnd";
 import { MetaformFieldType } from "../../../generated/client";
@@ -101,8 +99,6 @@ class ComponentTab extends React.Component<Props, State> {
    */
   private renderComponent = (fieldType: MetaformFieldType) => {
     // TODO replace the rendering method to use only visual display component & add all the component
-
-    const { classes } = this.props;
 
     switch (fieldType) {
       case MetaformFieldType.Text:

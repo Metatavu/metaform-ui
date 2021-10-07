@@ -270,7 +270,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       <Draggable draggableId={ `field-${sectionIndex.toString()}-${fieldIndex.toString()}` } index={ fieldIndex }>
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
           <div
-            ref={providedDraggable.innerRef}
+            ref={ providedDraggable.innerRef }
             { ...providedDraggable.draggableProps }
             { ...providedDraggable.dragHandleProps }
           >
@@ -297,7 +297,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   */
   private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
     // TODO add all the component
-    const { classes, metaform } = this.props;
+    const { metaform } = this.props;
 
     if (!metaform) {
       return;
