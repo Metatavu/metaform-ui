@@ -110,6 +110,12 @@ export interface IStrings extends LocalizedStringsMethods {
     reload: string;
   },
 
+  authRedirectDialog: {
+    title: string;
+    contentText: string;
+    buttonText: string;
+  },
+
   jsonScreen: {
     title: string;
     toggleReadOnlyButtonEdit: string;

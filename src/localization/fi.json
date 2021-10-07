@@ -90,6 +90,12 @@
     "cancel": "Peruuta",
     "send": "Lähetä"
   },
+
+  "authRedirectDialog": {
+    "title": "Metaform-tunnistautuminen",
+    "contentText": "Siirryt tunnistautumispalveluun...",
+    "buttonText": "Ok"
+  },
   
   "errorDialog": {
     "title": "Hups! Jokin meni pieleen",

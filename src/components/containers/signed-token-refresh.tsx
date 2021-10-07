@@ -9,6 +9,7 @@ import ErrorDialog from "../generic/error-dialog";
 import { KeycloakInstance } from "keycloak-js";
 import Keycloak from "keycloak-js";
 import Config from "../../config";
+import ConfirmAuthRedirectDialog from "../generic/auth-redirect-dialog";
 
 /**
  * Component props
@@ -24,6 +25,7 @@ interface Props {
  */
 interface State {
   error?: Error | unknown;
+  dialogOpen: boolean;
 }
 
 /**
@@ -43,7 +45,9 @@ class SignedTokenRefresh extends React.Component<Props, State> {
     super(props);
     this.keycloak = Keycloak(Config.getSignedKeycloakConfig());
     
-    this.state = { };
+    this.state = {
+      dialogOpen: true
+    };
   }
 
   /**
@@ -54,7 +58,7 @@ class SignedTokenRefresh extends React.Component<Props, State> {
 
     const auth = await this.keycloakInit();
 
-    if (!auth) {
+    if (!auth && this.state.dialogOpen === false) {
       await this.keycloak.login(Config.getSignedKeycloakLoginOptions(loginMode));
       window.location.reload();
     } else {
@@ -88,11 +92,24 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
+    if(this.props.loginMode === "USER"){
+      return <ConfirmAuthRedirectDialog onConfirm={ this.onConfirm } dialogOpen={ this.state.dialogOpen } />
+    }
+    
     if (this.state.error) {
       return <ErrorDialog error={ this.state.error } onClose={ () => this.setState({ error: undefined }) } />;
     }
 
     return this.props.signedToken ? this.props.children : null;
+  }
+
+  /**
+   * Update dialog state
+   */
+  private onConfirm = () => {
+    console.log(this.state.dialogOpen)
+    this.setState({dialogOpen: false})
+    console.log(this.state.dialogOpen)
   }
 
   /**

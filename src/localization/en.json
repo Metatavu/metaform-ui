@@ -91,6 +91,12 @@
     "send": "Send"
   },
 
+  "authRedirectDialog": {
+    "title": "Metaform authentication",
+    "contentText": "You'll be redirected to the authentication service...",
+    "buttonText": "Ok"
+  },
+
   "errorDialog": {
     "title": "Whoops! Something went wrong",
     "reloadPage": "Try reloading the page.",
