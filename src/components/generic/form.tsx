@@ -165,7 +165,7 @@ export class Form extends React.Component<Props, State> {
    * @param formReadOnly form read only
    * @param value autocomplete form value
    */
-  private renderAutocomplete = (field: MetaformField, formReadOnly: boolean, value: FieldValue) => {
+  private renderAutocomplete = (field: MetaformField, readOnly: boolean, value: FieldValue) => {
     const {
       metaform,
       classes,
@@ -178,7 +178,7 @@ export class Form extends React.Component<Props, State> {
         field={ field }
         metaform={ metaform }
         setFieldValue={ setFieldValue }
-        disabled={ formReadOnly || !!field.readonly }
+        disabled={ readOnly }
         value={ value }
       />
     );
