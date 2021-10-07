@@ -36,7 +36,19 @@ export default class MetaformUtils {
    * @returns created field type
    */
   public static metaformDefaultField = (fieldType: MetaformFieldType): MetaformField => {
-    // TODO radio, select
+    if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
+      return {
+        title: fieldType.toString(),
+        type: fieldType,
+        options: [
+          {
+            name: "option",
+            text: "option",
+          },
+        ]
+      } 
+    }
+
     return {
       title: fieldType.toString(),
       type: fieldType
@@ -49,7 +61,6 @@ export default class MetaformUtils {
    * @returns created section 
    */
   public static metaformDefaultSection = (): MetaformSection => {
-    // TODO radio, select
     return {
       title: "Section",
       fields: []

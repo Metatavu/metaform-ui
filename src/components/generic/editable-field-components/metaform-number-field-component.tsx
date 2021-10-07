@@ -1,8 +1,8 @@
-import { FormControl, FormLabel, InputLabel, TextField, WithStyles, } from "@material-ui/core";
+import { FormControl, FormLabel, InputLabel, TextField, withStyles, WithStyles, } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
-import styles from "../../../styles/form-edit-screen";
+import styles from "../../../styles/generics/editable-field-components/metaform-number-field-component";
 
 /**
  * Component props
@@ -70,12 +70,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     return (
       <>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberField }
-          </InputLabel>
           <TextField
+            label={ strings.editableFields.numberField }
             variant="standard"
             type="number"
             placeholder={ field.placeholder }
@@ -89,12 +85,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           />
         </FormControl>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberFieldMin }
-          </InputLabel>
           <TextField
+            label={ strings.editableFields.numberFieldMin }
             variant="standard"
             type="number"
             id={ fieldId }
@@ -105,12 +97,8 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           />
         </FormControl>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberFieldMax }
-          </InputLabel>
           <TextField
+            label={ strings.editableFields.numberFieldMax }
             variant="standard"
             type="number"
             id={ fieldId }
@@ -159,3 +147,5 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     onFieldUpdate(updatedField);
   }
 }
+
+export default withStyles(styles)(MetaformNumberFieldComponent);

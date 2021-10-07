@@ -44,10 +44,6 @@ export default createStyles({
     padding: `${theme.spacing(1)}px 0px`,
   },
 
-  numberField: {
-    width: "30%"
-  },
-
   drawer: {
     height: "100%"
   },

@@ -57,10 +57,6 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
       );
     }
 
-    if (!field.name) {
-      return null;
-    }
-
     const options = field.options || [];
 
     return (
