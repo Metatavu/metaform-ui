@@ -1,8 +1,8 @@
-import { FormControl, InputLabel, OutlinedInput, Typography, WithStyles } from "@material-ui/core";
+import { FormControl, InputLabel, OutlinedInput, Typography, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
-import styles from "../../../styles/form-edit-screen";
+import styles from "../../../styles/generics/editable-field-components/metaform-html-field-component";
 
 /**
  * Component props
@@ -90,3 +90,5 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
     onFieldUpdate(updatedField);
   }
 }
+
+export default withStyles(styles)(MetaformHtmlComponent)

@@ -1,12 +1,13 @@
-import { Button, FormControl, InputLabel, OutlinedInput, FormLabel } from "@material-ui/core";
+import { Button, FormControl, InputLabel, OutlinedInput, FormLabel, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
+import styles from "../../../styles/generics/editable-field-components/metaform-submit-field-component";
 
 /**
  * Component props
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   field?: MetaformField;
   fieldId?: string;
   onFieldUpdate?: (metaformField: MetaformField) => void;
@@ -102,5 +103,6 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
 
     onFieldUpdate(updatedField);
   }
-
 }
+
+export default withStyles(styles)(MetaformSubmitFieldComponent);

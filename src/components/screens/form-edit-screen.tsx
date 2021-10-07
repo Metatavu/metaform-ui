@@ -6,7 +6,6 @@ import styles from "../../styles/form-edit-screen";
 import { History } from "history";
 import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
-// eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
 import Api from "../../api/api";
 import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
@@ -14,17 +13,14 @@ import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { setMetaform } from "../../actions/metaform";
-import { MetaformTextFieldComponent } from "../generic/editable-field-components/MetaformTextFieldComponent";
-import { MetaformHtmlComponent } from "../generic/editable-field-components/MetaformHtmlFieldComponent";
-import { MetaformRadioFieldComponent } from "../generic/editable-field-components/MetaformRadioFieldComponent";
-import { MetaformSubmitFieldComponent } from "../generic/editable-field-components/MetaformSubmitFieldComponent";
-import { MetaformNumberFieldComponent } from "../generic/editable-field-components/MetaformNumberFieldComponent";
+import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent } from "../generic/editable-field-components";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
 import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
+import ComponentTab from "../generic/editor-screen-tabs/component-tab"
 
 /**
  * Component props
@@ -321,7 +317,6 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            classes={ classes }
             fieldName={ field.name }
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
@@ -349,7 +344,6 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            classes={ classes }
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
@@ -357,54 +351,6 @@ export class FormEditScreen extends React.Component<Props, State> {
         return (
           <div style={{ color: "red" }}> 
             `${ strings.formEditScreen.unknownFieldType }: ${ field.type }` 
-          </div>
-        );
-    }
-  }
-
-  /**
-   * Renders form editor sample component
-   * 
-   * @param fieldType metaform field type
-   */
-  private renderReadOnlyInput = (fieldType: MetaformFieldType) => {
-    // TODO replace the rendering method to use only visual display component & add all the component
-
-    const { classes, metaform } = this.props;
-
-    if (!metaform) {
-      return;
-    }
-
-    switch (fieldType) {
-      case MetaformFieldType.Text:
-        return (
-          <MetaformTextFieldComponent/>
-        );
-      case MetaformFieldType.Html:
-        return (
-          <MetaformHtmlComponent
-            classes={ classes }          
-          />
-        );
-      case MetaformFieldType.Radio:
-        return (
-          <MetaformRadioFieldComponent/>
-        );
-      case MetaformFieldType.Submit:
-        return (
-          <MetaformSubmitFieldComponent/>
-        );
-      case MetaformFieldType.Number:
-        return (
-          <MetaformNumberFieldComponent
-            classes={ classes }
-          />
-        );
-      default:
-        return (
-          <div style={{ color: "red" }}> 
-            `${ strings.formEditScreen.unknownFieldType }: ${ fieldType }` 
           </div>
         );
     }
@@ -443,7 +389,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         </Tabs>
         <Box className={ classes.drawerContent }>
           { leftDrawerTabIndex === 0 &&
-            this.renderDraggableComponents()
+            <ComponentTab/>
           }
         </Box>
       </Drawer>
@@ -486,61 +432,6 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Renders droppable component list
-   */
-  private renderDraggableComponents = () => {
-    const { classes } = this.props;
-
-    return (
-      <Box className={ classes.componentContainer }>
-        <Droppable droppableId="componentList" isDropDisabled>
-          {(provided:DroppableProvided, snapshot:DroppableStateSnapshot) => (
-            <div
-              ref={ provided.innerRef }
-            >
-              { Object.values(MetaformFieldType).map(this.renderDraggableComponent) }
-            </div>
-          )}
-        </Droppable>
-      </Box>
-    );
-  }
-
-  /**
-   * Renders a single draggable component
-   * 
-   * @param fieldType field type
-   * @param index index
-   */
-  private renderDraggableComponent = (fieldType: MetaformFieldType, index: number) => {
-    const { classes } = this.props;
-
-    return (
-      <Draggable draggableId={ fieldType } index={ index }>
-        {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
-            <>
-              <div
-                className={ classes.singleDraggableComponent }
-                ref={ providedDraggable.innerRef }
-                { ...providedDraggable.draggableProps }
-                { ...providedDraggable.dragHandleProps }
-              >
-                { this.renderReadOnlyInput(fieldType) }
-              </div>
-              { snapshotDraggable.isDragging &&
-                <div 
-                  className={ classNames(classes.singleDraggableComponent, { clone : true }) }
-                > 
-                  { this.renderReadOnlyInput(fieldType) }
-                </div> 
-              }
-            </>
-          )}
-      </Draggable>
-    );
-  }
-
-  /**
    * Event handler for drag start
    * 
    * @param initial drag start data
@@ -561,7 +452,6 @@ export class FormEditScreen extends React.Component<Props, State> {
       });
     }
   }
-
 
   /**
    * Event handler for drag end

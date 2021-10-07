@@ -12,11 +12,6 @@ export default createStyles({
     justifyContent: "center"
   },
 
-  componentContainer: {
-    padding: theme.spacing(2),
-    paddingTop: theme.spacing(4)
-  },
-
   addNewSectionButton: {
     alignSelf: "flex-end"
   },
@@ -47,16 +42,6 @@ export default createStyles({
   formEditorField: {
     width: "100%",
     padding: `${theme.spacing(1)}px 0px`,
-  },
-
-
-  singleDraggableComponent: {
-    marginBottom: theme.spacing(2),
-    "&.clone": {
-      "&+ div": {
-        display: "none !important",
-      }
-    }
   },
 
   numberField: {

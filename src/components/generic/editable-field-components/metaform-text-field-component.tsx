@@ -1,13 +1,14 @@
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { FormControl, FormLabel, TextField, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
 import { FieldValue } from "../../../types";
+import styles from "../../../styles/generics/editable-field-components/metaform-text-field-component"
 
 /**
  * Component props
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   field?: MetaformField;
   fieldId?: string;
   fieldLabelId?: string;
@@ -84,3 +85,5 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
     );
   }
 }
+
+export default withStyles(styles)(MetaformTextFieldComponent);
