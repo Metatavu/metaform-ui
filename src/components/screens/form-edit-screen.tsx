@@ -296,7 +296,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   * @param fieldIndex field index
   */
   private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
-    // TODO add all the component
+    // Task add all the component
     const { metaform } = this.props;
 
     if (!metaform) {

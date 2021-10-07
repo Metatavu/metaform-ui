@@ -98,7 +98,7 @@ class ComponentTab extends React.Component<Props, State> {
    * @param fieldType metaform field type
    */
   private renderComponent = (fieldType: MetaformFieldType) => {
-    // TODO replace the rendering method to use only visual display component & add all the component
+    // Task replace the rendering method to use only visual display component & add all the component
 
     switch (fieldType) {
       case MetaformFieldType.Text:
