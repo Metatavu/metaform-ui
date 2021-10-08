@@ -234,25 +234,27 @@ export class FormEditScreen extends React.Component<Props, State> {
               selected={ selectedSectionIndex === sectionIndex } 
               onDeleteClick={ this.onSectionDeleteClick(sectionIndex) }
             >
-              <Paper 
-                className={ classNames(classes.formEditorSection, { selected:  selectedSectionIndex === sectionIndex }) }
-                onClick={ this.onSectionClick(sectionIndex) }
-              >
-                <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
-                  {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                    <>
-                      <div ref={ provided.innerRef } >
-                        { (section.fields && section.fields.length > 0) ?
-                          section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
-                          <Typography>
-                            { strings.formEditScreen.emptySection }
-                          </Typography>
-                        }
-                      </div>
-                    </>
-                  )}
-                </Droppable>
-              </Paper>
+              <Droppable droppableId={ sectionIndex.toString() } isDropDisabled={ !draggingField }>
+                {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                  <Paper
+                    onClick={ this.onSectionClick(sectionIndex) }
+                    className={ 
+                      classNames(classes.formEditorSection, 
+                        { draggingOver: !(selectedSectionIndex === sectionIndex) && snapshot.isDraggingOver }, 
+                        { selected: selectedSectionIndex === sectionIndex }) 
+                      }
+                  >
+                    <div ref={ provided.innerRef } >
+                      { (section.fields && section.fields.length > 0) ?
+                        section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
+                        <Typography>
+                          { strings.formEditScreen.emptySection }
+                        </Typography>
+                      }
+                    </div>
+                  </Paper>
+                )}
+              </Droppable>
             </SectionDragHandle>
           </div> 
           )}

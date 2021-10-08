@@ -30,12 +30,16 @@ export default createStyles({
     padding: `${theme.spacing(3)}px ${theme.spacing(5)}px`,
     boxShadow: "none",
     margin: `${theme.spacing(2)}px 0px`,
+    overflow: "hidden",
     "& .MuiFormControl-root": {
       width: "100%"
     },
     "&.selected": {
       border: `2px solid ${theme.palette.primary.main}`,
       boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
+    },
+    "&.draggingOver": {
+      border: `2px dashed ${theme.palette.primary.main}`,
     }
   },
 
