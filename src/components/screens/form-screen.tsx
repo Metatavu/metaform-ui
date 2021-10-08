@@ -22,7 +22,10 @@ import Alert from "@material-ui/lab/Alert";
 import EmailDialog from "../generic/email-dialog";
 import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
-import { FileFieldValue } from "metaform-react/dist/types";
+import { FileFieldValue, ValidationErrors } from "metaform-react/dist/types";
+import Utils from "../../utils";
+
+const AUTOSAVE_COOLDOWN = 500;
 
 /**
  * Component props
@@ -31,7 +34,8 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   location: Location;
   keycloak: KeycloakInstance;
-  anonymousToken: AccessToken;
+  signedToken?: AccessToken;
+  anonymousToken?: AccessToken;
 }
 
 /**
@@ -39,9 +43,11 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   loading: boolean;
   saving: boolean;
+  autosaving: boolean;
+  formValid: boolean;
   draftSavedVisible: boolean;
   draftSaveVisible: boolean;
   draftEmailDialogVisible: boolean;
@@ -54,12 +60,15 @@ interface State {
   ownerKey: string | null;
   metaform?: Metaform;
   formValues: Dictionary<FieldValue>;
+  redirectTo?: string;
 }
 
 /**
  * Component for exhibitions screen
  */
 export class FormScreen extends React.Component<Props, State> {
+
+  private formValueChangeTimeout: any = null;
 
   /**
    * Constructor
@@ -71,6 +80,8 @@ export class FormScreen extends React.Component<Props, State> {
     this.state = {      
       loading: false,
       saving: false,
+      autosaving: false,
+      formValid: true,
       draftSaveVisible: false,
       draftSavedVisible: false,
       draftEmailDialogVisible: false,
@@ -88,7 +99,9 @@ export class FormScreen extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { location, anonymousToken } = this.props;
+    const { location, signedToken } = this.props;
+
+    const accessToken = this.getAccessToken();
     const query = new URLSearchParams(location.search);
 
     const draftId = query.get("draft");
@@ -103,10 +116,12 @@ export class FormScreen extends React.Component<Props, State> {
         draftId: draftId
       });
 
-      const metaformsApi = Api.getMetaformsApi(anonymousToken);
+      const metaformsApi = Api.getMetaformsApi(accessToken);
 
       const metaform = await metaformsApi.findMetaform({
-        metaformId: metaformId
+        metaformId: metaformId,
+        replyId: replyId || undefined,
+        ownerKey: ownerKey || undefined
       });
       
       const formValues = { ...this.state.formValues };
@@ -168,10 +183,16 @@ export class FormScreen extends React.Component<Props, State> {
         loading: false
       });
     } catch (e) {
-      this.setState({
-        loading: false,
-        error: e
-      });
+      if (e instanceof Response && e.status === 403 && !signedToken) {
+        this.setState({
+          redirectTo: "/protected/form"
+        });
+      } else {
+        this.setState({
+          loading: false,
+          error: e
+        });
+      }
     }
   }
 
@@ -180,9 +201,18 @@ export class FormScreen extends React.Component<Props, State> {
    */
   public render = () => {
     const { classes } = this.props;
+    const { redirectTo, loading, saving, snackbarMessage, error } = this.state;
 
     return (
-      <BasicLayout loading={ this.state.loading || this.state.saving } loadMessage={ this.state.saving ? strings.formScreen.savingReply : undefined } snackbarMessage={ this.state.snackbarMessage } error={ this.state.error } clearError={ this.clearError } clearSnackbar={ this.clearSnackbar }>
+      <BasicLayout 
+        loading={ loading || saving } 
+        loadMessage={ saving ? strings.formScreen.savingReply : undefined } 
+        snackbarMessage={ snackbarMessage } 
+        error={ error } 
+        redirectTo={ redirectTo }
+        clearError={ this.clearError } 
+        clearSnackbar={ this.clearSnackbar }
+      >
         <div className={ classes.root }>
           { this.renderForm() }
           { this.renderReplySaved() }
@@ -192,6 +222,7 @@ export class FormScreen extends React.Component<Props, State> {
           { this.renderDraftSave() }
           { this.renderDraftSaved() }
           { this.renderDraftEmailDialog() }
+          { this.renderAutosaving() }
         </div>
       </BasicLayout>
     );
@@ -207,15 +238,18 @@ export class FormScreen extends React.Component<Props, State> {
       return null
     }
 
+    const accessToken = this.getAccessToken();
+
     return (
       <Form
-        accessToken={ this.props.anonymousToken }
+        accessToken={ accessToken }
         ownerKey={ this.state.ownerKey || "" }
         contexts={ ["FORM"] }    
         metaform={ metaform }
         getFieldValue={ this.getFieldValue }
         setFieldValue={ this.setFieldValue }
         onSubmit={ this.onSubmit }
+        onValidationErrorsChange={ this.onValidationErrorsChange }
       />
     );
   }
@@ -230,7 +264,9 @@ export class FormScreen extends React.Component<Props, State> {
    * @return data processes to be used by ui
    */
   private processReplyData = async (metaform: Metaform, reply: Reply, ownerKey: string) => {
-    const attachmentsApi = Api.getAttachmentsApi(this.props.anonymousToken);
+    const accessToken = this.getAccessToken();
+    
+    const attachmentsApi = Api.getAttachmentsApi(accessToken);
     let values = reply.data;
     for (let i = 0; i < (metaform.sections || []).length; i++) {
       let section = metaform.sections && metaform.sections[i] ? metaform.sections[i] : undefined;
@@ -300,6 +336,21 @@ export class FormScreen extends React.Component<Props, State> {
             { strings.formScreen.draftEmailText } 
             <Link href="#" onClick={ this.onDraftEmailLinkClick }> { strings.formScreen.draftEmailLink } </Link>
           </p>
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  /**
+   * Renders autosave dialog
+   */
+  private renderAutosaving = () => {
+    const { autosaving } = this.state;
+
+    return (
+      <Snackbar open={ autosaving }>
+        <Alert severity="info">
+          <span> { strings.formScreen.autosaving } </span>
         </Alert>
       </Snackbar>
     );
@@ -414,16 +465,19 @@ export class FormScreen extends React.Component<Props, State> {
    * @param fieldValue field value
    */
   private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
-    const { formValues } = this.state;
+    const { formValues, metaform, formValid } = this.state;
 
     if (formValues[fieldName] !== fieldValue) {
       formValues[fieldName] = fieldValue;
+      
       this.setState({
-        formValues: formValues
-      });
-      this.setState({
+        formValues: formValues,
         draftSaveVisible: !!this.state.metaform?.allowDrafts
       });
+
+      if (formValid && metaform?.autosave) {
+        this.scheduleAutosave();
+      }
     }
   }
 
@@ -453,10 +507,10 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private findDraft = async (draftId: string) => {
     try {
-      const { anonymousToken } = this.props;
+      const accessToken = this.getAccessToken();
       const metaformId = Config.getMetaformId();   
       
-      const draftApi = Api.getDraftsApi(anonymousToken);
+      const draftApi = Api.getDraftsApi(accessToken);
       return await draftApi.findDraft({
         metaformId: metaformId,
         draftId: draftId
@@ -475,10 +529,10 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private findReply = async (replyId: string, ownerKey: string) => {
     try {
-      const { anonymousToken } = this.props;
+      const accessToken = this.getAccessToken();
       const metaformId = Config.getMetaformId();   
 
-      const replyApi = Api.getRepliesApi(anonymousToken);
+      const replyApi = Api.getRepliesApi(accessToken);
       return await replyApi.findReply({
         metaformId: metaformId,
         replyId: replyId,
@@ -495,6 +549,8 @@ export class FormScreen extends React.Component<Props, State> {
   private saveDraft = async () => {
     try {
       const { metaform, formValues, draftId } = this.state;
+      const accessToken = this.getAccessToken();
+      
       if (!metaform || !metaform.id) {
         return;
       }
@@ -504,7 +560,7 @@ export class FormScreen extends React.Component<Props, State> {
         draftSaveVisible: false
       });
 
-      const draftsApi = Api.getDraftsApi(this.props.anonymousToken);
+      const draftsApi = Api.getDraftsApi(accessToken);
       let draft;
 
       if (draftId) {
@@ -642,6 +698,7 @@ export class FormScreen extends React.Component<Props, State> {
    * Deletes the reply
    */
   private deleteReply = async () => {
+    const accessToken = this.getAccessToken();
     const { reply, ownerKey } = this.state;
 
     try {
@@ -650,7 +707,7 @@ export class FormScreen extends React.Component<Props, State> {
         loading: true
       });
 
-      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
+      const repliesApi = Api.getRepliesApi(accessToken);
 
       if (reply && reply.id && ownerKey) {
         await repliesApi.deleteReply({
@@ -702,30 +759,32 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private getReplyEditLink = () => {
     const { reply, ownerKey } = this.state;
-    if (!reply || !ownerKey) {
+    if (!reply?.id || !ownerKey) {
       return null;
     }
 
-    const { location } = window;
-    return (new URL(`${location.protocol}//${location.hostname}:${location.port}${location.pathname}?reply=${reply.id}&owner-key=${ownerKey}`)).toString();
+    return Utils.createOwnerKeyLink(reply.id, ownerKey);
   }
 
   /**
-   * Method for submitting form
+   * Returns either signed token or anonymous token if signed is absent
+   * 
+   * @return either signed token or anonymous token if signed is absent
    */
-  private onSubmit = async () =>  {
-    const { formValues, metaform, ownerKey } = this.state;
-    let { reply } = this.state;
+  private getAccessToken = () => {
+    const { signedToken, anonymousToken } = this.props;
+    return signedToken || anonymousToken as AccessToken;
+  }
 
-    if (!metaform || !metaform.id) {
-      return;
-    }
-
-    this.setState({
-      saving: true
-    });
-
-    let values = {...formValues};
+  /**
+   * Returns form values as map
+   * 
+   * @param metaform metaform
+   * @returns form values as map
+   */
+  private getFormValues = (metaform: Metaform): { [ key: string]: object } => {
+    const { formValues } = this.state;
+    const values = { ...formValues };
 
     metaform.sections?.forEach((section) => {
       section.fields?.forEach((field) => {
@@ -739,31 +798,31 @@ export class FormScreen extends React.Component<Props, State> {
       })
     });
 
+    return values as { [ key: string]: object };
+  }
+
+  /**
+   * Saves the reply
+   */
+  private saveReply = async () => {
+    const { metaform, ownerKey } = this.state;
+    let { reply } = this.state;
+
+    if (!metaform || !metaform.id) {
+      return;
+    }
+
+    this.setState({
+      saving: true
+    });
+
     try {
-      const repliesApi = Api.getRepliesApi(this.props.anonymousToken);
       if (reply && reply.id && ownerKey) {
-        await repliesApi.updateReply({
-          metaformId: Config.getMetaformId(),
-          replyId: reply.id,
-          ownerKey: ownerKey,
-          reply: {
-            data: values as any
-          }
-        });
-        reply = await repliesApi.findReply({
-          metaformId: Config.getMetaformId(),
-          replyId: reply.id,
-          ownerKey: ownerKey
-        });
+        reply = await this.updateReply(metaform, reply, ownerKey);        
       } else {
-        reply = await repliesApi.createReply({
-          metaformId: Config.getMetaformId(),
-          reply: {
-            data: values as any
-          },
-          replyMode: Config.getReplyMode()
-        });
+        reply = await this.createReply(metaform);
       }
+
       const updatedOwnerKey = ownerKey || reply.ownerKey;
       let updatedValues = reply.data;
       if (updatedOwnerKey) {
@@ -782,7 +841,134 @@ export class FormScreen extends React.Component<Props, State> {
         error: e
       });
     };
+  }
 
+  /**
+   * Creates new reply
+   * 
+   * @param metaform metaform
+   * @returns created reply
+   */
+  private createReply = async (metaform: Metaform) => {
+    const accessToken = this.getAccessToken();
+    const repliesApi = Api.getRepliesApi(accessToken);
+    
+    return await repliesApi.createReply({
+      metaformId: Config.getMetaformId(),
+      reply: {
+        data: this.getFormValues(metaform)
+      },
+      replyMode: Config.getReplyMode()
+    });
+  }
+
+  /**
+   * Updates existing reply
+   * 
+   * @param metaform metaform
+   * @param reply reply
+   * @param ownerKey owner key
+   * @returns updated reply
+   */
+  private updateReply = async (metaform: Metaform, reply: Reply, ownerKey: string | null) => {
+    const accessToken = this.getAccessToken();
+    const repliesApi = Api.getRepliesApi(accessToken);
+    
+    await repliesApi.updateReply({
+      metaformId: Config.getMetaformId(),
+      replyId: reply.id!,
+      ownerKey: ownerKey || undefined,
+      reply: {
+        data: this.getFormValues(metaform)
+      }
+    });
+
+    return await repliesApi.findReply({
+      metaformId: Config.getMetaformId(),
+      replyId: reply.id!,
+      ownerKey: ownerKey || undefined
+    });
+  }
+
+  /**
+   * Schedules an autosave. If new autosave is scheduled before given cooldown period 
+   * the old autosave is cancelled and replaced with the new one
+   */
+  private scheduleAutosave = () => {
+    if (this.formValueChangeTimeout) {
+      clearTimeout(this.formValueChangeTimeout);
+      this.formValueChangeTimeout = null;
+    }
+
+    this.formValueChangeTimeout = setTimeout(this.autosave, AUTOSAVE_COOLDOWN);
+  }
+
+  /**
+   * Autosaves the form
+   */
+  private autosave = async () => {
+    this.formValueChangeTimeout = null;
+
+    const { formValid, metaform, ownerKey, autosaving } = this.state;
+    let { reply } = this.state;
+
+    if (!formValid) {
+      return;
+    }
+
+    if (autosaving) {
+      this.scheduleAutosave();
+      return;
+    }
+
+    if (!metaform || !metaform.id || !reply) {
+      return;
+    }
+
+    try {
+      this.setState({
+        autosaving: true
+      });
+
+      await this.updateReply(metaform, reply, ownerKey);        
+
+      this.setState({
+        autosaving: false
+      });
+    } catch (e) {
+      this.setState({
+        autosaving: false,
+        error: e
+      });
+    };
+  }
+
+  /**
+   * Method for submitting form
+   */
+  private onSubmit = async () =>  {
+    await this.saveReply();
+  }
+
+  /**
+   * Event handler for validation errors change
+   * 
+   * @param validationErrors validation errors
+   */
+  private onValidationErrorsChange = (validationErrors: ValidationErrors) => {
+    const { metaform } = this.state;
+
+    const formValid = Object.keys(validationErrors).length === 0;
+
+    if (formValid !== this.state.formValid) {
+      this.setState({
+        formValid: formValid
+      });
+
+      if (formValid && metaform?.autosave) {
+        this.scheduleAutosave();
+      }
+    }
   }
 
   /**
@@ -923,7 +1109,8 @@ export class FormScreen extends React.Component<Props, State> {
 function mapStateToProps(state: ReduxState) {
   return {
     keycloak: state.auth.keycloak as KeycloakInstance,
-    anonymousToken: state.auth.anonymousToken as AccessToken
+    signedToken: state.auth.signedToken,
+    anonymousToken: state.auth.anonymousToken
   };
 }
 

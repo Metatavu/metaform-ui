@@ -2,18 +2,20 @@ import * as React from "react";
 
 import styles from "../../styles/form";
 
-import { WithStyles, withStyles, Icon, LinearProgress } from "@material-ui/core";
-import { Metaform } from "../../generated/client";
+import { WithStyles, withStyles, Icon, LinearProgress, Slider } from "@material-ui/core";
+import { Metaform, MetaformField } from "../../generated/client";
 import { MetaformComponent, FieldValue, IconName } from "metaform-react";
 import DatePicker from "react-datepicker";
 import AddIcon from '@material-ui/icons/Add';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import strings from "../../localization/strings";
-import { FileFieldValue, FileFieldValueItem } from "metaform-react/dist/types";
+import { FileFieldValue, FileFieldValueItem, ValidationErrors } from "metaform-react/dist/types";
 import { AccessToken } from "../../types";
 import Api from "../../api/api";
 import Utils from "../../utils";
+import "react-datepicker/dist/react-datepicker.css";
+import FormAutocomplete from "./form-autocomplete";
 
 /**
  * Component props
@@ -21,18 +23,19 @@ import Utils from "../../utils";
 interface Props extends WithStyles<typeof styles> {
   contexts: string[];
   metaform: Metaform;
-  accessToken?: AccessToken
-  ownerKey?: string
+  accessToken?: AccessToken;
+  ownerKey?: string;
   getFieldValue: (fieldName: string) => FieldValue;
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
   onSubmit: (source: Metaform) => void;
+  onValidationErrorsChange?: (validationErrors: ValidationErrors) => void;
 }
 
 /**
  * Component state
  */
 interface State {
-  uploadingFields: string[]
+  uploadingFields: string[];
 }
 
 /**
@@ -48,7 +51,7 @@ export class Form extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {    
-      uploadingFields: []  
+      uploadingFields: []
     };
   }
 
@@ -56,7 +59,7 @@ export class Form extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes, metaform } = this.props;
+    const { classes, metaform, onValidationErrorsChange } = this.props;
 
     return (
       <div className={ classes.formContainer }>
@@ -69,12 +72,14 @@ export class Form extends React.Component<Props, State> {
           setFieldValue={ this.props.setFieldValue }
           datePicker={ this.renderDatePicker }
           datetimePicker={ this.renderDatetimePicker }
+          renderAutocomplete={ this.renderAutocomplete }
           uploadFile={ this.uploadFile }
           onFileDelete={ this.deleteFile }
           onFileShow={ this.showFile }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
           renderIcon={ this.renderIcon }        
+          renderSlider={ this.renderSlider }
           onSubmit={ this.props.onSubmit }
+          onValidationErrorsChange={ onValidationErrorsChange }
           renderBeforeField={(fieldname) => {
             if (fieldname && this.state.uploadingFields.indexOf(fieldname) > -1) {
               return (<LinearProgress />);
@@ -123,6 +128,77 @@ export class Form extends React.Component<Props, State> {
   }
 
   /**
+   * Renders slider field
+   * 
+   * @param fieldName field name
+   * @param readOnly whether the field is read only
+   */
+  private renderSlider = (fieldName: string, readOnly: boolean) => {
+    const { setFieldValue } = this.props; 
+    const field = this.getField(fieldName);
+    if (!field) {
+      return null;
+    }
+
+    const value = this.props.getFieldValue(fieldName);
+    
+    return (
+      <Slider 
+        step={ field.step }
+        max={ field.max }
+        min={ field.min }
+        name={ field.name }
+        placeholder={ field.placeholder }
+        disabled={ readOnly }
+        value={ value as number }
+        onChange={ (_event: React.ChangeEvent<{}>, value: number | number[]) => {
+          setFieldValue(fieldName, value as number);
+        }}
+      />
+    );
+  }
+
+  /**
+   * Renders autocomplete component
+   * 
+   * @param field field
+   * @param formReadOnly form read only
+   * @param value autocomplete form value
+   */
+  private renderAutocomplete = (field: MetaformField, readOnly: boolean, value: FieldValue) => {
+    const {
+      metaform,
+      classes,
+      setFieldValue 
+    } = this.props;
+
+    return (
+      <FormAutocomplete
+        classes={ classes }
+        field={ field }
+        metaform={ metaform }
+        setFieldValue={ setFieldValue }
+        disabled={ readOnly }
+        value={ value }
+      />
+    );
+  }
+
+  /**
+   * Finds a field from form by field name
+   * 
+   * @param fieldName field name
+   * @returns field or null if not found
+   */
+  private getField = (fieldName: string) => {
+    const { metaform } = this.props;
+
+    return (metaform.sections || [])
+      .flatMap(section => section.fields || [])
+      .find(field => field.name === fieldName);
+  }
+
+  /**
    * Method for uploading a file
    *
    * @param file file
@@ -166,7 +242,7 @@ export class Form extends React.Component<Props, State> {
       }
       const value = {
         id: data.fileRef,
-        secure: false,
+        persisted: false,
         name: data.fileName,
         url: this.createDefaultFileUrl(data.fileRef)
       } as FileFieldValueItem;
@@ -208,7 +284,7 @@ export class Form extends React.Component<Props, State> {
     this.props.setFieldValue(fieldName, { files });
     
     //Only unsecured values can be deleted from server
-    if (!value.secure) {
+    if (!value.persisted) {
       fetch(this.createDefaultFileUrl(value.id), { method: "DELETE" })
         .then((res) => {
           if (res.ok) {
@@ -225,7 +301,7 @@ export class Form extends React.Component<Props, State> {
    * @param value uploaded value
    */
   private showFile = async (fieldName: string, value: FileFieldValueItem) => {
-    if (!value.secure) {
+    if (!value.persisted) {
       window.open(value.url, "blank");
       return
     }
@@ -234,15 +310,6 @@ export class Form extends React.Component<Props, State> {
       const data = await attachmentApi.findAttachmentData({attachmentId: value.id, ownerKey: this.props.ownerKey});
       Utils.downloadBlob(data, value.name || "attachment");
     }
-  }
-
-  /**
-   * Method for setting autocomplete options
-   *
-   * @param path path
-   */
-  private setAutocompleteOptions = async (path: string, input?: string): Promise<string[]> => {
-    return [];
   }
   
   /**

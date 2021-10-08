@@ -108,12 +108,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/export`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}/export`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -158,12 +162,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}/replies`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -203,12 +211,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
+            path: `/v1/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -246,12 +258,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
+            path: `/v1/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -318,12 +334,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}/replies`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -366,12 +386,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies/{replyId}/export`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
+            path: `/v1/metaforms/{metaformId}/replies/{replyId}/export`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -416,12 +440,16 @@ export class RepliesApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
+            path: `/v1/metaforms/{metaformId}/replies/{replyId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"replyId"}}`, encodeURIComponent(String(requestParameters.replyId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

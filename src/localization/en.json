@@ -2,7 +2,8 @@
   "generic": {
     "loading": "Loading...",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loadingAutoCompleteOptions": "Loading options..."
   },
 
   "form": {
@@ -16,6 +17,7 @@
   },
 
   "formScreen": {
+    "autosaving": "Saving reply...",
     "replyNotFound": "Reply could not be found from the system",
     "saveDraft": "You can save this form reply as a draft by clicking",
     "saveDraftLink": "here",
@@ -60,10 +62,27 @@
     "replySaved": "Changed saved successfully"
   },
 
+  "adminInviteScreen": {
+    "title": "Invitations",
+    "emailFieldNotFoundError": "Email field not found. Check form configuration!",
+    "noOwnerKeyError": "Did not receive owner key. Check form configuration!",
+    "sendingInvitation": "Sending invitation...",
+    "invitationEmailSubject": "Invitation to reply to {0} -form",
+    "invitationEmailContent": "<p>Hi!</p><p>You have been invited to fill out form {0}. You can access the from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" 
+  },
+
   "adminLayout": {
     "replies": "Replies",
+    "invite": "Invite",
     "profile": "Profile",
     "logout": "Logout"
+  },
+
+  "adminLayoutV2": {
+    "form": "Form",
+    "preview": "Preview",
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigation"
   },
   
   "emailDialog": {
@@ -84,6 +103,44 @@
     "errorMessage": "Error message: ",
     "close": "Close",
     "reload": "Reload"
+  },
+
+  "jsonScreen": {
+    "title": "JSON preview and edit",
+    "toggleReadOnlyButtonEdit": "Edit",
+    "toggleReadOnlyButtonPreview": "Preview"
+  },
+
+  "formEditScreen": {
+    "leftSideBarComponentsTab": "Components",
+    "leftSideBarStylingTab": "Styling",
+    "leftSideBarFieldHeader": "Fields",
+    "leftSideBarComponentHeader": "Components",
+    "rightSideBarLinksTab": "Links",
+    "rightSideBarVisibilityTab": "Visibility",
+    "leftSideBarInfo": "Fields and Components not working yet!",
+    "chooseComponent": "Choose component",
+    "sectionLayout": "Section layout",
+    "headerField": "Header field",
+    "textField": "Text field",
+    "editableTextField": "Editable field",
+    "conditionalField": "Conditional field",
+    "dropDownMenu": "Dropdown menu",
+    "selectBox": "Select box",
+    "radioButton": "Radio button",
+    "button": "Button",
+    "image": "Image",
+    "unknownFieldType": "Unknown field type",
+    "formEditorInfo": "Editing is not working yet",
+    "formMainHeader": "Form main header"
+  },
+
+  "editableFields": {
+    "htmlField": "Html content",
+    "submitFieldText": "Submit button text",
+    "numberField": "Number field",
+    "numberFieldMin": "Set min value",
+    "numberFieldMax": "Set max value"
   }
 
 }

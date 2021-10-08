@@ -2,7 +2,8 @@
   "generic": {
     "loading": "Ladataan...",
     "confirm": "Vahvista",
-    "cancel": "Peruuta"
+    "cancel": "Peruuta",
+    "loadingAutoCompleteOptions": "Ladataan vaihtoehtoja..."
   },
 
   "form": {
@@ -16,6 +17,7 @@
   },
 
   "formScreen": {
+    "autosaving": "Vastausta tallennetaan...",
     "replyNotFound": "Vastausta ei löytynyt järjestelmästä",
     "saveDraft": "Voit tallentaa lomakkeen vedoksena klikkaamalla",
     "saveDraftLink": "tästä",
@@ -60,11 +62,28 @@
     "replySaved": "Muutokset tallennettu onnistuneesti!"
   },
 
+  "adminInviteScreen": {
+    "title": "Kutsuminen",
+    "emailFieldNotFoundError": "Sähköpostikenttää ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
+    "noOwnerKeyError": "Omistaja-avainta ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
+    "sendingInvitation": "Lähetetään kutsua...",    
+    "invitationEmailSubject": "Kutsu täyttämään {0} -lomaketta",
+    "invitationEmailContent": "<p>Hei!</p><p>Sinut on kutsuttu vastaamaan {0} -lomakkeeseen. Pääset vastaamaan osoiteesta:</p><p><a href='{1}'>{1}</a></p><hr/><p>Tämä on automaattinen viesti, älä vastaa viestiin.</p>"
+  },
+
   "adminLayout": {
     "replies": "Vastaukset",
+    "invite": "Kutsuminen",
     "profile": "Käyttäjätili",
     "logout": "Kirjaudu ulos"
   }, 
+
+  "adminLayoutV2": {
+    "form": "Lomake",
+    "preview": "Esikatselu",
+    "json": "JSON",
+    "metaformNavigation": "Metaform-UI navigaatio"
+  },
   
   "emailDialog": {
     "title": "Sähköposti",
@@ -77,13 +96,51 @@
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",
     "unsavedContents": "Huomaathan, että tallentamattomat sisällöt häviävät uudelleenladattaessa. Mikäli sinulla on sivulla tallentamattomia sisältöjä, voit sulkea tämän ilmoituksen ja kopioida sisällöt leikepöydälle ennen uudelleenlatausta.",
-    "reportIssue": "Mikäli ongelma jatkuu, ota sähköpostilla yhteyttä osoitteeseen support@metatavu.fi. Liitä tekniset lisätiedot osaksi sähköpostia nopeuttaaksesi ongelan selvittelyä.",
+    "reportIssue": "Mikäli ongelma jatkuu, ota sähköpostilla yhteyttä osoitteeseen support@metatavu.fi. Liitä tekniset lisätiedot osaksi sähköpostia nopeuttaaksesi ongelman selvittelyä.",
     "technicalDetails": "Teknisiä lisätietoja:",
     "time": "Aika: {0}",
     "url": "Osoite: {0}",
     "errorMessage": "Virheilmoitus: ",
     "close": "Sulje",
     "reload": "Lataa uudelleen"
+  },
+
+  "jsonScreen": {
+    "title": "JSON-esikatselu ja muokkaus",
+    "toggleReadOnlyButtonEdit": "Muokkaa",
+    "toggleReadOnlyButtonPreview": "Esikatsele"
+  },
+
+  "formEditScreen": {
+    "leftSideBarComponentsTab": "Palikat",
+    "leftSideBarStylingTab": "Muotoilu",
+    "leftSideBarFieldHeader": "Kentät",
+    "leftSideBarComponentHeader": "Komponentit",
+    "rightSideBarLinksTab": "Linkit",
+    "rightSideBarVisibilityTab": "Näkyvyys",
+    "leftSideBarInfo": "Kentät ja Komponentit eivät vielä toimi!",
+    "chooseComponent": "Valitse komponentti",
+    "sectionLayout": "Osion pohja",
+    "headerField": "Otsikkokenttä",
+    "textField": "Tekstikenttä",
+    "editableTextField": "Muokattava tekstikenttä",
+    "conditionalField": "Ehdollinen kenttä",
+    "dropDownMenu": "Alasvetovalikko",
+    "selectBox": "Valintaruutu",
+    "radioButton": "Valintanappi",
+    "button": "Nappi",
+    "image": "Kuva",
+    "unknownFieldType": "Tuntematon kenttätyyppi",
+    "formEditorInfo": "Muokkaus ei vielä toimi",
+    "formMainHeader": "Lomakkeen pääotsikko"
+  },
+
+  "editableFields": {
+    "htmlField": "Html-sisältö",
+    "submitFieldText": "Lähetä-napin teksti",
+    "numberField": "Numerokenttä",
+    "numberFieldMin": "Aseta minimiarvo",
+    "numberFieldMax": "Aseta maksimiarvo"
   }
 
 }

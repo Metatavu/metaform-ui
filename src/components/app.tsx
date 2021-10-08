@@ -4,19 +4,22 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { ReduxState, ReduxActions, rootReducer } from "../store";
 
-import { ThemeProvider } from "@material-ui/styles";
 import metaformTheme from "../styles/theme";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@material-ui/core";
 import strings from "../localization/strings";
 import AnonymousTokenRefresh from "./containers/anonymous-token-refresh";
-import AdminTokenRefresh from "./containers/admin-token-refresh";
+import SignedTokenRefresh from "./containers/signed-token-refresh";
 import moment from "moment";
 import "moment/locale/fi";
 import "moment/locale/en-gb";
 import FormScreen from "./screens/form-screen";
 import AdminScreen from "./screens/admin-screen";
 import AdminReplyScreen from "./screens/admin-reply-screen";
+import AdminInviteScreen from "./screens/admin-invite-screen";
+import FormEditJsonScreen from "./screens/json-screen";
+import FormEditScreen from "./screens/form-edit-screen";
+import PreviewScreen from "./screens/preview-screen";
 
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
 
@@ -54,7 +57,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <CssBaseline />
         <Provider store={store}>     
           <BrowserRouter>
@@ -73,33 +76,95 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  path="/protected/form"
+                  exact={ true }
+                  render={({ history, location }) => (
+                    <SignedTokenRefresh loginMode="USER">
+                      <FormScreen
+                        history={ history }
+                        location={ location }
+                      />
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
                   path="/admin"
                   exact={ true }
                   render={({ history }) => (
-                    <AdminTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <AdminScreen
                         history={ history }
                       />
-                    </AdminTokenRefresh>
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/edit-form/json"
+                  exact={ true }
+                  render={({ history }) => (
+                    <SignedTokenRefresh loginMode="ADMIN">
+                      <ThemeProvider theme={theme}>
+                        <FormEditJsonScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/edit-form/form"
+                  exact={ true }
+                  render={({ history }) => (
+                    <SignedTokenRefresh loginMode="ADMIN">
+                      <ThemeProvider theme={theme}>
+                        <FormEditScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/edit-form/preview"
+                  exact={ true }
+                  render={({ history }) => (
+                    <SignedTokenRefresh>
+                      <ThemeProvider theme={theme}>
+                        <PreviewScreen
+                          history={ history }
+                        />
+                      </ThemeProvider>
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  path="/admin/invite"
+                  exact={ true }
+                  render={({ history, match }) => (
+                    <SignedTokenRefresh loginMode="ADMIN">
+                      <AdminInviteScreen                            
+                        history={ history }
+                      />
+                    </SignedTokenRefresh>
                   )}
                 />
                 <Route
                   path="/admin/replies/:replyId"
                   exact={ true }
                   render={({ history, match }) => (
-                    <AdminTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <AdminReplyScreen                            
                         history={ history }
                         replyId={ match.params.replyId }
                       />
-                    </AdminTokenRefresh>
+                    </SignedTokenRefresh>
                   )}
                 />
               </Switch>
             </div>
           </BrowserRouter>
         </Provider>
-      </ThemeProvider>
+      </>
     );
   }
 }

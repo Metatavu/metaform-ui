@@ -1,17 +1,23 @@
 /**
- * Admin login action
+ * Signed login action
  */
-export const ADMIN_LOGIN = "ADMIN_LOGIN";
-export type ADMIN_LOGIN = typeof ADMIN_LOGIN;
+export const SIGNED_LOGIN = "SIGNED_LOGIN";
+export type SIGNED_LOGIN = typeof SIGNED_LOGIN;
 
 /**
- * Admin logout action
+ * Signed logout action
  */
-export const ADMIN_LOGOUT = "ADMIN_LOGOUT";
-export type ADMIN_LOGOUT = typeof ADMIN_LOGOUT;
+export const SIGNED_LOGOUT = "SIGNED_LOGOUT";
+export type SIGNED_LOGOUT = typeof SIGNED_LOGOUT;
 
 /**
-* Anonymous login action
-*/
+ * Anonymous login action
+ */
 export const ANONYMOUS_LOGIN = "ANONYMOUS_LOGIN";
 export type ANONYMOUS_LOGIN = typeof ANONYMOUS_LOGIN;
+
+/**
+ * Set the metaform data
+ */
+export const SET_METAFORM = "SET_METAFORM";
+export type SET_METAFORM = typeof SET_METAFORM;

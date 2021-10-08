@@ -5,6 +5,7 @@ import styles from "../../styles/basic-layout";
 import ErrorDialog from "../generic/error-dialog";
 import MuiAlert from '@material-ui/lab/Alert';
 import strings from "../../localization/strings";
+import { Redirect } from "react-router-dom";
 
 export interface SnackbarMessage { 
   message: string; 
@@ -16,7 +17,8 @@ export interface SnackbarMessage {
  */
 interface Props extends WithStyles<typeof styles> {
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
+  redirectTo?: string;
   loading?: boolean;
   loadMessage?: string;
   clearError?: () => void;
@@ -49,7 +51,11 @@ class BasicLayout extends React.Component<Props, State> {
    * Render basic layout
    */
   public render() {
-    const { classes } = this.props;
+    const { classes, redirectTo } = this.props;
+
+    if (redirectTo) {
+      return <Redirect to={ redirectTo } />
+    }
 
     if (!this.props.error && this.props.loading) {
       return this.renderLoader();

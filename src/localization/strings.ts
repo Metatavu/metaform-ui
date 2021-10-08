@@ -9,6 +9,7 @@ export interface IStrings extends LocalizedStringsMethods {
     loading: string;
     cancel: string;
     confirm: string;
+    loadingAutoCompleteOptions: string;
   };
 
   form: {
@@ -23,6 +24,7 @@ export interface IStrings extends LocalizedStringsMethods {
 
   formScreen: {
     replyNotFound: string;
+    autosaving: string;
     saveDraft: string;
     saveDraftLink: string;
     draftSaved: string;
@@ -66,10 +68,27 @@ export interface IStrings extends LocalizedStringsMethods {
     replySaved: string;
   };
 
+  adminInviteScreen: {
+    title: string;
+    emailFieldNotFoundError: string;
+    noOwnerKeyError: string;
+    sendingInvitation: string;
+    invitationEmailSubject: string;
+    invitationEmailContent: string;
+  };
+
   adminLayout: {
     replies: string;
+    invite: string;
     profile: string;
     logout: string;
+  },
+
+  adminLayoutV2: {
+    form: string;
+    preview: string;
+    json: string;
+    metaformNavigation: string;
   },
 
   emailDialog: {
@@ -90,7 +109,45 @@ export interface IStrings extends LocalizedStringsMethods {
     errorMessage: string;
     close: string;
     reload: string;
-  };
+  },
+
+  jsonScreen: {
+    title: string;
+    toggleReadOnlyButtonEdit: string;
+    toggleReadOnlyButtonPreview: string;
+  },
+
+  formEditScreen: {
+    leftSideBarComponentsTab: string;
+    leftSideBarStylingTab: string;
+    leftSideBarFieldHeader: string;
+    leftSideBarComponentHeader: string;
+    rightSideBarLinksTab: string;
+    rightSideBarVisibilityTab: string;
+    leftSideBarInfo: string;
+    chooseComponent: string;
+    sectionLayout: string;
+    headerField: string;
+    textField: string;
+    editableTextField: string;
+    conditionalField: string;
+    dropDownMenu: string;
+    selectBox: string;
+    radioButton: string;
+    button: string;
+    image: string;
+    unknownFieldType: string;
+    formEditorInfo: string;
+    formMainHeader: string;
+  },
+
+  editableFields: {
+    htmlField: string;
+    submitFieldText: string;
+    numberField: string;
+    numberFieldMin: string;
+    numberFieldMax: string;
+  }
 
 }
 

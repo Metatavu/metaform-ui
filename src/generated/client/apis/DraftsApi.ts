@@ -77,12 +77,16 @@ export class DraftsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/drafts`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
+            path: `/v1/metaforms/{metaformId}/drafts`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -118,12 +122,16 @@ export class DraftsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
+            path: `/v1/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -157,12 +165,16 @@ export class DraftsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
+            path: `/v1/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -203,12 +215,16 @@ export class DraftsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
+            path: `/v1/metaforms/{metaformId}/drafts/{draftId}`.replace(`{${"metaformId"}}`, encodeURIComponent(String(requestParameters.metaformId))).replace(`{${"draftId"}}`, encodeURIComponent(String(requestParameters.draftId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { connect } from "react-redux";
 import { ReduxState, ReduxActions } from "../../store";
-import { adminLogin } from "../../actions/auth";
+import { signedLogin } from "../../actions/auth";
 
-import { AccessToken } from "../../types";
+import { AccessToken, LoginMode } from "../../types";
 import ErrorDialog from "../generic/error-dialog";
 import { KeycloakInstance } from "keycloak-js";
 import Keycloak from "keycloak-js";
@@ -14,21 +14,22 @@ import Config from "../../config";
  * Component props
  */
 interface Props {
-  adminToken?: AccessToken;
-  onAdminLogin: (keycloak: KeycloakInstance, adminToken: AccessToken) => void;
+  loginMode: LoginMode;
+  signedToken?: AccessToken;
+  onSignedLogin: (keycloak: KeycloakInstance, signedToken: AccessToken) => void;
 }
 
 /**
  * Component state
  */
 interface State {
-  error?: Error;
+  error?: Error | unknown;
 }
 
 /**
  * Component for keeping authentication token fresh
  */
-class AccessTokenRefresh extends React.Component<Props, State> {
+class SignedTokenRefresh extends React.Component<Props, State> {
 
   private keycloak: KeycloakInstance;
   private timer?: any;
@@ -40,7 +41,8 @@ class AccessTokenRefresh extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.keycloak = Keycloak(Config.getAdminLoginConfig());
+    this.keycloak = Keycloak(Config.getSignedKeycloakConfig());
+    
     this.state = { };
   }
 
@@ -48,21 +50,24 @@ class AccessTokenRefresh extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
+    const { loginMode } = this.props;
+
     const auth = await this.keycloakInit();
 
     if (!auth) {
+      await this.keycloak.login(Config.getSignedKeycloakLoginOptions(loginMode));
       window.location.reload();
     } else {
       if (this.keycloak) {
         await this.keycloak.loadUserProfile();
 
-        const adminToken = this.buildToken(this.keycloak);
-        if (adminToken) {
-          this.props.onAdminLogin(this.keycloak, adminToken);
+        const signedToken = this.buildToken(this.keycloak);
+        if (signedToken) {
+          this.props.onSignedLogin(this.keycloak, signedToken);
         }
       }
 
-      this.refreshAccessToken();
+      await this.refreshAccessToken();
 
       this.timer = setInterval(() => {
         this.refreshAccessToken();
@@ -87,19 +92,19 @@ class AccessTokenRefresh extends React.Component<Props, State> {
       return <ErrorDialog error={ this.state.error } onClose={ () => this.setState({ error: undefined }) } />;
     }
 
-    return this.props.adminToken ? this.props.children : null;
+    return this.props.signedToken ? this.props.children : null;
   }
 
   /**
    * Refreshes access token
    */
-  private refreshAccessToken() {
+  private refreshAccessToken = async () => {
     try {
-      const refreshed = this.keycloak.updateToken(70);
+      const refreshed = await this.keycloak.updateToken(70);
       if (refreshed) {
-        const adminToken = this.buildToken(this.keycloak);
-        if (adminToken) {
-          this.props.onAdminLogin(this.keycloak, adminToken);
+        const signedToken = this.buildToken(this.keycloak);
+        if (signedToken) {
+          this.props.onSignedLogin(this.keycloak, signedToken);
         }
       }
     } catch (e) {
@@ -112,10 +117,10 @@ class AccessTokenRefresh extends React.Component<Props, State> {
   /**
    * Initializes Keycloak client
    */
-  private keycloakInit = () => {
-    return new Promise(resolve => {
-      this.keycloak.init({ onLoad: "login-required", checkLoginIframe: false }).success(resolve);
-    });
+  private keycloakInit = async () => {
+    return await this.keycloak.init({
+      checkLoginIframe: false
+    })
   }
 
   /**
@@ -141,7 +146,8 @@ class AccessTokenRefresh extends React.Component<Props, State> {
       refresh_expires_in: refreshTokenParsed?.exp,
       firstName: profile?.firstName,
       lastName: profile?.lastName,
-      userId: tokenParsed.sub
+      userId: tokenParsed.sub,
+      realmRoles: tokenParsed.realm_access?.roles || []
     };
   }
 
@@ -154,7 +160,7 @@ class AccessTokenRefresh extends React.Component<Props, State> {
  */
 function mapStateToProps(state: ReduxState) {
   return {
-    adminToken: state.auth.adminToken
+    signedToken: state.auth.signedToken
   };
 }
 
@@ -165,8 +171,8 @@ function mapStateToProps(state: ReduxState) {
  */
 function mapDispatchToProps(dispatch: React.Dispatch<ReduxActions>) {
   return {
-    onAdminLogin: (keycloak: KeycloakInstance, adminToken: AccessToken) => dispatch(adminLogin(keycloak, adminToken))
+    onSignedLogin: (keycloak: KeycloakInstance, signedToken: AccessToken) => dispatch(signedLogin(keycloak, signedToken))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccessTokenRefresh) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(SignedTokenRefresh) as any;
