@@ -213,10 +213,17 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderFormSection = (section: MetaformSection, sectionIndex: number) => {
     const { classes } = this.props;
-    const { draggingField, selectedSectionIndex } = this.state;
+    const { 
+      draggingField,
+      selectedSectionIndex 
+    } = this.state;
 
     return (
-      <Draggable draggableId={ `section-${sectionIndex.toString()}` } index={ sectionIndex }>
+      <Draggable 
+        draggableId={ `section-${sectionIndex.toString()}` } 
+        index={ sectionIndex } 
+        isDragDisabled={ selectedSectionIndex !== sectionIndex }
+      >
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
           <div
             ref={ providedDraggable.innerRef }
@@ -267,7 +274,11 @@ export class FormEditScreen extends React.Component<Props, State> {
     const selected = selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex;
     
     return (
-      <Draggable draggableId={ `field-${sectionIndex.toString()}-${fieldIndex.toString()}` } index={ fieldIndex }>
+      <Draggable 
+        index={ fieldIndex }
+        draggableId={ `field-${sectionIndex.toString()}-${fieldIndex.toString()}` }
+        isDragDisabled={ selectedFieldIndex !== fieldIndex || selectedSectionIndex !== sectionIndex }
+      >
         {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
           <div
             ref={ providedDraggable.innerRef }
@@ -443,7 +454,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     if (source.droppableId === "componentList" || !isNaN(parseInt(source.droppableId))) {
       this.setState({
         draggingField: true,
-        draggingSection: false
+        draggingSection: false,
       });
     } else if (source.droppableId === "sectionList") {
       this.setState({
