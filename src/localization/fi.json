@@ -2,7 +2,8 @@
   "generic": {
     "loading": "Ladataan...",
     "confirm": "Vahvista",
-    "cancel": "Peruuta"
+    "cancel": "Peruuta",
+    "loadingAutoCompleteOptions": "Ladataan vaihtoehtoja..."
   },
 
   "form": {

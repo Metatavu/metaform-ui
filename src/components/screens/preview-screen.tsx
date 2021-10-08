@@ -137,16 +137,18 @@ export class PreviewScreen extends React.Component<Props, State> {
     }
 
     return (
-      <Box className={ classes.formContainer }>
-        <Form
-          accessToken={ signedToken }
-          contexts={ ["FORM"] }    
-          metaform={ metaform }
-          onSubmit={() => {}}
-          getFieldValue={ this.getFieldValue }
-          setFieldValue={ this.setFieldValue }
-          onValidationErrorsChange={ this.onValidationErrorsChange }
-        />
+      <Box className={ classes.formBackgroundContainer }>
+        <Box className={ classes.formContainer }>
+          <Form
+            accessToken={ signedToken }
+            contexts={ ["FORM"] }    
+            metaform={ metaform }
+            onSubmit={() => {}}
+            getFieldValue={ this.getFieldValue }
+            setFieldValue={ this.setFieldValue }
+            onValidationErrorsChange={ this.onValidationErrorsChange }
+          />
+        </Box>
       </Box>
     );
   }

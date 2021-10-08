@@ -18,6 +18,10 @@ import {
     FieldRuleFromJSON,
     FieldRuleFromJSONTyped,
     FieldRuleToJSON,
+    MetaformFieldAutocomplete,
+    MetaformFieldAutocompleteFromJSON,
+    MetaformFieldAutocompleteFromJSONTyped,
+    MetaformFieldAutocompleteToJSON,
     MetaformFieldFlags,
     MetaformFieldFlagsFromJSON,
     MetaformFieldFlagsFromJSONTyped,
@@ -30,6 +34,10 @@ import {
     MetaformFieldPermissionContextsFromJSON,
     MetaformFieldPermissionContextsFromJSONTyped,
     MetaformFieldPermissionContextsToJSON,
+    MetaformFieldSource,
+    MetaformFieldSourceFromJSON,
+    MetaformFieldSourceFromJSONTyped,
+    MetaformFieldSourceToJSON,
     MetaformFieldType,
     MetaformFieldTypeFromJSON,
     MetaformFieldTypeFromJSONTyped,
@@ -161,7 +169,13 @@ export interface MetaformField {
      */
     options?: Array<MetaformFieldOption>;
     /**
-     * Source url for autocomplete and autocomplete-multiple fields
+     * 
+     * @type {MetaformFieldAutocomplete}
+     * @memberof MetaformField
+     */
+    autocomplete?: MetaformFieldAutocomplete;
+    /**
+     * Source url for autocomplete and autocomplete-multiple fields. This field is deprecated, use autocomplete instead.
      * @type {string}
      * @memberof MetaformField
      */
@@ -226,6 +240,12 @@ export interface MetaformField {
      * @memberof MetaformField
      */
     html?: string;
+    /**
+     * 
+     * @type {MetaformFieldSource}
+     * @memberof MetaformField
+     */
+    source?: MetaformFieldSource;
 }
 
 export function MetaformFieldFromJSON(json: any): MetaformField {
@@ -257,6 +277,7 @@ export function MetaformFieldFromJSONTyped(json: any, ignoreDiscriminator: boole
         'checked': !exists(json, 'checked') ? undefined : json['checked'],
         'printable': !exists(json, 'printable') ? undefined : json['printable'],
         'options': !exists(json, 'options') ? undefined : ((json['options'] as Array<any>).map(MetaformFieldOptionFromJSON)),
+        'autocomplete': !exists(json, 'autocomplete') ? undefined : MetaformFieldAutocompleteFromJSON(json['autocomplete']),
         'sourceUrl': !exists(json, 'source-url') ? undefined : json['source-url'],
         'uploadUrl': !exists(json, 'upload-url') ? undefined : json['upload-url'],
         'singleFile': !exists(json, 'single-file') ? undefined : json['single-file'],
@@ -268,6 +289,7 @@ export function MetaformFieldFromJSONTyped(json: any, ignoreDiscriminator: boole
         'src': !exists(json, 'src') ? undefined : json['src'],
         'text': !exists(json, 'text') ? undefined : json['text'],
         'html': !exists(json, 'html') ? undefined : json['html'],
+        'source': !exists(json, 'source') ? undefined : MetaformFieldSourceFromJSON(json['source']),
     };
 }
 
@@ -299,6 +321,7 @@ export function MetaformFieldToJSON(value?: MetaformField | null): any {
         'checked': value.checked,
         'printable': value.printable,
         'options': value.options === undefined ? undefined : ((value.options as Array<any>).map(MetaformFieldOptionToJSON)),
+        'autocomplete': MetaformFieldAutocompleteToJSON(value.autocomplete),
         'source-url': value.sourceUrl,
         'upload-url': value.uploadUrl,
         'single-file': value.singleFile,
@@ -310,6 +333,7 @@ export function MetaformFieldToJSON(value?: MetaformField | null): any {
         'src': value.src,
         'text': value.text,
         'html': value.html,
+        'source': MetaformFieldSourceToJSON(value.source),
     };
 }
 

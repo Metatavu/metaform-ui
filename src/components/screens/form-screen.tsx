@@ -43,7 +43,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   loading: boolean;
   saving: boolean;
   autosaving: boolean;
@@ -183,7 +183,7 @@ export class FormScreen extends React.Component<Props, State> {
         loading: false
       });
     } catch (e) {
-      if (e.status === 403 && !signedToken) {
+      if (e instanceof Response && e.status === 403 && !signedToken) {
         this.setState({
           redirectTo: "/protected/form"
         });

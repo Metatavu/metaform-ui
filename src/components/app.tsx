@@ -4,10 +4,9 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { ReduxState, ReduxActions, rootReducer } from "../store";
 
-import { ThemeProvider } from "@material-ui/styles";
 import metaformTheme from "../styles/theme";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@material-ui/core";
 import strings from "../localization/strings";
 import AnonymousTokenRefresh from "./containers/anonymous-token-refresh";
 import SignedTokenRefresh from "./containers/signed-token-refresh";

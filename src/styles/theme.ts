@@ -67,10 +67,6 @@ export default createMuiTheme({
       elevation: 0,
       position: "fixed"
     },
-    MuiTextField: {
-      variant: "outlined",
-      size: "small"
-    }
   },
 
   overrides: {

@@ -24,11 +24,11 @@ export enum MetaformTableColumnType {
     Email = 'email',
     Autocomplete = 'autocomplete',
     Number = 'number',
-    Enum = 'enum',
     Date = 'date',
     Time = 'time',
     Html = 'html',
-    Button = 'button'
+    Button = 'button',
+    Enum = 'enum'
 }
 
 export function MetaformTableColumnTypeFromJSON(json: any): MetaformTableColumnType {
