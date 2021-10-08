@@ -1,12 +1,12 @@
 import * as React from "react";
-
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
+import styles from "../../styles/form";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Typography, WithStyles } from "@material-ui/core";
 import strings from "../../localization/strings";
 
 /**
  * Interface representing component properties
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   onConfirm: () => void;
   dialogOpen: boolean;
 }
@@ -37,21 +37,25 @@ export default class ConfirmAuthRedirectDialog extends React.Component<Props, St
    * Component render method
    */
   public render() {
-    const { dialogOpen, onConfirm } = this.props;
+    const { dialogOpen, onConfirm, classes } = this.props;
     return (
       <Dialog
         open={ dialogOpen }
-        maxWidth="xl"
-        BackdropProps={{ style: { backgroundColor: "#fff", paddingBottom:"100px" } }}
+        BackdropProps={{ style:{ backgroundColor: "#fff", paddingBottom:"100px" }} }
       >
-        <DialogTitle disableTypography id="alert-dialog-title">{ strings.authRedirectDialog.title }</DialogTitle>
+        <DialogTitle disableTypography style={{ fontWeight: 700, paddingBottom: 0 }} id="alert-dialog-title">{ strings.authRedirectDialog.title }</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            { strings.authRedirectDialog.contentText }
+            <Typography style={{ fontSize:14, lineHeight:1.5 }}>
+              { strings.authRedirectDialog.contentTextPt1 }
+            </Typography>
+            <Typography style={{ fontSize:14, lineHeight:1 }}>
+              { strings.authRedirectDialog.contentTextPt2 }
+            </Typography>
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={ onConfirm } color="primary">
+        <DialogActions style={{ padding:0 }}>
+          <Button variant="contained" onClick={ onConfirm } style={{ background: "#2f80ed", color:"#fff", borderRadius:"30px", width:"120px", margin:"0px 20px 20px 0px" }} >
             { strings.authRedirectDialog.buttonText }
           </Button>
         </DialogActions>

@@ -112,7 +112,8 @@ export interface IStrings extends LocalizedStringsMethods {
 
   authRedirectDialog: {
     title: string;
-    contentText: string;
+    contentTextPt1: string;
+    contentTextPt2: string;
     buttonText: string;
   },
 

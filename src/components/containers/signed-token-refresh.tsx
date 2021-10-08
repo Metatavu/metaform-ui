@@ -10,11 +10,13 @@ import { KeycloakInstance } from "keycloak-js";
 import Keycloak from "keycloak-js";
 import Config from "../../config";
 import ConfirmAuthRedirectDialog from "../generic/auth-redirect-dialog";
+import { WithStyles } from "@material-ui/core";
+import styles from "../../styles/form";
 
 /**
  * Component props
  */
-interface Props {
+interface Props extends WithStyles<typeof styles>{
   loginMode: LoginMode;
   signedToken?: AccessToken;
   onSignedLogin: (keycloak: KeycloakInstance, signedToken: AccessToken) => void;
@@ -92,15 +94,18 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
+    const { children, signedToken, classes } = this.props;
+    const { dialogOpen, error } = this.state;
+
     if(this.props.loginMode === "USER"){
-      return <ConfirmAuthRedirectDialog onConfirm={ this.onConfirm } dialogOpen={ this.state.dialogOpen } />
+      return <ConfirmAuthRedirectDialog classes={ classes } onConfirm={ this.onConfirm } dialogOpen={ dialogOpen } />
     }
     
     if (this.state.error) {
-      return <ErrorDialog error={ this.state.error } onClose={ () => this.setState({ error: undefined }) } />;
+      return <ErrorDialog error={ error } onClose={ () => this.setState({ error: undefined }) } />;
     }
 
-    return this.props.signedToken ? this.props.children : null;
+    return signedToken ? children : null;
   }
 
   /**

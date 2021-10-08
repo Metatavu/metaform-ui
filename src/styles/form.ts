@@ -70,6 +70,13 @@ export default createStyles({
         background: "#0069d9",
       }
     }
+  },
+
+  authRedirectDialogButton: {
+    background: "#2f80ed",
+    color:"#fff",
+    borderRadius:"30px",
+    width:"120px"
   }
 
 });

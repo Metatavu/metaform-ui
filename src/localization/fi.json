@@ -92,8 +92,9 @@
   },
 
   "authRedirectDialog": {
-    "title": "Metaform-tunnistautuminen",
-    "contentText": "Siirryt tunnistautumispalveluun...",
+    "title": "Tunnistautuminen",
+    "contentTextPt1": "Lomakkeen käyttö vaatii vahvaa tunnistautumista.",
+    "contentTextPt2": "Siirry eteenpäin tunnistautumispalveluun.",
     "buttonText": "Ok"
   },
   
