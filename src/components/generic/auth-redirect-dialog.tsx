@@ -37,7 +37,7 @@ export default class ConfirmAuthRedirectDialog extends React.Component<Props, St
    * Component render method
    */
   public render() {
-    const { dialogOpen, onConfirm, classes } = this.props;
+    const { dialogOpen, onConfirm } = this.props;
     return (
       <Dialog
         open={ dialogOpen }

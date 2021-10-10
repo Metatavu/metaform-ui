@@ -94,7 +94,8 @@
 
   "authRedirectDialog": {
     "title": "Metaform authentication",
-    "contentText": "You'll be redirected to the authentication service...",
+    "contentTextPt1": "Filling the form requires strong authentication.",
+    "contentTextPt2": "Continue to authentication service.",
     "buttonText": "Ok"
   },
 
