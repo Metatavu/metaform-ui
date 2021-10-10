@@ -14,7 +14,8 @@ import { AnonymousLoginConfig, LoginMode } from "../types";
   REACT_APP_KEYCLOAK_ANONYMOUS_USER: str({ default: "" }),
   REACT_APP_KEYCLOAK_ANONYMOUS_PASS: str({ default: "" }),
   REACT_APP_KEYCLOAK_USER_IDPHINT: str({ default: undefined }),
-  REACT_APP_KEYCLOAK_ADMIN_IDPHINT: str({ default: undefined })
+  REACT_APP_KEYCLOAK_ADMIN_IDPHINT: str({ default: undefined }),
+  REACT_APP_CORS_PROXY: str()
 });
 
 // REACT_APP_API_BASE_PATH=https://essote-api.metaform.fi/v1
@@ -91,6 +92,15 @@ export default class Config {
     return {
       idpHint: idpHint
     };
+  }
+
+  /**
+   * Returns address for CORS proxy service
+   * 
+   * @returns address for CORS proxy service
+   */
+  public static getCorsProxy(): String {
+    return env.REACT_APP_CORS_PROXY;
   }
 
 }

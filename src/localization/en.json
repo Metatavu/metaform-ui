@@ -2,7 +2,8 @@
   "generic": {
     "loading": "Loading...",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loadingAutoCompleteOptions": "Loading options..."
   },
 
   "form": {

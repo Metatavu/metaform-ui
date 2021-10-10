@@ -38,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   value:string;
   readOnly: boolean;
   isLoading: boolean;

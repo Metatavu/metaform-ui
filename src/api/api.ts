@@ -63,7 +63,7 @@ export default class Api {
   private static getConfiguration(accessToken: AccessToken) {
     return new Configuration({
       basePath: process.env.REACT_APP_API_BASE_PATH,
-      apiKey: `Bearer ${accessToken.access_token}`
+      accessToken: accessToken.access_token
     });
   }
 

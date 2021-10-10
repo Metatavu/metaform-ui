@@ -1,4 +1,5 @@
 import { createStyles } from "@material-ui/core";
+import theme from "./theme";
 
 export default createStyles({
 
@@ -68,15 +69,36 @@ export default createStyles({
 
       "& input[type='submit']:hover": {
         background: "#0069d9",
+      },
+
+      "& .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']": {
+        padding: 0
+      },
+
+      "& .MuiAutocomplete-input:first-child": {
+        paddingLeft: "10px"
+      },
+
+      "& .MuiAutocomplete-endAdornment": {
+        background: "#fff"
       }
     }
   },
 
-  authRedirectDialogButton: {
-    background: "#2f80ed",
-    color:"#fff",
-    borderRadius:"30px",
-    width:"120px"
-  }
-
+  autoCompleteLoader: {
+    paddingTop: "10px",
+    paddingLeft: "20px",
+    "& p": {
+      fontSize: "0.875rem",
+      color: "#6c757d",
+      float: "right",
+      marginRight: "150px",
+      [theme.breakpoints.down('sm')]: {
+        marginRight: "320px",
+        "& MuiCircularProgress-root": {
+          paddingLeft: "40px"
+        }
+      },
+    },
+  },
 });

@@ -81,12 +81,16 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/exportThemes/{exportThemeId}/files`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))),
+            path: `/v1/exportThemes/{exportThemeId}/files`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -122,12 +126,16 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
+            path: `/v1/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -161,12 +169,16 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
+            path: `/v1/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -197,12 +209,16 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/exportThemes/{exportThemeId}/files`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))),
+            path: `/v1/exportThemes/{exportThemeId}/files`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -243,12 +259,16 @@ export class ExportThemeFilesApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json;charset=utf-8';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // bearer authentication
-        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = typeof token === 'function' ? token("bearer", []) : token;
 
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
-            path: `/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
+            path: `/v1/exportThemes/{exportThemeId}/files/{exportThemeFileId}`.replace(`{${"exportThemeId"}}`, encodeURIComponent(String(requestParameters.exportThemeId))).replace(`{${"exportThemeFileId"}}`, encodeURIComponent(String(requestParameters.exportThemeFileId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

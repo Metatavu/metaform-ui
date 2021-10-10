@@ -59,8 +59,8 @@ export type FileFieldValue = {
 export type TableFieldCellValue = string | number | null;
 
 /**
-* Interface for values in single row
-*/
+ * Interface for values in single row
+ */
 export interface TableFieldRowValue { 
   [key: string]: TableFieldCellValue;
 };
@@ -84,6 +84,23 @@ export enum EditorNavigationLinks {
  */
 export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-o" | "add";
 
-/** LoginMode */
-
+/**
+ * LoginMode 
+ */
 export type LoginMode = "USER" | "ADMIN";
+
+/**
+ * Autocomplete item
+ */
+export type AutocompleteItem = { id: string, [key: string]: string };
+
+/**
+ * Values for filtering scopes
+ */
+export enum autocompleteErrorMessages {
+  MISSING_OPTIONS = "Code server autocomplete not configured",
+  MISSING_CODE_SERVER_BASE_URL = "Code server autocomplete missing codeServerBaseUrl",
+  MISSING_CODE_SERVER_CLASSIFICATION_ID = "Code server autocomplete missing codeServerClassificationId",
+  MISSING_CODE_SERVER_PARENT_CONCEPT_CODE_ID = "Code server autocomplete missing codeServerParentConceptCodeId",
+  MISSING_AUTO_COMPLETE = "Autocomplete not configured"
+}

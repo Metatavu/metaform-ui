@@ -17,7 +17,7 @@ export interface SnackbarMessage {
  */
 interface Props extends WithStyles<typeof styles> {
   snackbarMessage?: SnackbarMessage;
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   redirectTo?: string;
   loading?: boolean;
   loadMessage?: string;
