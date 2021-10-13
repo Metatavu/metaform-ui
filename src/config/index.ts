@@ -87,7 +87,7 @@ export default class Config {
    * @returns signed Keycloak login options
    */
   public static getSignedKeycloakLoginOptions(loginMode: LoginMode): KeycloakLoginOptions {
-    const idpHint = loginMode == "ADMIN" ? env.REACT_APP_KEYCLOAK_ADMIN_IDPHINT : env.REACT_APP_KEYCLOAK_USER_IDPHINT;
+    const idpHint = loginMode === "ADMIN" ? env.REACT_APP_KEYCLOAK_ADMIN_IDPHINT : env.REACT_APP_KEYCLOAK_USER_IDPHINT;
 
     return {
       idpHint: idpHint

@@ -128,7 +128,7 @@ class App extends React.Component<Props, State> {
                   path="/admin/edit-form/preview"
                   exact={ true }
                   render={({ history }) => (
-                    <SignedTokenRefresh>
+                    <SignedTokenRefresh loginMode="ADMIN">
                       <ThemeProvider theme={theme}>
                         <PreviewScreen
                           history={ history }
@@ -142,7 +142,7 @@ class App extends React.Component<Props, State> {
                   exact={ true }
                   render={({ history, match }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <AdminInviteScreen                            
+                      <AdminInviteScreen
                         history={ history }
                       />
                     </SignedTokenRefresh>
