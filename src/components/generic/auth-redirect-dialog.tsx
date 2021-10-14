@@ -30,7 +30,7 @@ export default class ConfirmAuthRedirectDialog extends React.Component<Props, St
    */
   constructor(props: Props) {
     super(props);
-    this.state = { };
+    this.state = {};
   }
 
   /** 
