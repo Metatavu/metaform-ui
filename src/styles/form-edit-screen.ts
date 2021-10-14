@@ -39,7 +39,25 @@ export default createStyles({
       boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
     },
     "&.draggingOver": {
-      border: `2px dashed ${theme.palette.primary.main}`,
+      backgroundColor: "#fff",
+      animationName: "$border-dance",
+      animationDuration: "3s",
+      animationIterationCount: "infinite",
+      animationTimingFunction: "linear",
+      background: `linear-gradient(90deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(90deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(0deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(0deg, ${theme.palette.primary.main} 50%, #FFF 50%)`,
+      backgroundRepeat: "repeat-x, repeat-x, repeat-y, repeat-y",
+      backgroundSize: "15px 3px, 15px 3px, 3px 15px, 3px 15px",
+      backgroundPosition: "0px 0px, 100% 100%, 0px 100%, 100% 0px",
+      boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
+    }
+  },
+
+  "@keyframes border-dance": {
+    "0%": {
+      backgroundPosition: "0px 0px, 200px 100%, 0px 200px, 100% 0px",
+    },
+    "100%": {
+      backgroundPosition: "200px 0px, 0px 100%, 0px 0px, 100% 200px"
     }
   },
 
