@@ -41,7 +41,7 @@ export default class ConfirmAuthRedirectDialog extends React.Component<Props, St
     
     return (
       <Dialog
-        open={ true }
+        open
         BackdropProps={{ style:{ backgroundColor: "#fff", paddingBottom:"100px" }} }
       >
         <DialogTitle disableTypography style={{ fontWeight: 700, paddingBottom: 10 }}>{ strings.authRedirectDialog.title }</DialogTitle>
