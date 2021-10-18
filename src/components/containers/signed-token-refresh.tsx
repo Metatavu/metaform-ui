@@ -90,21 +90,21 @@ class SignedTokenRefresh extends React.Component<Props, State> {
     const { children, signedToken, classes, loginMode } = this.props;
     const { error } = this.state;
 
+    if (error) {
+      return (
+        <ErrorDialog
+          error={ error }
+          onClose={ () => this.setState({ error: undefined }) }
+        />
+      );
+    }
+
     if (loginMode === "USER" && signedToken === null) {
       return (
         <ConfirmAuthRedirectDialog
           classes={ classes }
           onConfirm={ () => this.keycloak.login(Config.getSignedKeycloakLoginOptions(loginMode)) }
           dialogOpen
-        />
-      );
-    }
-    
-    if (error) {
-      return (
-        <ErrorDialog
-          error={ error }
-          onClose={ () => this.setState({ error: undefined }) }
         />
       );
     }
