@@ -53,13 +53,18 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    * Component did mount life cycle event
    */
   public componentDidMount = async () => {
-    const { onSignedLogin } = this.props;
+    const { loginMode, onSignedLogin } = this.props;
 
     try {
       const auth = await this.keycloakInit();
 
       if (!auth) {
-        onSignedLogin(this.keycloak, null);
+        if (loginMode === "ADMIN") {
+          this.keycloak.login(Config.getSignedKeycloakLoginOptions(loginMode));
+        } else {
+          onSignedLogin(this.keycloak, null);
+        }
+
         return;
       }
 
@@ -135,11 +140,9 @@ class SignedTokenRefresh extends React.Component<Props, State> {
    * Initializes Keycloak client
    */
   private keycloakInit = async () => {
-    const { loginMode } = this.props;
-
     return await this.keycloak.init({
       checkLoginIframe: false,
-      onLoad: loginMode === "ADMIN" ? "login-required" : "check-sso"
+      onLoad: "check-sso"
     })
   }
 
