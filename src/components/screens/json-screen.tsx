@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/json-screen";
 import { History } from "history";
-import { WithStyles, withStyles, Button, Typography, Grid, Drawer, Toolbar } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Typography, Grid } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from '../../types';

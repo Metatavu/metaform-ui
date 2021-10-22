@@ -14,6 +14,11 @@ export interface AccessToken {
 };
 
 /**
+ * Type for signed access token
+ */
+export type SignedToken = AccessToken | null;
+
+/**
  * Interface describing dictionary type
  */
 export interface Dictionary<T> {

@@ -1,13 +1,13 @@
-import { AuthAction } from '../actions/auth';
-import { SIGNED_LOGIN, SIGNED_LOGOUT, ANONYMOUS_LOGIN } from '../constants/actionTypes';
-import { KeycloakInstance } from 'keycloak-js';
-import { AccessToken } from '../types';
+import { AuthAction } from "../actions/auth";
+import { SIGNED_LOGIN, SIGNED_LOGOUT, ANONYMOUS_LOGIN } from "../constants/actionTypes";
+import { KeycloakInstance } from "keycloak-js";
+import { AccessToken, SignedToken } from "../types";
 
 /**
  * Redux auth state
  */
 export interface AuthState {
-  signedToken?: AccessToken;
+  signedToken?: SignedToken;
   anonymousToken?: AccessToken;
   keycloak?: KeycloakInstance;
 }
