@@ -330,7 +330,6 @@ export class FormEditScreen extends React.Component<Props, State> {
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
-            fieldName={ field.name }
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );

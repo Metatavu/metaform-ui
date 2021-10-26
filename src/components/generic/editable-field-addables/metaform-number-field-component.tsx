@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField, withStyles, WithStyles, } from "@material-ui/core";
+import { FormControl, FormLabel, InputLabel, TextField, withStyles, WithStyles, } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";

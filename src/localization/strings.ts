@@ -154,8 +154,8 @@ export interface IStrings extends LocalizedStringsMethods {
     numberFieldMin: string;
     numberFieldMax: string;
     default: {
-      label: string,
-      html: string,
+      label: string;
+      html: string;
       text: string;
       radio: string;
       select: string;
@@ -166,6 +166,20 @@ export interface IStrings extends LocalizedStringsMethods {
       dateTime: string;
       autoComplete: string;
     }
+  }
+
+  addableComponent: {
+    label: string;
+    html: string;
+    text: string;
+    radio: string;
+    select: string;
+    number: string;
+    memo: string;
+    checkList: string;
+    submit: string;
+    dateTime: string;
+    autoComplete: string;
   }
 
 }

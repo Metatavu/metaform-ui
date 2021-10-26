@@ -1,18 +1,16 @@
-import { FormControl, InputLabel, OutlinedInput, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { FormControl, TextField, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import styles from "../../../styles/generics/editable-field-components/metaform-html-field-component";
 
 /**
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field?: MetaformField;
-  fieldId?: string;
-  fieldLabelId?: string;
-  fieldName?: string;
-  onFieldUpdate?: (metaformField: MetaformField) => void;
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -42,24 +40,17 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId } = this.props;
-
-    if (!field) {
-      return (
-        <FormControl variant="outlined">
-          <Typography>
-            { `"${strings.editableFields.default.html}"` }
-          </Typography>
-        </FormControl>
-      );
-    }
+    const {
+      field,
+      fieldId,
+    } = this.props;
 
     return (
-      <FormControl variant="outlined">
-        <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
-        <OutlinedInput
+      <FormControl>
+        <TextField
+          variant="outlined"
           disabled={ field.readonly }
-          label={ strings.editableFields.htmlField }
+          label={ field.name }
           id={ fieldId }
           color="primary"
           value={ field.html }
@@ -76,10 +67,6 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
   */ 
   private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
-
-    if (!onFieldUpdate) {
-      return;
-    }
 
     const updatedField = { 
       ...field 

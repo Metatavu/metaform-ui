@@ -160,6 +160,19 @@
       "dateTime": "dateTime",
       "autoComplete": "autoComplete"
     }
-  }
+  },
 
+  "addableComponent" : {
+    "label": "label",
+    "html": "html",
+    "text": "text",
+    "radio": "radio",
+    "select": "select",
+    "number": "number",
+    "memo": "memo",
+    "checkList": "checkList",
+    "submit": "submit",
+    "dateTime": "dateTime",
+    "autoComplete": "autoComplete"
+  }
 }
