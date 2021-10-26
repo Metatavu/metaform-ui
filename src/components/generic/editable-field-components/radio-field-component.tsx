@@ -8,10 +8,10 @@ import styles from "../../../styles/generics/editable-field-components/metaform-
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field?: MetaformField;
-  fieldId?: string;
-  fieldLabelId?: string;
-  onFieldUpdate?: (metaformField: MetaformField) => void;
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -41,27 +41,22 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId } = this.props;
-
-    if (!field) {
-      return (
-        <FormControl component="fieldset">
-          <FormLabel component="legend">
-            { strings.editableFields.default.label }
-          </FormLabel>
-          <FormControlLabel 
-            control={ <Radio disabled color="primary"/> } 
-            label={ `"${strings.editableFields.default.radio}"` } 
-          />
-        </FormControl>
-      );
-    }
+    const {
+      field,
+      fieldId,
+      fieldLabelId
+    } = this.props;
 
     const options = field.options || [];
 
     return (
       <FormControl component="fieldset">
-        <FormLabel component="legend">{ field.title }</FormLabel>
+        <FormLabel 
+          id={ fieldLabelId }
+          component="legend"
+        >
+          { field.title }
+        </FormLabel>
         <RadioGroup key={ `${ fieldId }-group-container` }>
           { options.map((option, i) =>  this.renderOption(option)) }
         </RadioGroup>

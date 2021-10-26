@@ -7,7 +7,7 @@ import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, Droppa
 import { MetaformFieldType } from "../../../generated/client";
 import strings from "../../../localization/strings";
 import { MetaformTextFieldComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent } from "../editable-field-components";
-import { MetaformHtmlAddable, MetaformNumberFieldAddable } from "../editable-field-addables";
+import { MetaformHtmlAddable, MetaformNumberFieldAddable, MetaformRadioFieldAddable } from "../editable-field-addables";
 
 /**
  * Interface representing component properties
@@ -112,7 +112,7 @@ class ComponentTab extends React.Component<Props, State> {
         );
       case MetaformFieldType.Radio:
         return (
-          <MetaformRadioFieldComponent/>
+          <MetaformRadioFieldAddable/>
         );
       case MetaformFieldType.Submit:
         return (
