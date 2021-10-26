@@ -1,16 +1,15 @@
-import { Button, FormControl, InputLabel, OutlinedInput, FormLabel, WithStyles, withStyles } from "@material-ui/core";
+import { Button, FormControl, WithStyles, withStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import styles from "../../../styles/generics/editable-field-components/metaform-submit-field-component";
 
 /**
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field?: MetaformField;
-  fieldId?: string;
-  onFieldUpdate?: (metaformField: MetaformField) => void;
+  field: MetaformField;
+  fieldId: string;
+  onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
 /**
@@ -45,28 +44,11 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
       fieldId,
     } = this.props;
 
-    if (!field) {
-      return (
-        <FormControl>
-          <FormLabel htmlFor={ fieldId }>
-            { strings.editableFields.default.label }
-          </FormLabel>
-          <Button
-            disabled
-            variant="contained"
-            color="primary"
-          >
-            { `"${strings.editableFields.default.submit}"` }
-          </Button>
-        </FormControl>
-      );
-    }
-
     return ( 
       <FormControl>
-        <InputLabel htmlFor={ fieldId }>{ strings.editableFields.submitFieldText }</InputLabel>
-        <OutlinedInput
-          label={ strings.editableFields.submitFieldText }
+        <TextField
+          variant="outlined"
+          label={ field.name }
           id={ fieldId }
           color="secondary"
           value={ field.text }
@@ -90,10 +72,6 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
-
-    if (!onFieldUpdate) {
-      return;
-    }
 
     const updatedField = {
       ...field 
