@@ -6,8 +6,8 @@ import classNames from "classnames";
 import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from "react-beautiful-dnd";
 import { MetaformFieldType } from "../../../generated/client";
 import strings from "../../../localization/strings";
-import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent } from "../editable-field-components";
-import { MetaformHtmlAddable } from "../editable-field-addables/html-field-addables";
+import { MetaformTextFieldComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent } from "../editable-field-components";
+import { MetaformHtmlAddable, MetaformNumberFieldAddable } from "../editable-field-addables";
 
 /**
  * Interface representing component properties
@@ -120,7 +120,7 @@ class ComponentTab extends React.Component<Props, State> {
         );
       case MetaformFieldType.Number:
         return (
-          <MetaformNumberFieldComponent/>
+          <MetaformNumberFieldAddable/>
         );
       default:
         return (

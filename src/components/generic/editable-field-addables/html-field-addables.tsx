@@ -15,7 +15,7 @@ interface State {
 }
 
 /**
- * Component for Metaform memo field
+ * Component for Metaform html addable
  */
 export class MetaformHtmlAddable extends React.Component<Props, State> {
 
@@ -34,16 +34,13 @@ export class MetaformHtmlAddable extends React.Component<Props, State> {
   /**
    * Component render method
    */
-  public render() {
-
-    return (
-      <FormControl variant="outlined">
-        <Typography>
-          { `"${strings.editableFields.default.html}"` }
-        </Typography>
+  public render = () => (
+    <FormControl variant="outlined">
+      <Typography>
+        { `"${strings.editableFields.default.html}"` }
+      </Typography>
     </FormControl>
-    );
-  }
+  );
 }
 
 export default MetaformHtmlAddable

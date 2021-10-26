@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, InputLabel, TextField, withStyles, WithStyles, } from "@material-ui/core";
+import { FormControl, TextField, withStyles, WithStyles, } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
@@ -8,10 +8,10 @@ import styles from "../../../styles/generics/editable-field-components/metaform-
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field?: MetaformField;
-  fieldId?: string;
-  fieldLabelId?: string;
-  onFieldUpdate?: (metafromfield: MetaformField) => void;
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
+  onFieldUpdate: (metafromfield: MetaformField) => void;
 }
 
 /**
@@ -46,20 +46,6 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
       field, 
       fieldId, 
     } = this.props;
-
-    if (!field) {
-      return (        
-        <FormControl>
-          <FormLabel>{ strings.editableFields.default.label }</FormLabel>
-          <TextField
-            disabled
-            type="number"
-            variant="standard"
-            placeholder={ `"${strings.editableFields.default.number}"` }
-          />
-        </FormControl>
-      );
-    }
 
     const inputProps = {
       min: field.min,
@@ -119,10 +105,6 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   */ 
   private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
-
-    if (!onFieldUpdate) {
-      return;
-    }
 
     const { value, name } = event.target;
 
