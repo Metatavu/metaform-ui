@@ -13,6 +13,7 @@ models/Attachment.ts
 models/AuditLogEntry.ts
 models/AuditLogEntryType.ts
 models/BadRequest.ts
+models/Conflict.ts
 models/Draft.ts
 models/EmailNotification.ts
 models/ExportTheme.ts

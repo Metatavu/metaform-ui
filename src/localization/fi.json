@@ -41,7 +41,8 @@
     "replyDeleteLink": "tästä",
     "confirmDeleteReplyTitle": "Oletko varma?",
     "confirmDeleteReplyText": "Oletko varma, että haluat poistaa vastauksen?",
-    "replyDeleted": "Vastaus on poistettu onnistuneesti!"
+    "replyDeleted": "Vastaus on poistettu onnistuneesti!",
+    "logout": "Kirjaudu ulos"
   },
 
   "adminScreen": {

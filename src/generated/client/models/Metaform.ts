@@ -90,6 +90,12 @@ export interface Metaform {
     title?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Metaform
+     */
+    slug?: string;
+    /**
+     * 
      * @type {Array<MetaformSection>}
      * @memberof Metaform
      */
@@ -127,6 +133,7 @@ export function MetaformFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'allowInvitations': !exists(json, 'allowInvitations') ? undefined : json['allowInvitations'],
         'autosave': !exists(json, 'autosave') ? undefined : json['autosave'],
         'title': !exists(json, 'title') ? undefined : json['title'],
+        'slug': !exists(json, 'slug') ? undefined : json['slug'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(MetaformSectionFromJSON)),
         'filters': !exists(json, 'filters') ? undefined : ((json['filters'] as Array<any>).map(MetaformFilterFromJSON)),
         'scripts': !exists(json, 'scripts') ? undefined : MetaformScriptsFromJSON(json['scripts']),
@@ -151,6 +158,7 @@ export function MetaformToJSON(value?: Metaform | null): any {
         'allowInvitations': value.allowInvitations,
         'autosave': value.autosave,
         'title': value.title,
+        'slug': value.slug,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(MetaformSectionToJSON)),
         'filters': value.filters === undefined ? undefined : ((value.filters as Array<any>).map(MetaformFilterToJSON)),
         'scripts': MetaformScriptsToJSON(value.scripts),

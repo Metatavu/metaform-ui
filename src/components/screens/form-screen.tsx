@@ -13,7 +13,7 @@ import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, Dictionary, SignedToken } from '../../types';
 import Api from "../../api/api";
-import { Metaform, MetaformFieldType, Reply } from "../../generated/client";
+import { Metaform, MetaformFieldSourceType, MetaformFieldType, Reply } from "../../generated/client";
 import { FieldValue } from "metaform-react";
 import Form from "../generic/form";
 import Config from "../../config";
@@ -124,27 +124,9 @@ export class FormScreen extends React.Component<Props, State> {
         ownerKey: ownerKey || undefined
       });
       
-      const formValues = { ...this.state.formValues };
       document.title = metaform.title ? metaform.title : "Metaform";
 
-      metaform.sections?.forEach(section => {        
-        section.fields?.forEach(field => {
-          const { name, _default, options } = field;
-          if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
-            field.uploadUrl = Api.createDefaultUploadUrl()
-          } 
-          if (name) {
-            if (_default) {
-              formValues[name] = _default;
-            } else if (options && options.length) {
-              const selectedOption = options.find(option => option.selected || option.checked);
-              if (selectedOption) {
-                formValues[name] = selectedOption.name;
-              }
-            }
-          }
-        });
-      });
+      const formValues = this.prepareFormValues(metaform);
 
       if (replyId && ownerKey) {
         const reply = await this.findReply(replyId, ownerKey);
@@ -223,6 +205,7 @@ export class FormScreen extends React.Component<Props, State> {
           { this.renderDraftSaved() }
           { this.renderDraftEmailDialog() }
           { this.renderAutosaving() }
+          { this.renderLogoutLink() }
         </div>
       </BasicLayout>
     );
@@ -447,6 +430,68 @@ export class FormScreen extends React.Component<Props, State> {
         open={ this.state.replyDeleteConfirmVisible } 
       />
     );
+  }
+
+  /**
+   * Renders logout link
+   */
+  private renderLogoutLink = () => {
+    const { signedToken } = this.props;
+    if (!signedToken) {
+      return null;
+    }
+
+    return (
+      <div style={{ margin: "auto", width: "70%", maxWidth: "777px" }}>
+        <Link style={{ cursor: "pointer" }} onClick={ this.onLogoutClick }>
+          { strings.formScreen.logout }
+        </Link>
+      </div>
+    );
+  }
+
+  /**
+   * Prepares form values for the form. 
+   *
+   * @param metaform metaform
+   * @returns prepared form values
+   */
+  private prepareFormValues = (metaform: Metaform): Dictionary<FieldValue> => {
+    const { formValues } = this.state;
+    const { keycloak } = this.props;
+    const { tokenParsed } = keycloak;
+    const result = { ...formValues };
+
+    metaform.sections?.forEach(section => {        
+      section.fields?.forEach(field => {
+        const { name, _default, options, source } = field;
+
+        if (field.type === MetaformFieldType.Files && !field.uploadUrl) {
+          field.uploadUrl = Api.createDefaultUploadUrl()
+        }
+
+        if (name) {
+          if (_default) {
+            result[name] = _default;
+          } else if (options && options.length) {
+            const selectedOption = options.find(option => option.selected || option.checked);
+            if (selectedOption) {
+              result[name] = selectedOption.name;
+            }
+          }
+
+          if (source && source.type === MetaformFieldSourceType.AccessToken && tokenParsed) {
+            const accessTokenAttribute = source.options?.accessTokenAttribute;
+            const accessTokenValue = accessTokenAttribute ? (tokenParsed as any)[accessTokenAttribute] : null;
+            if (accessTokenValue) {
+              result[name] = accessTokenValue;
+            }
+          }
+        }
+      });
+    });
+
+    return result;
   }
 
   /**
@@ -1097,6 +1142,14 @@ export class FormScreen extends React.Component<Props, State> {
    */
   private onReplyDeleteConfirmConfirm = () => {
     this.deleteReply();
+  }
+
+  /**
+     * Event handler for logout button click
+     */
+  private onLogoutClick = () => {
+    const { keycloak } = this.props;
+    keycloak.logout();
   }
 
 }

@@ -19,7 +19,6 @@
  */
 export enum MetaformFieldSourceType {
     Default = 'default',
-    ReplyMeta = 'replyMeta',
     AccessToken = 'accessToken',
     Autocomplete = 'autocomplete'
 }
