@@ -41,7 +41,8 @@
     "replyDeleteLink": "here",
     "confirmDeleteReplyTitle": "Are you sure?",
     "confirmDeleteReplyText": "Are you sure that you wish to delete the reply?",
-    "replyDeleted": "The reply has been deleted!"
+    "replyDeleted": "The reply has been deleted!",
+    "logout": "Kirjaudu ulos"
   },
 
   "adminScreen": {

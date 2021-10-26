@@ -48,6 +48,7 @@ export interface IStrings extends LocalizedStringsMethods {
     confirmDeleteReplyTitle: string;
     confirmDeleteReplyText: string;
     replyDeleted: string;
+    logout: string;
   };
 
   adminScreen: {

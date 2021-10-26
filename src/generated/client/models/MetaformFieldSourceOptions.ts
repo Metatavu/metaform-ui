@@ -20,17 +20,23 @@ import { exists, mapValues } from '../runtime';
  */
 export interface MetaformFieldSourceOptions {
     /**
-     * Source autocomplete field name. This option is used only when using autocomplete strategy
+     * Source autocomplete field name. This option is used only when using source type autocomplete
      * @type {string}
      * @memberof MetaformFieldSourceOptions
      */
     autocompleteField?: string;
     /**
-     * Name of the autocomplete item property to be used as field value. This option is used only when using autocomplete strategy
+     * Name of the autocomplete item property to be used as field value. This option is used only when using source type autocomplete
      * @type {string}
      * @memberof MetaformFieldSourceOptions
      */
     autocompleteItemProperty?: string;
+    /**
+     * Name of the user token attribute. This option is used only when using source type accessToken
+     * @type {string}
+     * @memberof MetaformFieldSourceOptions
+     */
+    accessTokenAttribute?: string;
 }
 
 export function MetaformFieldSourceOptionsFromJSON(json: any): MetaformFieldSourceOptions {
@@ -45,6 +51,7 @@ export function MetaformFieldSourceOptionsFromJSONTyped(json: any, ignoreDiscrim
         
         'autocompleteField': !exists(json, 'autocompleteField') ? undefined : json['autocompleteField'],
         'autocompleteItemProperty': !exists(json, 'autocompleteItemProperty') ? undefined : json['autocompleteItemProperty'],
+        'accessTokenAttribute': !exists(json, 'accessTokenAttribute') ? undefined : json['accessTokenAttribute'],
     };
 }
 
@@ -59,6 +66,7 @@ export function MetaformFieldSourceOptionsToJSON(value?: MetaformFieldSourceOpti
         
         'autocompleteField': value.autocompleteField,
         'autocompleteItemProperty': value.autocompleteItemProperty,
+        'accessTokenAttribute': value.accessTokenAttribute,
     };
 }
 
