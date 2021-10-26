@@ -1,7 +1,6 @@
 import { FormControl, FormLabel, TextField, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import { FieldValue } from "../../../types";
 import styles from "../../../styles/generics/editable-field-components/metaform-text-field-component"
 
@@ -9,12 +8,11 @@ import styles from "../../../styles/generics/editable-field-components/metaform-
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  field?: MetaformField;
-  fieldId?: string;
-  fieldLabelId?: string;
-  value?: FieldValue;
+  field: MetaformField;
+  fieldId: string;
+  fieldLabelId: string;
   getFieldValue?: (fieldName: string) => FieldValue;
-  onFieldUpdate?: (metaformField: MetaformField) => void;
+  onFieldUpdate: (metaformField: MetaformField) => void;
   onFocus?: () => void;
 }
 
@@ -49,22 +47,8 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
       field, 
       fieldId, 
       fieldLabelId, 
-      value, 
       onFocus 
     } = this.props;
-
-    if (!field) {
-      return (
-        <FormControl>
-          <FormLabel component="legend">{ strings.editableFields.default.label }</FormLabel>
-          <TextField
-            disabled
-            variant="standard"
-            placeholder={ `"${strings.editableFields.default.text}"` }
-          />
-        </FormControl>
-      );
-    }
 
     return (
       <FormControl>
@@ -78,7 +62,7 @@ export class MetaformTextFieldComponent extends React.Component<Props, State> {
           title={ field.title }
           required={ field.required }
           disabled={ field.readonly }
-          value={ value as string || "" }
+          value={ field.placeholder || "" }
           onFocus={ onFocus }
         />
       </FormControl>

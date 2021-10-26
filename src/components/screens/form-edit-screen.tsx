@@ -321,6 +321,8 @@ export class FormEditScreen extends React.Component<Props, State> {
         return (
           <MetaformTextFieldComponent
             field={ field }
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
