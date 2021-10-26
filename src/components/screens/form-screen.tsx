@@ -459,7 +459,6 @@ export class FormScreen extends React.Component<Props, State> {
   private prepareFormValues = (metaform: Metaform): Dictionary<FieldValue> => {
     const { formValues } = this.state;
     const { keycloak } = this.props;
-    const { tokenParsed } = keycloak;
     const result = { ...formValues };
 
     metaform.sections?.forEach(section => {        
@@ -480,11 +479,15 @@ export class FormScreen extends React.Component<Props, State> {
             }
           }
 
-          if (source && source.type === MetaformFieldSourceType.AccessToken && tokenParsed) {
-            const accessTokenAttribute = source.options?.accessTokenAttribute;
-            const accessTokenValue = accessTokenAttribute ? (tokenParsed as any)[accessTokenAttribute] : null;
-            if (accessTokenValue) {
-              result[name] = accessTokenValue;
+          if (keycloak) {
+            const { tokenParsed } = keycloak;
+
+            if (source && source.type === MetaformFieldSourceType.AccessToken && tokenParsed) {
+              const accessTokenAttribute = source.options?.accessTokenAttribute;
+              const accessTokenValue = accessTokenAttribute ? (tokenParsed as any)[accessTokenAttribute] : null;
+              if (accessTokenValue) {
+                result[name] = accessTokenValue;
+              }
             }
           }
         }
