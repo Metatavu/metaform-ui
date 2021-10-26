@@ -93,12 +93,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const {
-      field,
-      disabled,
-      value,
-      classes
-    } = this.props;
+    const { field, disabled, value } = this.props;
 
     const {
       items,
@@ -114,7 +109,7 @@ export default class FormAutocomplete extends React.Component<Props, State> {
       return this.renderErrorMessage();
     }
 
-    if (loading || !items && !errorMessage) {
+    if (loading || (!items && !errorMessage)) {
       return this.renderLoader();
     }
 

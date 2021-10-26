@@ -11,7 +11,7 @@ import BasicLayout, { SnackbarMessage } from "../layouts/basic-layout";
 
 import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
-import { AccessToken, Dictionary } from '../../types';
+import { AccessToken, Dictionary, SignedToken } from '../../types';
 import Api from "../../api/api";
 import { Metaform, MetaformFieldType, Reply } from "../../generated/client";
 import { FieldValue } from "metaform-react";
@@ -34,7 +34,7 @@ interface Props extends WithStyles<typeof styles> {
   history: History;
   location: Location;
   keycloak: KeycloakInstance;
-  signedToken?: AccessToken;
+  signedToken?: SignedToken;
   anonymousToken?: AccessToken;
 }
 

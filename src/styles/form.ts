@@ -85,6 +85,22 @@ export default createStyles({
     }
   },
 
+  confirmDialogContentText: {
+    lineHeight: 0.4,
+    fontSize: 12
+  },
+
+  confirmDialogButton: {
+    background: "#2f80ed",
+    color:"#fff",
+    borderRadius:"30px",
+    width:"120px",
+    margin:"0px 20px 20px 0px",
+    "&:hover": {
+      background: "rgba(47, 128, 237, 0.7)"
+    }
+  },
+
   autoCompleteLoader: {
     paddingTop: "10px",
     paddingLeft: "20px",

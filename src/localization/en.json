@@ -92,6 +92,13 @@
     "send": "Send"
   },
 
+  "authRedirectDialog": {
+    "title": "Metaform authentication",
+    "contentTextPt1": "Filling the form requires strong authentication.",
+    "contentTextPt2": "Continue to authentication service.",
+    "buttonText": "Ok"
+  },
+
   "errorDialog": {
     "title": "Whoops! Something went wrong",
     "reloadPage": "Try reloading the page.",
