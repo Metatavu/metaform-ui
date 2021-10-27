@@ -35,7 +35,7 @@ export default class MetaformUtils {
    * @param fieldType metaform field type
    * @returns created field type
    */
-  public static metaformDefaultField = (fieldType: MetaformFieldType): MetaformField => {
+  public static createEmptyField = (fieldType: MetaformFieldType): MetaformField => {
     if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
       return {
         title: fieldType.toString(),
