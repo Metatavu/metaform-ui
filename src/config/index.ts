@@ -15,15 +15,23 @@ import { AnonymousLoginConfig, LoginMode } from "../types";
   REACT_APP_KEYCLOAK_ANONYMOUS_PASS: str({ default: "" }),
   REACT_APP_KEYCLOAK_USER_IDPHINT: str({ default: undefined }),
   REACT_APP_KEYCLOAK_ADMIN_IDPHINT: str({ default: undefined }),
-  REACT_APP_CORS_PROXY: str()
+  REACT_APP_CORS_PROXY: str(),
+  REACT_APP_API_BASE_PATH: url()
 });
-
-// REACT_APP_API_BASE_PATH=https://essote-api.metaform.fi/v1
 
 /**
  * Helper class for handling configurations
  */
 export default class Config {
+
+  /**
+   * Returns API base path
+   * 
+   * @returns API base path
+   */
+  public static getApiBasePath = () => {
+    return env.REACT_APP_API_BASE_PATH;
+  }
 
   /**
    * Returns used realm
