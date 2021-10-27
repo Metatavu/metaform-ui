@@ -519,7 +519,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private onFieldAdd = (fieldType: MetaformFieldType, droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
-    const defaultField = MetaformUtils.metaformDefaultField(fieldType);
+    const defaultField = MetaformUtils.createEmptyField(fieldType);
     const sectionId = parseInt(droppableDestination.droppableId);
     const fieldId = droppableDestination.index;
 
