@@ -11,7 +11,7 @@ import { KeycloakInstance } from "keycloak-js";
 // eslint-disable-next-line max-len
 import { AccessToken, EditorNavigationLinks } from "../../types";
 import Api from "../../api/api";
-import { Metaform, MetaformField, MetaformSection, MetaformFieldType, MetaformsApi } from "../../generated/client";
+import { Metaform, MetaformField, MetaformSection, MetaformFieldType } from "../../generated/client";
 import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
