@@ -38,7 +38,7 @@ export default class MetaformUtils {
   public static createEmptyField = (fieldType: MetaformFieldType): MetaformField => {
     if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
       return {
-        title: fieldType.toString(),
+        title: fieldType,
         type: fieldType,
         options: [
           {
