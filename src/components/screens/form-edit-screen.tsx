@@ -643,7 +643,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for section delete click
+   * Event handler for field delete click
    * 
    * @param sectionIndex section index
    * @param fieldIndex field index
