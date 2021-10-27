@@ -1,7 +1,6 @@
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField, MetaformFieldOption } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import styles from "../../../styles/generics/editable-field-components/metaform-radio-field-component";
 
 /**
