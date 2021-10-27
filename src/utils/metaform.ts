@@ -33,7 +33,7 @@ export default class MetaformUtils {
    * Create empty field for given field type
    * 
    * @param fieldType metaform field type
-   * @returns created field type
+   * @returns created field
    */
   public static createEmptyField = (fieldType: MetaformFieldType): MetaformField => {
     if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
