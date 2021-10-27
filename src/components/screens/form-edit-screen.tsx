@@ -220,7 +220,7 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <Draggable 
-        draggableId={ `section-${sectionIndex.toString()}` } 
+        draggableId={ `section-${sectionIndex}` } 
         index={ sectionIndex } 
         isDragDisabled={ selectedSectionIndex !== sectionIndex }
       >
@@ -485,18 +485,21 @@ export class FormEditScreen extends React.Component<Props, State> {
       if (destination.droppableId !== "sectionList") {
         return;
       }
+
       this.onSectionMove(source, destination);
     // from section
     } else if (draggableId.startsWith("field")) {
       if (isNaN(parseInt(destination.droppableId))) {
         return;
       }
+
       this.onSectionFieldMove(source, destination);
     // from component list
     } else if (source.droppableId === "componentList") {
       if (isNaN(parseInt(destination.droppableId))) {
         return;
       }
+
       this.onFieldAdd(
         draggableId as MetaformFieldType,
         source,
@@ -519,7 +522,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private onFieldAdd = (fieldType: MetaformFieldType, droppableSource: DraggableLocation, droppableDestination: DraggableLocation) => {
     const { metaform, onSetMetaform } = this.props;
-    const defaultField = MetaformUtils.metaformDefaultField(fieldType);
+    const defaultField = MetaformUtils.createEmptyField(fieldType);
     const sectionId = parseInt(droppableDestination.droppableId);
     const fieldId = droppableDestination.index;
 
@@ -566,7 +569,6 @@ export class FormEditScreen extends React.Component<Props, State> {
     const draggedSection = updatedMetaform.sections[originSectionIndex];
     updatedMetaform.sections.splice(originSectionIndex, 1);
     updatedMetaform.sections.splice(destinationSectionIndex, 0, draggedSection);
-
 
     onSetMetaform(updatedMetaform);
     this.setState({
@@ -761,7 +763,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   private onAddNewSectionClick = () => {
     const { metaform, onSetMetaform } = this.props;
 
-    const createdSection = MetaformUtils.metaformDefaultSection();
+    const createdSection = MetaformUtils.createEmptySection();
     const updatedMetaform = { ...metaform } as Metaform;
 
     if (!updatedMetaform.sections) {

@@ -30,15 +30,15 @@ export default class MetaformUtils {
   }
 
   /**
-   * Create a default field with field Type
+   * Create empty field for given field type
    * 
    * @param fieldType metaform field type
-   * @returns created field type
+   * @returns created field
    */
-  public static metaformDefaultField = (fieldType: MetaformFieldType): MetaformField => {
+  public static createEmptyField = (fieldType: MetaformFieldType): MetaformField => {
     if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
       return {
-        title: fieldType.toString(),
+        title: fieldType,
         type: fieldType,
         options: [
           {
@@ -50,18 +50,18 @@ export default class MetaformUtils {
     }
 
     return {
-      name: fieldType.toString(),
-      title: fieldType.toString(),
+      name: fieldType,
+      title: fieldType,
       type: fieldType
     } 
   }
 
   /**
-   * Convert a empty section
+   * Create an empty section
    * 
    * @returns created section 
    */
-  public static metaformDefaultSection = (): MetaformSection => {
+  public static createEmptySection = (): MetaformSection => {
     return {
       title: "Section",
       fields: []
