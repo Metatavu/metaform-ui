@@ -54,6 +54,8 @@ interface State {
  * Component for editing Metaform
  */
 export class FormEditScreen extends React.Component<Props, State> {
+  editorRef: React.RefObject<HTMLDivElement>;
+
   /**
    * Constructor
    *
@@ -70,6 +72,8 @@ export class FormEditScreen extends React.Component<Props, State> {
       leftDrawerTabIndex: 0,
       rightDrawerTabIndex: 0
     };
+
+    this.editorRef = React.createRef();
   }
 
   /**
@@ -163,7 +167,7 @@ export class FormEditScreen extends React.Component<Props, State> {
     }
 
     return (
-      <Box className={ classes.formEditor }>
+      <div className={ classes.formEditor } ref={ this.editorRef }>
         { this.renderMainHeader() }
         <Droppable droppableId={ "sectionList" } isDropDisabled={ !draggingSection }>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
@@ -184,7 +188,7 @@ export class FormEditScreen extends React.Component<Props, State> {
             { strings.formEditScreen.addNewSection }
           </Typography>
         </Button>
-      </Box>
+      </div>
     );
   }
 
@@ -786,15 +790,12 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Event handler for empty space click
    */
   private onGlobalClick = (event: MouseEvent) => {
-    const eventHtml =  event.target as HTMLElement;
-    eventHtml.classList.forEach(className => {
-      if (className.startsWith("FormEditScreen-root")) {
-        this.setState({
-          selectedFieldIndex: undefined,
-          selectedSectionIndex: undefined
-        })
-      }
-    })
+    if (this.editorRef && this.editorRef.current && !this.editorRef.current.contains(event.target as Node)) {
+      this.setState({
+        selectedFieldIndex: undefined,
+        selectedSectionIndex: undefined
+      });
+    }
   }
 
   /**
@@ -812,7 +813,6 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Returns field label's id
    * 
    * @param field metaform field
-   *
    * @returns field label's id 
    */
   private getFieldLabelId = (field : MetaformField) => {
