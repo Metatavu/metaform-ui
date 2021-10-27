@@ -220,7 +220,7 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <Draggable 
-        draggableId={ `section-${sectionIndex.toString()}` } 
+        draggableId={ `section-${sectionIndex}` } 
         index={ sectionIndex } 
         isDragDisabled={ selectedSectionIndex !== sectionIndex }
       >
