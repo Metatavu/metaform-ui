@@ -485,6 +485,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       if (destination.droppableId !== "sectionList") {
         return;
       }
+
       this.onSectionMove(source, destination);
     // from section
     } else if (draggableId.startsWith("field")) {
