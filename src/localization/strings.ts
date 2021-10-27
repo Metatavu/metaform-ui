@@ -147,25 +147,9 @@ export interface IStrings extends LocalizedStringsMethods {
   },
 
   editableFields: {
-    htmlField: string;
-    submitFieldText: string;
-    radioFieldText: string;
     numberField: string;
     numberFieldMin: string;
     numberFieldMax: string;
-    default: {
-      label: string;
-      html: string;
-      text: string;
-      radio: string;
-      select: string;
-      number: string;
-      memo: string;
-      checkList: string;
-      submit: string;
-      dateTime: string;
-      autoComplete: string;
-    }
   }
 
   addableComponent: {
@@ -179,7 +163,7 @@ export interface IStrings extends LocalizedStringsMethods {
     checkList: string;
     submit: string;
     dateTime: string;
-    autoComplete: string;
+    autocomplete: string;
   }
 
 }

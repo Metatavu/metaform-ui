@@ -37,7 +37,7 @@ export class MetaformHtmlAddable extends React.Component<Props, State> {
   public render = () => (
     <FormControl variant="outlined">
       <Typography>
-        { `"${strings.editableFields.default.html}"` }
+        { `"${strings.addableComponent.html}"` }
       </Typography>
     </FormControl>
   );

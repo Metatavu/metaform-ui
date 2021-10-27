@@ -141,25 +141,9 @@
   },
 
   "editableFields": {
-    "htmlField": "Html-sisältö",
-    "submitFieldText": "Lähetä-napin teksti",
-    "radioFieldText": "Radiokentän teksti",
     "numberField": "Numerokenttä",
     "numberFieldMin": "Aseta minimiarvo",
-    "numberFieldMax": "Aseta maksimiarvo",
-    "default": {
-      "label": "label",
-      "html": "html",
-      "text": "text",
-      "radio": "radio",
-      "select": "select",
-      "number": "number",
-      "memo": "memo",
-      "checkList": "checkList",
-      "submit": "submit",
-      "dateTime": "dateTime",
-      "autoComplete": "autoComplete"
-    }
+    "numberFieldMax": "Aseta maksimiarvo"
   },
 
   "addableComponent" : {
@@ -173,6 +157,6 @@
     "checkList": "checkList",
     "submit": "submit",
     "dateTime": "dateTime",
-    "autoComplete": "autoComplete"
+    "autocomplete": "autocomplete"
   }
 }

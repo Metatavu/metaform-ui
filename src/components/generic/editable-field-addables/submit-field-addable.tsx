@@ -37,13 +37,13 @@ export class MetaformSubmitFieldAddable extends React.Component<Props, State> {
   public render = () => (
     <FormControl>
       <FormLabel>
-        { strings.editableFields.default.label }
+        { strings.addableComponent.label }
       </FormLabel>
       <Button
         variant="contained"
         color="primary"
       >
-        { `"${strings.editableFields.default.submit}"` }
+        { `"${strings.addableComponent.submit}"` }
       </Button>
     </FormControl>
   );

@@ -114,6 +114,13 @@ export class FormEditScreen extends React.Component<Props, State> {
   };
 
   /**
+   * Component will unmount life cycle event
+   */
+  public componentWillUnmount = async () => {
+    document.removeEventListener("click", this.onGlobalClick, false)
+  };
+
+  /**
    * Component render method
    */
   public render = () => {

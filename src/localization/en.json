@@ -141,25 +141,9 @@
   },
 
   "editableFields": {
-    "htmlField": "Html content",
-    "submitFieldText": "Submit button text",
-    "radioFieldText": "Radio field text",
     "numberField": "Number field",
     "numberFieldMin": "Set min value",
-    "numberFieldMax": "Set max value",
-    "default": {
-      "label": "label",
-      "html": "html",
-      "text": "text",
-      "radio": "radio",
-      "select": "select",
-      "number": "number",
-      "memo": "memo",
-      "checkList": "checkList",
-      "submit": "submit",
-      "dateTime": "dateTime",
-      "autoComplete": "autoComplete"
-    }
+    "numberFieldMax": "Set max value"
   },
 
   "addableComponent" : {
@@ -173,6 +157,6 @@
     "checkList": "checkList",
     "submit": "submit",
     "dateTime": "dateTime",
-    "autoComplete": "autoComplete"
+    "autocomplete": "autocomplete"
   }
 }
