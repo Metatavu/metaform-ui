@@ -570,7 +570,6 @@ export class FormEditScreen extends React.Component<Props, State> {
     updatedMetaform.sections.splice(originSectionIndex, 1);
     updatedMetaform.sections.splice(destinationSectionIndex, 0, draggedSection);
 
-
     onSetMetaform(updatedMetaform);
     this.setState({
       selectedSectionIndex: destinationSectionIndex
