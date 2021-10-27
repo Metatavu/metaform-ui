@@ -499,6 +499,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       if (isNaN(parseInt(destination.droppableId))) {
         return;
       }
+
       this.onFieldAdd(
         draggableId as MetaformFieldType,
         source,
