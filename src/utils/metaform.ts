@@ -61,7 +61,7 @@ export default class MetaformUtils {
    * 
    * @returns created section 
    */
-  public static metaformDefaultSection = (): MetaformSection => {
+  public static createEmptySection = (): MetaformSection => {
     return {
       title: "Section",
       fields: []
