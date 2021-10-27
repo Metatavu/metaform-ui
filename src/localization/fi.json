@@ -83,7 +83,9 @@
     "form": "Lomake",
     "preview": "Esikatselu",
     "json": "JSON",
-    "metaformNavigation": "Metaform-UI navigaatio"
+    "metaformNavigation": "Metaform-UI navigaatio",
+    "save": "Tallentaa",
+    "saving": "Tallenna lomake"
   },
   
   "emailDialog": {

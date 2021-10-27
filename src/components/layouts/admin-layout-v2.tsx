@@ -183,7 +183,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
           className={ classes.saveButton }
           onClick={ this.onSaveButtonClick }
         >
-          { "Save" }
+          { strings.adminLayoutV2.save }
         </Button>
       </Box>
     );
@@ -207,7 +207,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <Box className={ classes.metaformLoadingContainer }>
           <CircularProgress size={ 64 }/>
           <Typography className={ classes.savingText }>
-            Saving metaform
+            { strings.adminLayoutV2.saving }
           </Typography>
         </Box>
       </Box>
