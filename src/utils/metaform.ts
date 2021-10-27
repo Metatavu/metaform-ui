@@ -51,7 +51,7 @@ export default class MetaformUtils {
 
     return {
       name: fieldType,
-      title: fieldType.toString(),
+      title: fieldType,
       type: fieldType
     } 
   }
