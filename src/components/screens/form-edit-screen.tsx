@@ -492,6 +492,7 @@ export class FormEditScreen extends React.Component<Props, State> {
       if (isNaN(parseInt(destination.droppableId))) {
         return;
       }
+
       this.onSectionFieldMove(source, destination);
     // from component list
     } else if (source.droppableId === "componentList") {
