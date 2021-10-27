@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-len
 import { AttachmentsApi, Configuration, DraftsApi, MetaformsApi, RepliesApi } from "../generated/client";
 import { AccessToken } from "../types";
+import Config from "../config";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -47,12 +48,7 @@ export default class Api {
    * Creates default file upload url
    */
   public static createDefaultUploadUrl = (): string => {
-    let apiUrl = process.env.REACT_APP_API_BASE_PATH || "";
-    const apiVersionSlashIndex = apiUrl.lastIndexOf("/v1");
-    if (apiVersionSlashIndex < 0) {
-      return "";
-    }
-    return `${apiUrl.slice(0, apiVersionSlashIndex)}/fileUpload`;
+    return `${Config.getApiBasePath()}/fileUpload`;
   }
 
   /**
@@ -62,7 +58,7 @@ export default class Api {
    */
   private static getConfiguration(accessToken: AccessToken) {
     return new Configuration({
-      basePath: process.env.REACT_APP_API_BASE_PATH,
+      basePath: Config.getApiBasePath(),
       accessToken: accessToken.access_token
     });
   }
