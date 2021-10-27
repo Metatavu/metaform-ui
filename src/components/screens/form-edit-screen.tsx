@@ -763,7 +763,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   private onAddNewSectionClick = () => {
     const { metaform, onSetMetaform } = this.props;
 
-    const createdSection = MetaformUtils.metaformDefaultSection();
+    const createdSection = MetaformUtils.createEmptySection();
     const updatedMetaform = { ...metaform } as Metaform;
 
     if (!updatedMetaform.sections) {
