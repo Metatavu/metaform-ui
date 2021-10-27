@@ -69,6 +69,9 @@ export default createStyles({
     borderRadius: 18,
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+    "&.Mui-disabled": {
+      color: "rgba(255, 255, 255, 0.4)"
+    }
   },
 
   metaformSaveLoadingContainer: {
