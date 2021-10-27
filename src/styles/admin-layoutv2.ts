@@ -72,7 +72,7 @@ export default createStyles({
   },
 
   metaformSaveLoadingContainer: {
-    zIndex: 101,
+    zIndex: 1200,
     width: "100%",
     height: "100%",
     position: "absolute",
@@ -80,7 +80,8 @@ export default createStyles({
     justifyContent: "center",
     alignItems: "center",
     top: 0,
-    left: 0
+    left: 0,
+    backgroundColor: "rgba(0 ,0, 0, 0.2)"
   },
 
   metaformLoadingContainer: {
