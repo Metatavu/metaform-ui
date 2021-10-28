@@ -84,8 +84,8 @@
     "preview": "Esikatselu",
     "json": "JSON",
     "metaformNavigation": "Metaform-UI navigaatio",
-    "save": "Tallentaa",
-    "saving": "Tallenna lomake"
+    "save": "Tallenna lomake",
+    "saving": "Tallentaa"
   },
   
   "emailDialog": {
