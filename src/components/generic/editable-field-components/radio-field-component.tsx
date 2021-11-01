@@ -97,9 +97,9 @@ export class MetaformRadioFieldComponent extends React.Component<Props, State> {
         key={ `${ fieldId }-${ option.name }-radio` }
         id={ `${ fieldId }-${ option.name }` } 
         aria-labelledby={ fieldLabelId }
-        name={ field!.name }
-        title={ field!.title }
-        required={ field!.required }
+        name={ field.name }
+        title={ field.title }
+        required={ field.required }
         value={ option.name }
       />
     )
