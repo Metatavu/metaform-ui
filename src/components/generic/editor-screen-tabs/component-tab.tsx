@@ -122,11 +122,7 @@ class ComponentTab extends React.Component<Props, State> {
           <MetaformNumberFieldAddable/>
         );
       default:
-        return (
-          <div style={{ color: "red" }}> 
-            `${ strings.formEditScreen.unknownFieldType }: ${ fieldType }` 
-          </div>
-        );
+        return null;
     }
   }
 }
