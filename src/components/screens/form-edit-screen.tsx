@@ -54,7 +54,7 @@ interface State {
  * Component for editing Metaform
  */
 export class FormEditScreen extends React.Component<Props, State> {
-  editorRef: React.RefObject<HTMLDivElement>;
+  private editorRef: React.RefObject<HTMLDivElement>;
 
   /**
    * Constructor
