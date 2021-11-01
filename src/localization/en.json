@@ -120,14 +120,12 @@
   },
 
   "formEditScreen": {
-    "leftSideBarComponentsTab": "Components",
-    "leftSideBarStylingTab": "Styling",
-    "leftSideBarFieldHeader": "Fields",
-    "leftSideBarComponentHeader": "Components",
-    "rightSideBarLinksTab": "Links",
-    "rightSideBarVisibilityTab": "Visibility",
-    "leftSideBarInfo": "Fields and Components not working yet!",
-    "chooseComponent": "Choose component",
+    "componentsTab": "Components",
+    "stylingTab": "Styling",
+    "linksTab": "Links",
+    "visibilityTab": "Visibility",
+    "emptySection": "Empty section",
+    "addNewSection": "Add new section",
     "sectionLayout": "Section layout",
     "headerField": "Header field",
     "textField": "Text field",
@@ -144,11 +142,22 @@
   },
 
   "editableFields": {
-    "htmlField": "Html content",
-    "submitFieldText": "Submit button text",
     "numberField": "Number field",
     "numberFieldMin": "Set min value",
     "numberFieldMax": "Set max value"
-  }
+  },
 
+  "addableComponent" : {
+    "label": "label",
+    "html": "html",
+    "text": "text",
+    "radio": "radio",
+    "select": "select",
+    "number": "number",
+    "memo": "memo",
+    "checkList": "checkList",
+    "submit": "submit",
+    "dateTime": "dateTime",
+    "autocomplete": "autocomplete"
+  }
 }

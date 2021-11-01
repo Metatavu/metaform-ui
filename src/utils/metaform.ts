@@ -1,4 +1,4 @@
-import { Metaform } from "../generated/client";
+import { Metaform, MetaformField, MetaformFieldType, MetaformSection } from "../generated/client";
 
 /**
  * Utility class for metaform
@@ -29,4 +29,42 @@ export default class MetaformUtils {
     } as Metaform;
   }
 
+  /**
+   * Create empty field for given field type
+   * 
+   * @param fieldType metaform field type
+   * @returns created field
+   */
+  public static createEmptyField = (fieldType: MetaformFieldType): MetaformField => {
+    if (fieldType === MetaformFieldType.Select || fieldType === MetaformFieldType.Radio) {
+      return {
+        title: fieldType,
+        type: fieldType,
+        options: [
+          {
+            name: "option",
+            text: "option",
+          },
+        ]
+      } 
+    }
+
+    return {
+      name: fieldType,
+      title: fieldType,
+      type: fieldType
+    } 
+  }
+
+  /**
+   * Create an empty section
+   * 
+   * @returns created section 
+   */
+  public static createEmptySection = (): MetaformSection => {
+    return {
+      title: "Section",
+      fields: []
+    } 
+  }
 }

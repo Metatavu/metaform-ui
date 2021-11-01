@@ -120,14 +120,12 @@
   },
 
   "formEditScreen": {
-    "leftSideBarComponentsTab": "Palikat",
-    "leftSideBarStylingTab": "Muotoilu",
-    "leftSideBarFieldHeader": "Kentät",
-    "leftSideBarComponentHeader": "Komponentit",
-    "rightSideBarLinksTab": "Linkit",
-    "rightSideBarVisibilityTab": "Näkyvyys",
-    "leftSideBarInfo": "Kentät ja Komponentit eivät vielä toimi!",
-    "chooseComponent": "Valitse komponentti",
+    "componentsTab": "Palikat",
+    "stylingTab": "Muotoilu",
+    "linksTab": "Linkit",
+    "visibilityTab": "Näkyvyys",
+    "emptySection": "Tyhjä osio",
+    "addNewSection": "Lisää uusi osio",
     "sectionLayout": "Osion pohja",
     "headerField": "Otsikkokenttä",
     "textField": "Tekstikenttä",
@@ -144,11 +142,22 @@
   },
 
   "editableFields": {
-    "htmlField": "Html-sisältö",
-    "submitFieldText": "Lähetä-napin teksti",
     "numberField": "Numerokenttä",
     "numberFieldMin": "Aseta minimiarvo",
     "numberFieldMax": "Aseta maksimiarvo"
-  }
+  },
 
+  "addableComponent" : {
+    "label": "label",
+    "html": "html",
+    "text": "text",
+    "radio": "radio",
+    "select": "select",
+    "number": "number",
+    "memo": "memo",
+    "checkList": "checkList",
+    "submit": "submit",
+    "dateTime": "dateTime",
+    "autocomplete": "autocomplete"
+  }
 }
