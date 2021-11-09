@@ -93,12 +93,6 @@ export default createStyles({
     justifyContent: "center"
   },
 
-  mainHeader: {
-    marginBottom: 20,
-    width: "100%",
-    textAlign: "center",
-  },
-
   fields: {
     borderRadius: "5px",
     boxShadow: "2px 2px #ccc",
@@ -144,6 +138,10 @@ export default createStyles({
       fontWeight: "bold",
       textTransform: "uppercase",
     }
-  }
+  },
 
+  metaformTitle: {
+    fontSize: 36,
+    marginBottom: theme.spacing(2)
+  }
 });

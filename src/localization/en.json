@@ -120,14 +120,14 @@
   },
 
   "formEditScreen": {
+    "title": "Title",
     "componentsTab": "Components",
     "stylingTab": "Styling",
-    "linksTab": "Links",
-    "visibilityTab": "Visibility",
+    "formTab": "Form",
+    "selectionTab": "Selection",
     "emptySection": "Empty section",
     "addNewSection": "Add new section",
     "sectionLayout": "Section layout",
-    "headerField": "Header field",
     "textField": "Text field",
     "editableTextField": "Editable field",
     "conditionalField": "Conditional field",
@@ -137,8 +137,7 @@
     "button": "Button",
     "image": "Image",
     "unknownFieldType": "Unknown field type",
-    "formEditorInfo": "Editing is not working yet",
-    "formMainHeader": "Form main header"
+    "formEditorInfo": "Editing is not working yet"
   },
 
   "editableFields": {

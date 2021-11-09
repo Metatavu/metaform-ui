@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
 import { History } from "history";
-import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Box, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 import { AccessToken, EditorNavigationLinks } from "../../types";
 import Api from "../../api/api";
@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 import ComponentTab from "../generic/editor-screen-tabs/component-tab"
+import FormTab from "../generic/editor-screen-tabs/form-tab"
 
 /**
  * Component props
@@ -168,51 +169,36 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <div className={ classes.formEditor } ref={ this.editorRef }>
-        { this.renderMainHeader() }
-        <Droppable droppableId={ "sectionList" } isDropDisabled={ !draggingSection }>
-          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-            <div ref={ provided.innerRef } style={{ width: "100%" }}>
-              { metaform.sections?.map((section, sectionIndex) => 
-                this.renderFormSection(section, sectionIndex)) 
-              }
-            </div>
-          )}
-        </Droppable>
-        <Button 
-          variant="text"
-          startIcon={ <AddIcon/> }
-          onClick={ this.onAddNewSectionClick }
-          className={ classes.addNewSectionButton }
+        <Typography className={ classes.metaformTitle }>
+          { metaform.title }
+        </Typography>
+        <Box 
+          style={{
+            display: "flex",
+            flexDirection: "column"
+          }}
         >
-          <Typography>
-            { strings.formEditScreen.addNewSection }
-          </Typography>
-        </Button>
+          <Droppable droppableId={ "sectionList" } isDropDisabled={ !draggingSection }>
+            {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+              <div ref={ provided.innerRef } >
+                { metaform.sections?.map((section, sectionIndex) => 
+                  this.renderFormSection(section, sectionIndex)) 
+                }
+              </div>
+            )}
+          </Droppable>
+          <Button 
+            variant="text"
+            startIcon={ <AddIcon/> }
+            onClick={ this.onAddNewSectionClick }
+            className={ classes.addNewSectionButton }
+          >
+            <Typography>
+              { strings.formEditScreen.addNewSection }
+            </Typography>
+          </Button>
+        </Box>
       </div>
-    );
-  }
-
-  /**
-   * Renders main header
-   */
-  private renderMainHeader = () => {
-    const { classes, metaform } = this.props;
-
-    if (!metaform) {
-      return;
-    }
-
-    return (
-      <FormControl variant="outlined" className={ classes.mainHeader }>
-        <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
-        <OutlinedInput
-          label={ strings.formEditScreen.formMainHeader }
-          id="mainHeaderField"
-          color="secondary"
-          value={ metaform.title }
-          onChange={ this.handleInputTitleChange }
-        />
-      </FormControl>
     );
   }
 
@@ -425,7 +411,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Renders right drawer
    */
   private renderRightDrawer = () => {
-    const { classes } = this.props;
+    const { classes, metaform, onSetMetaform } = this.props;
     const { rightDrawerTabIndex } = this.state;
 
     return (
@@ -444,14 +430,22 @@ export class FormEditScreen extends React.Component<Props, State> {
           <Tab
             fullWidth
             value={ 0 }
-            label={ strings.formEditScreen.linksTab }
+            label={ strings.formEditScreen.formTab }
           />
           <Tab
             fullWidth
             value={ 1 }
-            label={ strings.formEditScreen.visibilityTab }
+            label={ strings.formEditScreen.selectionTab }
           />
         </Tabs>
+        <Box className={ classes.drawerContent }>
+            { rightDrawerTabIndex === 0 &&
+              <FormTab
+                metaform={ metaform }
+                onSetMetaform={ onSetMetaform }
+              />
+            }
+        </Box>
       </Drawer>
     );
   }

@@ -120,14 +120,14 @@
   },
 
   "formEditScreen": {
+    "title": "Otsikko",
     "componentsTab": "Palikat",
     "stylingTab": "Muotoilu",
-    "linksTab": "Linkit",
-    "visibilityTab": "Näkyvyys",
+    "formTab": "Lomake",
+    "selectionTab": "Valinta",
     "emptySection": "Tyhjä osio",
     "addNewSection": "Lisää uusi osio",
     "sectionLayout": "Osion pohja",
-    "headerField": "Otsikkokenttä",
     "textField": "Tekstikenttä",
     "editableTextField": "Muokattava tekstikenttä",
     "conditionalField": "Ehdollinen kenttä",
@@ -137,8 +137,7 @@
     "button": "Nappi",
     "image": "Kuva",
     "unknownFieldType": "Tuntematon kenttätyyppi",
-    "formEditorInfo": "Muokkaus ei vielä toimi",
-    "formMainHeader": "Lomakkeen pääotsikko"
+    "formEditorInfo": "Muokkaus ei vielä toimi"
   },
 
   "editableFields": {

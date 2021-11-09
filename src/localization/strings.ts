@@ -126,14 +126,14 @@ export interface IStrings extends LocalizedStringsMethods {
   },
 
   formEditScreen: {
+    title: string;
     componentsTab: string;
     stylingTab: string;
-    linksTab: string;
-    visibilityTab: string;
+    formTab: string;
+    selectionTab: string;
     emptySection: string;
     addNewSection: string;
     sectionLayout: string;
-    headerField: string;
     textField: string;
     editableTextField: string;
     conditionalField: string;
@@ -144,7 +144,6 @@ export interface IStrings extends LocalizedStringsMethods {
     image: string;
     unknownFieldType: string;
     formEditorInfo: string;
-    formMainHeader: string;
   },
 
   editableFields: {
