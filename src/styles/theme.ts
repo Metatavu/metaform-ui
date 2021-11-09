@@ -118,11 +118,5 @@ export default createMuiTheme({
         width: "100%"
       }
     },
-    MuiIconButton: {
-      root: {
-        paddingTop: "0px !important",
-        paddingBottom: "0px !important"
-      }
-    }
   }
 });

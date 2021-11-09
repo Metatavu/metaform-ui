@@ -120,7 +120,6 @@
   },
 
   "formEditScreen": {
-    "title": "Title",
     "componentsTab": "Components",
     "stylingTab": "Styling",
     "formTab": "Form",
@@ -146,7 +145,7 @@
     "numberFieldMax": "Set max value"
   },
 
-  "addableComponent" : {
+  "componentTab" : {
     "label": "label",
     "html": "html",
     "text": "text",
@@ -158,5 +157,14 @@
     "submit": "submit",
     "dateTime": "dateTime",
     "autocomplete": "autocomplete"
+  },
+
+  "formTab": {
+    "title": "Title",
+    "allowAnonymous": "Allow anonymous",
+    "allowDraft": "Allow draft",
+    "allowReplyOwnerKey": "Allow reply owner key",
+    "allowInvitation": "Allow invitation"
   }
+
 }

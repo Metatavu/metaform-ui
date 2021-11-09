@@ -36,11 +36,11 @@ export class MetaformNumberFieldAddable extends React.Component<Props, State> {
    */
   public render = () => (        
     <FormControl>
-      <FormLabel>{ strings.addableComponent.label }</FormLabel>
+      <FormLabel>{ strings.componentTab.label }</FormLabel>
       <TextField
         variant="standard"
         value=""
-        placeholder={ `"${strings.addableComponent.number}"` }
+        placeholder={ `"${strings.componentTab.number}"` }
         onChange={ this.onChange }
       />
     </FormControl>

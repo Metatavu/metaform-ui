@@ -8,4 +8,15 @@ export default createStyles({
     paddingTop: theme.spacing(4)
   },
 
+  switchGroupContainer: {
+    display: "flex",
+    flexDirection: "column",
+    padding: `${theme.spacing(2)}px 0px`
+  },
+
+  switchContainer: {
+    display: "flex",
+    alignItems: "center"
+  }
+
 });

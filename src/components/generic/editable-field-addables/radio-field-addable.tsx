@@ -37,11 +37,11 @@ export class MetaformRadioFieldAddable extends React.Component<Props, State> {
   public render = () => (
     <FormControl component="fieldset">
       <FormLabel component="legend">
-        { strings.addableComponent.label }
+        { strings.componentTab.label }
       </FormLabel>
       <FormControlLabel 
         control={ <Radio checked color="primary"/> } 
-        label={ `"${strings.addableComponent.radio}"` } 
+        label={ `"${strings.componentTab.radio}"` } 
       />
     </FormControl>
   );

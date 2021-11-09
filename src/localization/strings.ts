@@ -126,7 +126,6 @@ export interface IStrings extends LocalizedStringsMethods {
   },
 
   formEditScreen: {
-    title: string;
     componentsTab: string;
     stylingTab: string;
     formTab: string;
@@ -152,7 +151,7 @@ export interface IStrings extends LocalizedStringsMethods {
     numberFieldMax: string;
   }
 
-  addableComponent: {
+  componentTab: {
     label: string;
     html: string;
     text: string;
@@ -164,6 +163,14 @@ export interface IStrings extends LocalizedStringsMethods {
     submit: string;
     dateTime: string;
     autocomplete: string;
+  },
+
+  formTab: {
+    title: string;
+    allowAnonymous: string;
+    allowDraft: string;
+    allowReplyOwnerKey: string;
+    allowInvitation: string;
   }
 
 }

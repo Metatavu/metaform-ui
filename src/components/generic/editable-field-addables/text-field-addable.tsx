@@ -38,13 +38,13 @@ export class MetaformTextFieldAddable extends React.Component<Props, State> {
   public render = () => (
     <FormControl>
       <FormLabel component="legend">
-        { strings.addableComponent.label }
+        { strings.componentTab.label }
       </FormLabel>
       <TextField
         value=""
         onChange={ this.onChange } 
         variant="standard"
-        placeholder={ `"${strings.addableComponent.text}"` }
+        placeholder={ `"${strings.componentTab.text}"` }
       />
     </FormControl>
   );
