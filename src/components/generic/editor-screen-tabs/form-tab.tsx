@@ -97,17 +97,14 @@ class FormTab extends React.Component<Props, State> {
   /**
    * Renders title input
    */
-  private renderSwitch = (value: boolean, label: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void) => {
+  private renderSwitch = (checked: boolean, label: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void) => {
     const { classes } = this.props;
-
-    // TODO value fix
-    // TODO icon button drag handle
 
     return (
       <Box className={ classes.switchContainer }>
         <Switch
           color="primary"
-          value={ value }
+          checked={ checked }
           onChange={ onChange }
         />
         <Typography>
