@@ -171,6 +171,7 @@ export interface IStrings extends LocalizedStringsMethods {
     allowDraft: string;
     allowReplyOwnerKey: string;
     allowInvitation: string;
+    replayStrategy: string;
   }
 
 }

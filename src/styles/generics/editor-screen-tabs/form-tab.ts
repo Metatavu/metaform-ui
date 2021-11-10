@@ -1,5 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import theme from "../../theme";
+import globalStyles from "../../global-styles";
 
 export default createStyles({
 
@@ -11,12 +12,17 @@ export default createStyles({
   switchGroupContainer: {
     display: "flex",
     flexDirection: "column",
-    padding: `${theme.spacing(2)}px 0px`
+    marginTop: theme.spacing(2)
   },
 
   switchContainer: {
     display: "flex",
     alignItems: "center"
+  },
+
+  replyStrategySelect: {
+    marginTop: theme.spacing(2),
+    ...globalStyles.textFieldSelectWithBackground
   }
 
 });

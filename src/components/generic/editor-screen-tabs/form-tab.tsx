@@ -1,8 +1,8 @@
-import { Box, TextField, Switch, Typography } from "@material-ui/core";
+import { Box, TextField, Switch, Typography, MenuItem } from "@material-ui/core";
 import { withStyles, WithStyles } from "@material-ui/styles";
 import React from "react";
 import styles from "../../../styles/generics/editor-screen-tabs/form-tab";
-import { Metaform } from "../../../generated/client";
+import { Metaform, MetaformReplyStrategyEnum } from "../../../generated/client";
 import strings from "../../../localization/strings";
 
 /**
@@ -46,9 +46,12 @@ class FormTab extends React.Component<Props, State> {
       return null;
     }
 
+    // TODO slug editing
+
     return (
       <Box className={ classes.formEditingContainer }>
         { this.renderTitleInput() }
+        { this.renderReplyStrategy() }
         { this.renderSwitchGroup() }
       </Box>
     );
@@ -69,13 +72,44 @@ class FormTab extends React.Component<Props, State> {
         variant="outlined"
         value={ metaform.title }
         onChange={ this.onFormTitleChange }
-        label={strings.formTab.title  }
+        label={ strings.formTab.title }
       />
     );
   }
 
   /**
-   * Renders title input
+   * Renders reply strategy select
+   */
+  private renderReplyStrategy = () => {
+    const { metaform, classes } = this.props;
+
+    if (!metaform) {
+      return null;
+    }
+
+    return (
+      <TextField
+        select
+        variant="outlined"
+        className={ classes.replyStrategySelect }
+        value={ metaform.replyStrategy }
+        onChange={ this.onFormReplayStrategyChange }
+        label={ strings.formTab.replayStrategy }
+      >
+        { Object.keys(MetaformReplyStrategyEnum).map(replayStrategy => (
+            <MenuItem
+              value={ replayStrategy }
+            >
+              { replayStrategy }
+            </MenuItem>
+          ))
+        }
+      </TextField>
+    );
+  }
+
+  /**
+   * Renders switch group
    */
   private renderSwitchGroup = () => {
     const { metaform, classes } = this.props;
@@ -95,7 +129,7 @@ class FormTab extends React.Component<Props, State> {
   }
 
   /**
-   * Renders title input
+   * Renders switch
    */
   private renderSwitch = (checked: boolean, label: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void) => {
     const { classes } = this.props;
@@ -125,6 +159,22 @@ class FormTab extends React.Component<Props, State> {
     const updatedMetaform: Metaform = {
       ...metaform,
       title: event.target.value as string,
+    }
+
+    onSetMetaform(updatedMetaform);
+  }
+
+  /**
+   * Form allow anonymous toggle handler
+   * 
+   * @param event react input change event
+   */
+  private onFormReplayStrategyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { metaform, onSetMetaform } = this.props;
+
+    const updatedMetaform: Metaform = {
+      ...metaform,
+      replyStrategy: event.target.value as MetaformReplyStrategyEnum
     }
 
     onSetMetaform(updatedMetaform);

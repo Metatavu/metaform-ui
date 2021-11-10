@@ -117,6 +117,6 @@ export default createMuiTheme({
       root: {
         width: "100%"
       }
-    },
+    }
   }
 });

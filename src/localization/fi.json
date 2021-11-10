@@ -161,11 +161,12 @@
   },
 
   "formTab": {
-    "title": "Title",
-    "allowAnonymous": "Allow anonymous",
-    "allowDraft": "Allow draft",
-    "allowReplyOwnerKey": "Allow reply owner key",
-    "allowInvitation": "Allow invitation"
+    "title": "Otsikko",
+    "allowAnonymous": "Salli anonyymi",
+    "allowDraft": "Salli luonnos",
+    "allowReplyOwnerKey": "Salli vastata omistajaavaimeen",
+    "allowInvitation": "Salli kutsu",
+    "replayStrategy" : "Toistostrategia"
   }
 
 }
