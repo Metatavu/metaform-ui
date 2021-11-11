@@ -20,8 +20,9 @@ import MetaformUtils from "../../utils/metaform";
 import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
-import ComponentTab from "../generic/editor-screen-tabs/component-tab"
+import ComponentTab from "../generic/editor-screen-tabs/component-tab";
 import FormTab from "../generic/editor-screen-tabs/form-tab"
+import SelectionTab from "../generic/editor-screen-tabs/selection-tab";
 
 /**
  * Component props
@@ -411,8 +412,27 @@ export class FormEditScreen extends React.Component<Props, State> {
    * Renders right drawer
    */
   private renderRightDrawer = () => {
-    const { classes, metaform, onSetMetaform } = this.props;
-    const { rightDrawerTabIndex } = this.state;
+    const {
+      classes,
+      metaform,
+      onSetMetaform
+    } = this.props;
+    const {
+      rightDrawerTabIndex,
+      selectedSectionIndex,
+      selectedFieldIndex
+    } = this.state;
+
+    // TODO not implemented
+    // let selectedSection = undefined;
+    // let selectedField = undefined;
+    // let onSetMetaformSectionChange = undefined;
+    // let onSetMetaformSectionChange = undefined;
+
+    if (selectedSectionIndex !== undefined && metaform?.sections) {
+      selectedSection
+    }
+
 
     return (
       <Drawer
@@ -439,12 +459,21 @@ export class FormEditScreen extends React.Component<Props, State> {
           />
         </Tabs>
         <Box className={ classes.drawerContent }>
-            { rightDrawerTabIndex === 0 &&
-              <FormTab
-                metaform={ metaform }
-                onSetMetaform={ onSetMetaform }
-              />
-            }
+          { rightDrawerTabIndex === 0 &&
+            <FormTab
+              metaform={ metaform }
+              onSetMetaform={ onSetMetaform }
+            />
+          }
+          {/* TODO not implemented */}
+          {/* { rightDrawerTabIndex === 1 && metaform?.sections &&
+            <SelectionTab
+              selectedSection={ selectedSectionIndex !== undefined && metaform.sections[selectedSectionIndex] }
+              selectedField={ selectedSectionIndex !== undefined && selectedFieldIndex !== undefined && metaform.sections[selectedSectionIndex].field[selectedFieldIndex] }
+              onSetMetaformSectionUpdate={ selectedSectionIndex !== undefined && this.onSectionUpdate(selectedSectionIndex) }
+              onSetMetaformSectionUpdate={ selectedSectionIndex !== undefined && selectedFieldIndex !== undefined && this.onFieldUpdate(selectedSectionIndex, selectedFieldIndex) }
+            />
+          } */}
         </Box>
       </Drawer>
     );
@@ -717,17 +746,30 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for main header change
+   * Event handler for section update
    * 
-   * @param event new main header value
+   * @param sectionIndex  section index
    */
-  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onSectionUpdate = (sectionIndex: number) => (newMetaformSection: MetaformSection) => {
     const { metaform, onSetMetaform } = this.props;
 
-    onSetMetaform({
-      ...metaform, 
-      title: event.target.value
-    } as Metaform);
+    if (!metaform) {
+      return;
+    }
+
+    const updatedMetaform = {
+      ...metaform
+    } as Metaform;
+
+    const sections = updatedMetaform.sections;
+
+    if (!sections) {
+      return;
+    }
+
+    sections[sectionIndex] = newMetaformSection;
+
+    onSetMetaform(updatedMetaform);
   }
 
   /**
