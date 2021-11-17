@@ -171,7 +171,7 @@ export class AdminReplyScreen extends React.Component<Props, State> {
                 return {
                   name: attachment.name,
                   id: attachment.id,
-                  secure: true
+                  persisted: true
                 }
               })
             };
