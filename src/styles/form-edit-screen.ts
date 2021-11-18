@@ -12,49 +12,78 @@ export default createStyles({
     justifyContent: "center"
   },
 
+  addNewSectionButton: {
+    alignSelf: "flex-end"
+  },
+
   formEditor: {
-    padding: theme.spacing(10),
+    margin: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
 
-  editableForm: {
-    backgroundColor: "#fff",
-    borderRadius: "5px",
-    padding: "2rem",
-  },
-
-  editableSections: {
-    marginBottom: 10,
-    borderRadius: 5,
+  formEditorSection: {
+    width: 880,
+    borderRadius: 10,
+    borderTopLeftRadius: 0,
+    padding: `${theme.spacing(3)}px ${theme.spacing(5)}px`,
+    boxShadow: "none",
+    margin: `${theme.spacing(2)}px 0px`,
+    overflow: "hidden",
     "& .MuiFormControl-root": {
       width: "100%"
     },
-    backgroundColor: "rgba(225,105,40,0.1)"
+    "&.selected": {
+      border: `2px solid ${theme.palette.primary.main}`,
+      boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
+    },
+    "&.draggingOver": {
+      backgroundColor: "#fff",
+      animationName: "$border-dance",
+      animationDuration: "3s",
+      animationIterationCount: "infinite",
+      animationTimingFunction: "linear",
+      background: `linear-gradient(90deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(90deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(0deg, ${theme.palette.primary.main} 50%, #FFF 50%), linear-gradient(0deg, ${theme.palette.primary.main} 50%, #FFF 50%)`,
+      backgroundRepeat: "repeat-x, repeat-x, repeat-y, repeat-y",
+      backgroundSize: "15px 3px, 15px 3px, 3px 15px, 3px 15px",
+      backgroundPosition: "0px 0px, 100% 100%, 0px 100%, 100% 0px",
+      boxShadow: "0px 3px 10px -1px rgb(0 0 0 / 40%)"
+    }
   },
 
-  editableField: {
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 5,
-    marginBottom: 20,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    width: "100%"
+  "@keyframes border-dance": {
+    "0%": {
+      backgroundPosition: "0px 0px, 200px 100%, 0px 200px, 100% 0px",
+    },
+    "100%": {
+      backgroundPosition: "200px 0px, 0px 100%, 0px 0px, 100% 200px"
+    }
   },
 
-  numberField: {
-    width: "30%"
+  formEditorField: {
+    width: "100%",
+    padding: `${theme.spacing(1)}px 0px`,
   },
 
   drawer: {
-    height: "100%",
+    height: "100%"
   },
 
   drawerPaper: {
     height: "100%",
+    boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12)"
   },
 
   drawerTabs: {
     width: "100%",
     display: "flex"
+  },
+
+  drawerContent: {
+    flex: 1,
+    overflow: "auto",
+    overflowX: "hidden"
   },
 
   drawerTab: {

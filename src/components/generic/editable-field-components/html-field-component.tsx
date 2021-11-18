@@ -1,8 +1,7 @@
-import { FormControl, InputLabel, OutlinedInput, WithStyles } from "@material-ui/core";
+import { FormControl, TextField, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
-import strings from "../../../localization/strings";
-import styles from "../../../styles/form-edit-screen";
+import styles from "../../../styles/generics/editable-field-components/metaform-html-field-component";
 
 /**
  * Component props
@@ -11,7 +10,6 @@ interface Props extends WithStyles<typeof styles> {
   field: MetaformField;
   fieldId: string;
   fieldLabelId: string;
-  fieldName?: string;
   onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
@@ -42,15 +40,19 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId, classes } = this.props;
+    const {
+      field,
+      fieldId,
+    } = this.props;
 
     return (
-      <FormControl variant="outlined" className={ classes.mainHeader }>
-        <InputLabel htmlFor={ fieldId }>{ strings.editableFields.htmlField }</InputLabel>
-        <OutlinedInput
-          label={ strings.editableFields.htmlField }
+      <FormControl>
+        <TextField
+          variant="outlined"
+          disabled={ field.readonly }
+          label={ field.name }
           id={ fieldId }
-          color="secondary"
+          color="primary"
           value={ field.html }
           onChange={ this.handleHtmlInputChange }
         />
@@ -65,6 +67,7 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
   */ 
   private handleHtmlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
+
     const updatedField = { 
       ...field 
     } as MetaformField;
@@ -74,3 +77,5 @@ export class MetaformHtmlComponent extends React.Component<Props, State> {
     onFieldUpdate(updatedField);
   }
 }
+
+export default withStyles(styles)(MetaformHtmlComponent)

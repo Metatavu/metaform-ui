@@ -1,12 +1,12 @@
-import { Button, FormControl, InputLabel, OutlinedInput } from "@material-ui/core";
+import { Button, FormControl, WithStyles, withStyles, TextField } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
-import strings from "../../../localization/strings";
+import styles from "../../../styles/generics/editable-field-components/metaform-submit-field-component";
 
 /**
  * Component props
  */
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   field: MetaformField;
   fieldId: string;
   onFieldUpdate: (metaformField: MetaformField) => void;
@@ -39,27 +39,29 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    * Component render method
    */
   public render() {
-    const { field, fieldId } = this.props;
+    const {
+      field,
+      fieldId,
+    } = this.props;
 
     return ( 
-      <>
-        <FormControl>
-          <InputLabel htmlFor={ fieldId }>{ strings.editableFields.submitFieldText }</InputLabel>
-          <OutlinedInput
-            label={ strings.editableFields.submitFieldText }
-            id={ fieldId }
-            color="secondary"
-            value={ field.text }
-            onChange={ this.handleButtonTextChange }
-          />
-          <Button
-            variant="contained"
-            color="primary"
-          >
-            { field.text }
-          </Button>  
-        </FormControl>
-      </>
+      <FormControl>
+        <TextField
+          variant="outlined"
+          label={ field.name }
+          id={ fieldId }
+          color="secondary"
+          value={ field.text }
+          disabled={ field.readonly }
+          onChange={ this.handleButtonTextChange }
+        />
+        <Button
+          variant="contained"
+          color="primary"
+        >
+          { field.text }
+        </Button>  
+      </FormControl>
     );
   }
 
@@ -70,6 +72,7 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
    */ 
   private handleButtonTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
+
     const updatedField = {
       ...field 
     } as MetaformField;
@@ -78,5 +81,6 @@ export class MetaformSubmitFieldComponent extends React.Component<Props, State> 
 
     onFieldUpdate(updatedField);
   }
-
 }
+
+export default withStyles(styles)(MetaformSubmitFieldComponent);

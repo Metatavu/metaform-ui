@@ -271,7 +271,7 @@ export class FormScreen extends React.Component<Props, State> {
                 return {
                   name: a.name,
                   id: a.id,
-                  secure: true
+                  persisted: true
                 }
               })
             };

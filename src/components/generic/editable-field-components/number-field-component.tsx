@@ -1,8 +1,8 @@
-import { FormControl, Input, InputLabel, WithStyles, } from "@material-ui/core";
+import { FormControl, TextField, withStyles, WithStyles, } from "@material-ui/core";
 import React from "react";
 import { MetaformField } from "../../../generated/client";
 import strings from "../../../localization/strings";
-import styles from "../../../styles/form-edit-screen";
+import styles from "../../../styles/generics/editable-field-components/metaform-number-field-component";
 
 /**
  * Component props
@@ -41,7 +41,11 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
    * Component render method
    */
   public render = () => {
-    const { classes, field, fieldId } = this.props;
+    const { 
+      classes, 
+      field, 
+      fieldId, 
+    } = this.props;
 
     const inputProps = {
       min: field.min,
@@ -52,30 +56,24 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     return (
       <>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberField }
-          </InputLabel>
-          <Input
+          <TextField
+            label={ strings.editableFields.numberField }
+            variant="standard"
             type="number"
             placeholder={ field.placeholder }
             id={ fieldId }
             name={ field.name }
             title={ field.title }
             required={ field.required }
-            readOnly={ field.readonly }
+            disabled={ field.readonly }
             inputProps={ inputProps }
             className={ classes.numberField }
           />
         </FormControl>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberFieldMin }
-          </InputLabel>
-          <Input
+          <TextField
+            label={ strings.editableFields.numberFieldMin }
+            variant="standard"
             type="number"
             id={ fieldId }
             value={ field.min?.toString() || "" }
@@ -85,12 +83,9 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
           />
         </FormControl>
         <FormControl>
-          <InputLabel
-            htmlFor={ fieldId }
-          >
-            { strings.editableFields.numberFieldMax }
-          </InputLabel>
-          <Input
+          <TextField
+            label={ strings.editableFields.numberFieldMax }
+            variant="standard"
             type="number"
             id={ fieldId }
             value={ field.max?.toString() || "" }
@@ -110,6 +105,7 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
   */ 
   private handleNumberValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { field, onFieldUpdate } = this.props;
+
     const { value, name } = event.target;
 
     const updatedField = {
@@ -133,3 +129,5 @@ export class MetaformNumberFieldComponent extends React.Component<Props, State> 
     onFieldUpdate(updatedField);
   }
 }
+
+export default withStyles(styles)(MetaformNumberFieldComponent);
