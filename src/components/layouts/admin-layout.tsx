@@ -12,6 +12,7 @@ import strings from "../../localization/strings";
 import { Link } from "react-router-dom";
 import { KeycloakInstance } from "keycloak-js";
 import { Metaform } from "../../generated/client";
+import HistoryIcon from "@material-ui/icons/History";
 
 /**
  * Interface representing component properties
@@ -56,9 +57,22 @@ class AdminLayout extends React.Component<Props, State> {
     const { classes, snackbarMessage, error, loading, loadMessage, clearError, clearSnackbar } = this.props;
 
     return (
-      <BasicLayout snackbarMessage={ snackbarMessage } error={ error } loading={ loading } loadMessage={ loadMessage } clearError={ clearError } clearSnackbar={ clearSnackbar }>
-        <div className={classes.root}>
-          <Drawer className={ classes.drawer } variant="persistent" anchor="left"  open={ true }  classes={{ paper: classes.drawerPaper }}>
+      <BasicLayout
+        snackbarMessage={ snackbarMessage }
+        error={ error }
+        loading={ loading }
+        loadMessage={ loadMessage }
+        clearError={ clearError }
+        clearSnackbar={ clearSnackbar }
+      >
+        <div className={ classes.root }>
+          <Drawer
+            className={ classes.drawer }
+            variant="persistent"
+            anchor="left"
+            open
+            classes={{ paper: classes.drawerPaper }}
+          >
             { this.renderMenu() }
           </Drawer>
           <div className={ classes.content }>
@@ -78,6 +92,7 @@ class AdminLayout extends React.Component<Props, State> {
         { this.renderRepliesMenuItem() }
         { this.renderInviteMenuItem() }
         { this.renderProfileMenuItem() }
+        { this.renderAuditLogsMenuItem() }
         { this.renderLogoutMenuItem() }
       </List>
     );
@@ -89,7 +104,7 @@ class AdminLayout extends React.Component<Props, State> {
   private renderRepliesMenuItem = () => {
     return (
       <ListItem button key="replies" component={ Link } to="/admin">
-        <ListItemIcon><MailIcon /></ListItemIcon>
+        <ListItemIcon><MailIcon/></ListItemIcon>
         <ListItemText primary={ strings.adminLayout.replies } />
       </ListItem>
     );
@@ -107,7 +122,7 @@ class AdminLayout extends React.Component<Props, State> {
 
     return (
       <ListItem button key="invite" component={ Link } to="/admin/invite">
-        <ListItemIcon><TelegramIcon /></ListItemIcon>
+        <ListItemIcon><TelegramIcon/></ListItemIcon>
         <ListItemText primary={ strings.adminLayout.invite } />
       </ListItem>
     );
@@ -119,8 +134,24 @@ class AdminLayout extends React.Component<Props, State> {
   private renderProfileMenuItem = () => {
     return (
       <ListItem button key="profile" component="a" href={ this.getProfileLink() }>
-        <ListItemIcon><PersonIcon /></ListItemIcon>
+        <ListItemIcon><PersonIcon/></ListItemIcon>
         <ListItemText primary={ strings.adminLayout.profile } />
+      </ListItem>
+    );
+  }
+
+  /**
+   * Renders audit logs menu item
+   */
+  private renderAuditLogsMenuItem = () => {
+    if (!this.props.keycloak.hasRealmRole("metaform-view-all-audit-logs")) {
+      return null;
+    }
+
+    return (
+      <ListItem button key="audit-logs" component="a" href="/admin/audit-logs">
+        <ListItemIcon><HistoryIcon/></ListItemIcon>
+        <ListItemText primary={ strings.adminLayout.auditLogs }/>
       </ListItem>
     );
   }
@@ -131,7 +162,7 @@ class AdminLayout extends React.Component<Props, State> {
   private renderLogoutMenuItem = () => {
     return (
       <ListItem button key="logout" onClick={ this.onLogOutClick }>
-        <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
         <ListItemText primary={ strings.adminLayout.logout } />
       </ListItem>
     );
@@ -139,7 +170,7 @@ class AdminLayout extends React.Component<Props, State> {
 
   /**
    * Returns link to user profile
-   * 
+   *
    * @returns link to user profile
    */
   private getProfileLink = (): string => {

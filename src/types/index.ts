@@ -66,7 +66,7 @@ export type TableFieldCellValue = string | number | null;
 /**
  * Interface for values in single row
  */
-export interface TableFieldRowValue { 
+export interface TableFieldRowValue {
   [key: string]: TableFieldCellValue;
 };
 
@@ -80,7 +80,7 @@ export type TableFieldValue = TableFieldRowValue[];
  */
 export enum EditorNavigationLinks {
   form,
-  preview, 
+  preview,
   json
 }
 
@@ -90,9 +90,9 @@ export enum EditorNavigationLinks {
 export type IconName = "dot-circle-o" | "circle-o" | "check-square-o" | "square-o" | "add";
 
 /**
- * LoginMode 
+ * Type for Login mode
  */
-export type LoginMode = "USER" | "ADMIN";
+export type LoginMode = "USER" | "ADMIN";
 
 /**
  * Autocomplete item

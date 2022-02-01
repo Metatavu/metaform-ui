@@ -5,7 +5,6 @@ import styles from "../../../styles/generics/editor-screen-tabs/component-tab";
 import classNames from "classnames";
 import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from "react-beautiful-dnd";
 import { MetaformFieldType } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import { MetaformHtmlAddable, MetaformNumberFieldAddable, MetaformRadioFieldAddable, MetaformSubmitFieldAddable, MetaformTextFieldAddable } from "../editable-field-addables";
 
 /**
@@ -27,7 +26,7 @@ class ComponentTab extends React.Component<Props, State> {
 
   /**
    * Constructor
-   * 
+   *
    * @param props component props
    */
   constructor(props: Props) {
@@ -60,7 +59,7 @@ class ComponentTab extends React.Component<Props, State> {
 
   /**
    * Renders a single draggable component
-   * 
+   *
    * @param fieldType field type
    * @param index index
    */
@@ -80,11 +79,11 @@ class ComponentTab extends React.Component<Props, State> {
                 { this.renderComponent(fieldType) }
               </div>
               { snapshotDraggable.isDragging &&
-                <div 
+                <div
                   className={ classNames(classes.singleDraggableComponent, { clone : true }) }
-                > 
+                >
                   { this.renderComponent(fieldType) }
-                </div> 
+                </div>
               }
             </>
           )}
@@ -94,7 +93,7 @@ class ComponentTab extends React.Component<Props, State> {
 
   /**
    * Renders form editor sample component
-   * 
+   *
    * @param fieldType metaform field type
    */
   private renderComponent = (fieldType: MetaformFieldType) => {

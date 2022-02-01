@@ -67,17 +67,29 @@
     "title": "Kutsuminen",
     "emailFieldNotFoundError": "Sähköpostikenttää ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
     "noOwnerKeyError": "Omistaja-avainta ei löytynyt. Ole hyvä ja tarkista lomakkeen konfiguraatio!",
-    "sendingInvitation": "Lähetetään kutsua...",    
+    "sendingInvitation": "Lähetetään kutsua...",
     "invitationEmailSubject": "Kutsu täyttämään {0} -lomaketta",
     "invitationEmailContent": "<p>Hei!</p><p>Sinut on kutsuttu vastaamaan {0} -lomakkeeseen. Pääset vastaamaan osoiteesta:</p><p><a href='{1}'>{1}</a></p><hr/><p>Tämä on automaattinen viesti, älä vastaa viestiin.</p>"
+  },
+
+  "adminAuditLogsScreen": {
+    "title": "Käsittelyhistoria",
+    "before": "Loppuen",
+    "after": "Alkaen",
+    "date": "Päivämäärä ja aika",
+    "userId": "Käsittelijän ID",
+    "replyId": "Vastauksen ID",
+    "action": "Tehty toiminto",
+    "noRows": "Ei rivejä"
   },
 
   "adminLayout": {
     "replies": "Vastaukset",
     "invite": "Kutsuminen",
     "profile": "Käyttäjätili",
+    "auditLogs": "Käsittelyhistoria",
     "logout": "Kirjaudu ulos"
-  }, 
+  },
 
   "adminLayoutV2": {
     "form": "Lomake",
@@ -85,7 +97,7 @@
     "json": "JSON",
     "metaformNavigation": "Metaform-UI navigaatio"
   },
-  
+
   "emailDialog": {
     "title": "Sähköposti",
     "email": "Sähköpostiosoite",
@@ -99,7 +111,7 @@
     "contentTextPt2": "Siirry eteenpäin tunnistautumispalveluun.",
     "buttonText": "Ok"
   },
-  
+
   "errorDialog": {
     "title": "Hups! Jokin meni pieleen",
     "reloadPage": "Kokeile ladata sivu uudelleen.",

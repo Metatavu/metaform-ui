@@ -5,20 +5,19 @@ const drawerWidth = 240;
 export default createStyles({
 
   root: {
-    display: "flex"
+    display: "flex",
+    height: "100vh"
   },
-  
+
   drawer: {
-    width: drawerWidth,
-    flex: 0
+    width: drawerWidth
   },
 
   drawerPaper: {
-    width: drawerWidth,
+    width: drawerWidth
   },
-  
+
   content: {
-    marginLeft: drawerWidth,
     flex: 1
   }
 

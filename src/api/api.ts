@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-len
-import { AttachmentsApi, Configuration, DraftsApi, MetaformsApi, RepliesApi } from "../generated/client";
+import { AttachmentsApi, AuditLogEntriesApi, Configuration, DraftsApi, MetaformsApi, RepliesApi } from "../generated/client";
 import { AccessToken } from "../types";
 import Config from "../config";
 
@@ -37,11 +37,20 @@ export default class Api {
 
   /**
    * Gets initialized attachments api
-   * 
+   *
    * @param accessToken access token
    */
   public static getAttachmentsApi(accessToken: AccessToken) {
     return new AttachmentsApi(Api.getConfiguration(accessToken));
+  }
+
+  /**
+   * Gets initialized audit log entries api
+   *
+   * @param accessToken access token
+   */
+  public static getAuditLogEntriesApi(accessToken: AccessToken) {
+    return new AuditLogEntriesApi(Api.getConfiguration(accessToken));
   }
 
   /**
@@ -54,7 +63,7 @@ export default class Api {
   /**
    * Gets api configuration
    *
-   * @param token acess token
+   * @param token access token
    */
   private static getConfiguration(accessToken: AccessToken) {
     return new Configuration({

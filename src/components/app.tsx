@@ -20,20 +20,12 @@ import AdminInviteScreen from "./screens/admin-invite-screen";
 import FormEditJsonScreen from "./screens/json-screen";
 import FormEditScreen from "./screens/form-edit-screen";
 import PreviewScreen from "./screens/preview-screen";
+import AdminAuditTrailScreen from "./screens/admin-audit-trail-screen";
 
+/**
+ * Initialized Redux store
+ */
 const store = createStore<ReduxState, ReduxActions, any, any>(rootReducer);
-
-/**
- * Interface representing component properties
- */
-interface Props {
-}
-
-/**
- * Interface representing component state
- */
-interface State {
-}
 
 /**
  * Material UI's automated responsive font sizes
@@ -43,7 +35,7 @@ const theme = responsiveFontSizes(metaformTheme);
 /**
  * App component
  */
-class App extends React.Component<Props, State> {
+class App extends React.Component {
 
   /**
    * Component did mount life cycle component
@@ -59,13 +51,13 @@ class App extends React.Component<Props, State> {
     return (
       <>
         <CssBaseline />
-        <Provider store={store}>     
+        <Provider store={ store }>
           <BrowserRouter>
             <div className="App">
               <Switch>
                 <Route
+                  exact
                   path="/"
-                  exact={ true }
                   render={({ history, location }) => (
                     <AnonymousTokenRefresh>
                       <FormScreen
@@ -76,8 +68,8 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/protected/form"
-                  exact={ true }
                   render={({ history, location }) => (
                     <SignedTokenRefresh loginMode="USER">
                       <FormScreen
@@ -88,8 +80,8 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/admin"
-                  exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
                       <AdminScreen
@@ -99,8 +91,8 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/admin/edit-form/json"
-                  exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
                       <ThemeProvider theme={theme}>
@@ -112,8 +104,8 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/admin/edit-form/form"
-                  exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
                       <ThemeProvider theme={theme}>
@@ -125,11 +117,11 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/admin/edit-form/preview"
-                  exact={ true }
                   render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <ThemeProvider theme={theme}>
+                      <ThemeProvider theme={ theme }>
                         <PreviewScreen
                           history={ history }
                         />
@@ -138,22 +130,29 @@ class App extends React.Component<Props, State> {
                   )}
                 />
                 <Route
+                  exact
                   path="/admin/invite"
-                  exact={ true }
-                  render={({ history, match }) => (
+                  render={({ history }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <AdminInviteScreen
-                        history={ history }
-                      />
+                      <AdminInviteScreen history={ history }/>
                     </SignedTokenRefresh>
                   )}
                 />
                 <Route
+                  exact
+                  path="/admin/audit-logs"
+                  render={({ history }) => (
+                    <SignedTokenRefresh loginMode="ADMIN">
+                      <AdminAuditTrailScreen history={ history }/>
+                    </SignedTokenRefresh>
+                  )}
+                />
+                <Route
+                  exact
                   path="/admin/replies/:replyId"
-                  exact={ true }
                   render={({ history, match }) => (
                     <SignedTokenRefresh loginMode="ADMIN">
-                      <AdminReplyScreen                            
+                      <AdminReplyScreen
                         history={ history }
                         replyId={ match.params.replyId }
                       />

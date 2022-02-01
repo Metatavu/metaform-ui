@@ -1,8 +1,8 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from "@material-ui/core";
 
-const { breakpoints } = createMuiTheme();
+const { breakpoints } = createTheme();
 
-export default createMuiTheme({
+export default createTheme({
 
   palette: {
     primary: {

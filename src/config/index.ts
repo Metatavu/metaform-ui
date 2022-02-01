@@ -5,7 +5,7 @@ import { AnonymousLoginConfig, LoginMode } from "../types";
 /**
  * Validates that environment variables are in place and have correct form
  */
- const env = cleanEnv(process.env, {
+const env = cleanEnv(process.env, {
   REACT_APP_KEYCLOAK_REALM: str(),
   REACT_APP_FORM_ID: str(),
   REACT_APP_REPLY_MODE: str({ default: "CUMULATIVE", choices: ["UPDATE", "REVISION", "CUMULATIVE"]}),
@@ -26,7 +26,7 @@ export default class Config {
 
   /**
    * Returns API base path
-   * 
+   *
    * @returns API base path
    */
   public static getApiBasePath = () => {
@@ -35,7 +35,7 @@ export default class Config {
 
   /**
    * Returns used realm
-   * 
+   *
    * @returns used realm
    */
   public static getRealm = () => {
@@ -44,16 +44,16 @@ export default class Config {
 
   /**
    * Returns used metaform id
-   * 
+   *
    * @returns metaform id
    */
   public static getMetaformId = () => {
-    return env.REACT_APP_FORM_ID;    
+    return env.REACT_APP_FORM_ID;
   }
 
   /**
    * Returns used reply mode
-   * 
+   *
    * @returns used reply mode
    */
   public static getReplyMode = () => {
@@ -62,7 +62,7 @@ export default class Config {
 
   /**
    * Returns anonymous login config
-   * 
+   *
    * @returns anonymous login config
    */
   public static getAnonymousLoginConfig = (): AnonymousLoginConfig => {
@@ -77,11 +77,11 @@ export default class Config {
 
   /**
    * Returns signed Keycloak config
-   * 
+   *
    * @returns signed Keycloak config
    */
   public static getSignedKeycloakConfig = (): KeycloakConfig => {
-    return {    
+    return {
       url: env.REACT_APP_KEYCLOAK_URL,
       realm: env.REACT_APP_KEYCLOAK_REALM,
       clientId: env.REACT_APP_KEYCLOAK_CLIENT_ID
@@ -90,7 +90,7 @@ export default class Config {
 
   /**
    * Returns signed Keycloak login options
-   * 
+   *
    * @param loginMode login config
    * @returns signed Keycloak login options
    */
@@ -104,7 +104,7 @@ export default class Config {
 
   /**
    * Returns address for CORS proxy service
-   * 
+   *
    * @returns address for CORS proxy service
    */
   public static getCorsProxy(): String {

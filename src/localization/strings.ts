@@ -78,10 +78,22 @@ export interface IStrings extends LocalizedStringsMethods {
     invitationEmailContent: string;
   };
 
+  adminAuditLogsScreen: {
+    title: string;
+    before: string;
+    after: string;
+    date: string;
+    userId: string;
+    replyId: string;
+    action: string;
+    noRows: string;
+  }
+
   adminLayout: {
     replies: string;
     invite: string;
     profile: string;
+    auditLogs: string;
     logout: string;
   },
 

@@ -69,13 +69,25 @@
     "noOwnerKeyError": "Did not receive owner key. Check form configuration!",
     "sendingInvitation": "Sending invitation...",
     "invitationEmailSubject": "Invitation to reply to {0} -form",
-    "invitationEmailContent": "<p>Hi!</p><p>You have been invited to fill out form {0}. You can access the from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>" 
+    "invitationEmailContent": "<p>Hi!</p><p>You have been invited to fill out form {0}. You can access the from following link:</p><p><a href='{1}'>{1}</a></p><hr/><p>This is an automated message, please do not reply.</p>"
+  },
+
+  "adminAuditLogsScreen": {
+    "title": "Usage history",
+    "before": "Ending at",
+    "after": "Starting at",
+    "date": "Date and time",
+    "userId": "User ID",
+    "replyId": "Reply ID",
+    "action": "Action",
+    "noRows": "No rows"
   },
 
   "adminLayout": {
     "replies": "Replies",
     "invite": "Invite",
     "profile": "Profile",
+    "auditLogs": "Usage history",
     "logout": "Logout"
   },
 
@@ -85,7 +97,7 @@
     "json": "JSON",
     "metaformNavigation": "Metaform-UI navigation"
   },
-  
+
   "emailDialog": {
     "title": "Email",
     "email": "Email address",
