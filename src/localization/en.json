@@ -122,7 +122,7 @@
   "formEditScreen": {
     "componentsTab": "Components",
     "stylingTab": "Styling",
-    "linksTab": "Links",
+    "featuresTab": "Features",
     "visibilityTab": "Visibility",
     "emptySection": "Empty section",
     "addNewSection": "Add new section",

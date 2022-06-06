@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 import ComponentTab from "../generic/editor-screen-tabs/component-tab"
+import FeaturesTab from "../generic/editor-screen-tabs/features-tab";
 
 /**
  * Component props
@@ -38,7 +39,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   value: string;
   readOnly: boolean;
   isLoading: boolean;
@@ -48,6 +49,7 @@ interface State {
   draggingSection: boolean;
   selectedFieldIndex?: number;
   selectedSectionIndex?: number;
+  selectedField?: MetaformField;
 }
 
 /**
@@ -426,7 +428,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderRightDrawer = () => {
     const { classes } = this.props;
-    const { rightDrawerTabIndex } = this.state;
+    const { rightDrawerTabIndex, selectedField } = this.state;
 
     return (
       <Drawer
@@ -444,7 +446,7 @@ export class FormEditScreen extends React.Component<Props, State> {
           <Tab
             fullWidth
             value={ 0 }
-            label={ strings.formEditScreen.linksTab }
+            label={ strings.formEditScreen.featuresTab }
           />
           <Tab
             fullWidth
@@ -452,6 +454,11 @@ export class FormEditScreen extends React.Component<Props, State> {
             label={ strings.formEditScreen.visibilityTab }
           />
         </Tabs>
+        <Box className={ classes.drawerContent }>
+          { rightDrawerTabIndex === 0 &&
+            <FeaturesTab selectedField={ selectedField }  />
+          }
+        </Box>
       </Drawer>
     );
   }
@@ -719,6 +726,16 @@ export class FormEditScreen extends React.Component<Props, State> {
     this.setState({
       selectedSectionIndex: sectionIndex,
       selectedFieldIndex: fieldIndex
+    })
+    this.props.metaform?.sections?.map((section, indexS) => {
+      section.fields?.map((field, indexF) => {
+        if(sectionIndex === indexS && fieldIndex === indexF) {
+          console.log(field.title)
+          this.setState({
+            selectedField: field
+          })
+        }
+      })
     })
   }
 

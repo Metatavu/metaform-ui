@@ -122,7 +122,7 @@
   "formEditScreen": {
     "componentsTab": "Palikat",
     "stylingTab": "Muotoilu",
-    "linksTab": "Linkit",
+    "featuresTab": "Ominaisuudet",
     "visibilityTab": "Näkyvyys",
     "emptySection": "Tyhjä osio",
     "addNewSection": "Lisää uusi osio",

@@ -128,7 +128,7 @@ export interface IStrings extends LocalizedStringsMethods {
   formEditScreen: {
     componentsTab: string;
     stylingTab: string;
-    linksTab: string;
+    featuresTab: string;
     visibilityTab: string;
     emptySection: string;
     addNewSection: string;
