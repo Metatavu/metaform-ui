@@ -141,6 +141,11 @@
     "formMainHeader": "Lomakkeen pääotsikko"
   },
 
+  "featureTabContainer": {
+    "fieldInfo": "Kentän tiedot",
+    "fieldTitle": "Kentän nimi"
+  },
+
   "editableFields": {
     "numberField": "Numerokenttä",
     "numberFieldMin": "Aseta minimiarvo",

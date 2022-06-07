@@ -277,8 +277,6 @@ export class FormEditScreen extends React.Component<Props, State> {
 
   /**
    * Renders a single form field
-   * 
-   * @param section metaform section
    * @param sectionIndex section index
    * @param fieldIndex field index
    */
@@ -428,7 +426,7 @@ export class FormEditScreen extends React.Component<Props, State> {
    */
   private renderRightDrawer = () => {
     const { classes } = this.props;
-    const { rightDrawerTabIndex, selectedField } = this.state;
+    const { rightDrawerTabIndex } = this.state;
 
     return (
       <Drawer
@@ -456,11 +454,30 @@ export class FormEditScreen extends React.Component<Props, State> {
         </Tabs>
         <Box className={ classes.drawerContent }>
           { rightDrawerTabIndex === 0 &&
-            <FeaturesTab selectedField={ selectedField }  />
+            this.renderFeatureTab()
           }
         </Box>
       </Drawer>
     );
+  }
+
+  private renderFeatureTab = () => {
+    const { selectedField, selectedSectionIndex, selectedFieldIndex } = this.state;
+    const sectionIndex = selectedSectionIndex;
+    const fieldIndex = selectedFieldIndex;
+console.log("section index and field index when rendering right side tab", sectionIndex, fieldIndex)
+    if(selectedField) {
+      return ( 
+        <FeaturesTab
+          selectedField={ selectedField }
+          //onFieldUpdate={ selectedSectionIndex && selectedFieldIndex && this.onFieldUpdate(selectedSectionIndex, selectedFieldIndex) }
+        />
+      )
+    }
+
+    else return (
+      ""
+    )
   }
 
   /**
@@ -730,7 +747,6 @@ export class FormEditScreen extends React.Component<Props, State> {
     this.props.metaform?.sections?.map((section, indexS) => {
       section.fields?.map((field, indexF) => {
         if(sectionIndex === indexS && fieldIndex === indexF) {
-          console.log(field.title)
           this.setState({
             selectedField: field
           })

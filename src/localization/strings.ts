@@ -147,6 +147,11 @@ export interface IStrings extends LocalizedStringsMethods {
     formMainHeader: string;
   },
 
+  featureTabContainer: {
+    fieldInfo: string;
+    fieldTitle: string;
+  },
+
   editableFields: {
     numberField: string;
     numberFieldMin: string;

@@ -141,6 +141,11 @@
     "formMainHeader": "Form main header"
   },
 
+  "featureTabContainer": {
+    "fieldInfo": "Field info",
+    "fieldTitle": "Field name"
+  },
+
   "editableFields": {
     "numberField": "Number field",
     "numberFieldMin": "Set min value",
