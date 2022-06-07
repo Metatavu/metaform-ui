@@ -83,7 +83,9 @@
     "form": "Form",
     "preview": "Preview",
     "json": "JSON",
-    "metaformNavigation": "Metaform-UI navigation"
+    "metaformNavigation": "Metaform-UI navigation",
+    "save": "Save",
+    "saving": "Saving form"
   },
   
   "emailDialog": {

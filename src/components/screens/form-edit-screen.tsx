@@ -143,6 +143,7 @@ export class FormEditScreen extends React.Component<Props, State> {
         error={ error }
         clearError={ this.clearError }
         activeNavigationLink={ EditorNavigationLinks.form }
+        onMetaformSave={ this.onMetaformSave }
       >
         <DragDropContext onDragEnd={ this.onDragEnd } onDragStart={ this.onDragStart }>
           <Box className={ classes.root }>
@@ -828,6 +829,27 @@ export class FormEditScreen extends React.Component<Props, State> {
     });
   };
 
+  /**
+   * On metaform save event handler
+   */
+  private onMetaformSave = async () => {
+    const { signedToken, metaform } = this.props;
+
+    if (!metaform || !metaform.id) {
+      return;
+    }
+
+    try {
+      await Api.getMetaformsApi(signedToken).updateMetaform({
+        metaform,
+        metaformId: metaform.id 
+      });
+    } catch (error) {
+      this.setState({
+        error
+      });
+    }
+  };
 }
 
 /**

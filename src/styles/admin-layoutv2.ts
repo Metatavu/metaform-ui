@@ -57,6 +57,43 @@ export default createStyles({
     marginRight: theme.spacing(12),
     fontSize: 32,
     display: "flex"
-  }
+  },
 
+  saveButtonContainer: {
+    marginLeft: "auto",
+    marginRight: theme.spacing(1)
+  },
+
+  saveButton: {
+    color: "#fff",
+    borderRadius: 18,
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    "&.Mui-disabled": {
+      color: "rgba(255, 255, 255, 0.4)"
+    }
+  },
+
+  metaformSaveLoadingContainer: {
+    zIndex: 1200,
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+    left: 0,
+    backgroundColor: "rgba(0 ,0, 0, 0.2)"
+  },
+
+  metaformLoadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+
+  savingText: {
+    marginTop: theme.spacing(1)
+  }
 });
