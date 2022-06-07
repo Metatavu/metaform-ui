@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import strings from "../../localization/strings";
-import { AppBar, Toolbar, Typography, WithStyles, withStyles, Box } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, WithStyles, withStyles, Box, Button, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/admin-layoutv2";
 import BasicLayout, { SnackbarMessage } from "./basic-layout";
 import { KeycloakInstance } from "keycloak-js";
 import { Metaform } from "../../generated/client";
 import FormatAlignJustifyIcon from "@material-ui/icons/FormatAlignJustify";
+import SaveIcon from "@material-ui/icons/Save";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CodeIcon from "@material-ui/icons/Code";
 import { EditorNavigationLinks } from "../../types";
@@ -25,12 +26,14 @@ interface Props extends WithStyles<typeof styles> {
   activeNavigationLink: EditorNavigationLinks;
   clearError?: () => void;
   clearSnackbar?: () => void;
+  onMetaformSave?: () => void;
 }
 
 /**
  * Interface representing component state
  */
 interface State {
+  isSavingMetaform: boolean;
 }
 
 /**
@@ -44,7 +47,9 @@ class AdminLayoutV2 extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isSavingMetaform: false
+    };
   }
 
   /**
@@ -74,6 +79,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <Toolbar/>
         <Box className={ classes.content }>
           { this.props.children }
+          { this.renderSaveLoading() }
         </Box>
       </BasicLayout>
     );
@@ -88,6 +94,7 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         <Toolbar>
           { this.renderLogo() }
           { this.renderNavLinks() }
+          { this.renderSaveButton() }
         </Toolbar>
       </AppBar>
     );
@@ -152,6 +159,80 @@ class AdminLayoutV2 extends React.Component<Props, State> {
         </Link>
       </Box>
     );
+  };
+
+  /**
+   * Renders save metaform button
+   */
+  private renderSaveButton = () => {
+    const { classes, onMetaformSave } = this.props;
+    const { isSavingMetaform } = this.state;
+
+    if (!onMetaformSave) {
+      return null;
+    }
+
+    return (
+      <Box
+        className={ classes.saveButtonContainer }
+      >
+        <Button 
+          variant="text"
+          disabled={ isSavingMetaform }
+          startIcon={ <SaveIcon /> }
+          className={ classes.saveButton }
+          onClick={ this.onSaveButtonClick }
+        >
+          { strings.adminLayoutV2.save }
+        </Button>
+      </Box>
+    );
+  };
+
+  /**
+   * Renders metaform save loading
+   */
+  private renderSaveLoading = () => {
+    const { classes } = this.props;
+    const { isSavingMetaform } = this.state;
+
+    if (!isSavingMetaform) {
+      return null;
+    }
+
+    return (
+      <Box
+        className={ classes.metaformSaveLoadingContainer }
+      >
+        <Box className={ classes.metaformLoadingContainer }>
+          <CircularProgress size={ 64 }/>
+          <Typography className={ classes.savingText }>
+            { strings.adminLayoutV2.saving }
+          </Typography>
+        </Box>
+      </Box>
+    );
+  };
+
+  /**
+   * On save button click event handler
+   */
+  private onSaveButtonClick = async () => {
+    const { onMetaformSave } = this.props;
+
+    if (!onMetaformSave) {
+      return;
+    }
+
+    this.setState({
+      isSavingMetaform: true
+    });
+
+    await onMetaformSave();
+
+    this.setState({
+      isSavingMetaform: false
+    });
   };
 }
 

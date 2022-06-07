@@ -108,6 +108,7 @@ export class PreviewScreen extends React.Component<Props, State> {
 
     return (
       <AdminLayoutV2
+        onMetaformSave={ this.onMetaformSave }
         activeNavigationLink={ EditorNavigationLinks.preview }
         keycloak={ keycloak }
         metaform={ metaform }
@@ -208,6 +209,27 @@ export class PreviewScreen extends React.Component<Props, State> {
     });
   };
 
+  /**
+   * On metaform save event handler
+   */
+  private onMetaformSave = async () => {
+    const { signedToken, metaform } = this.props;
+
+    if (!metaform || !metaform.id) {
+      return;
+    }
+
+    try {
+      await Api.getMetaformsApi(signedToken).updateMetaform({
+        metaform,
+        metaformId: metaform.id 
+      });
+    } catch (error) {
+      this.setState({
+        error
+      });
+    }
+  }
 }
 
 /**
