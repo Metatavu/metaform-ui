@@ -146,7 +146,8 @@ export interface IStrings extends LocalizedStringsMethods {
     image: string;
     unknownFieldType: string;
     formEditorInfo: string;
-    formMainHeader: string;
+    formMainTitle: string;
+    formSectionTitle: string;
     notYetSupported: string;
   },
 
