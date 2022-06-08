@@ -13,7 +13,7 @@ import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { setMetaform } from "../../actions/metaform";
-import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent } from "../generic/editable-field-components";
+import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent } from "../generic/editable-field-components";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
@@ -38,7 +38,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   value: string;
   readOnly: boolean;
   isLoading: boolean;
@@ -367,6 +367,15 @@ export class FormEditScreen extends React.Component<Props, State> {
       case MetaformFieldType.Number:
         return (
           <MetaformNumberFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
+          />
+        );
+      case MetaformFieldType.Memo:
+        return (
+          <MetaformMemoFieldComponent
             fieldLabelId={ this.getFieldLabelId(field) }
             fieldId={ this.getFieldId(field) }
             field={ field }
