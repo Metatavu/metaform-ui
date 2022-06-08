@@ -147,6 +147,7 @@ export interface IStrings extends LocalizedStringsMethods {
     unknownFieldType: string;
     formEditorInfo: string;
     formMainHeader: string;
+    notYetSupported: string;
   },
 
   editableFields: {

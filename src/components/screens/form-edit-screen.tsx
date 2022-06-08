@@ -13,7 +13,7 @@ import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { setMetaform } from "../../actions/metaform";
-import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent } from "../generic/editable-field-components";
+import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent, MetaformDateTimeFieldComponent } from "../generic/editable-field-components";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 import ComponentTab from "../generic/editor-screen-tabs/component-tab"
+import { Alert } from "@material-ui/lab";
 
 /**
  * Component props
@@ -382,11 +383,19 @@ export class FormEditScreen extends React.Component<Props, State> {
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
+      case MetaformFieldType.DateTime:
+        return (
+          <MetaformDateTimeFieldComponent
+          field={ field }
+          />
+        );
       default:
         return (
-          <div style={{ color: "red" }}> 
-            `${ strings.formEditScreen.unknownFieldType }: ${ field.type }` 
-          </div>
+          <> 
+            <Alert severity="error">
+              { strings.formEditScreen.unknownFieldType }: { field.type } 
+            </Alert>
+          </>
         );
     }
   }

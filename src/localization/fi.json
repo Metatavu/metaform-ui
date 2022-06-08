@@ -140,7 +140,8 @@
     "image": "Kuva",
     "unknownFieldType": "Tuntematon kenttätyyppi",
     "formEditorInfo": "Muokkaus ei vielä toimi",
-    "formMainHeader": "Lomakkeen pääotsikko"
+    "formMainHeader": "Lomakkeen pääotsikko",
+    "notYetSupported": "*Ei vielä tuettu"
   },
 
   "editableFields": {

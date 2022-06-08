@@ -10,8 +10,6 @@ interface Props {
   field: MetaformField,
   fieldId: string,
   fieldLabelId: string,
-  formReadOnly: boolean,
-  onFocus: () => void
   onFieldUpdate: (metaformField: MetaformField) => void;
 }
 
@@ -44,7 +42,7 @@ export class MetaformMemoFieldComponent extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { field, fieldId, fieldLabelId, formReadOnly, onFocus } = this.props;
+    const { field, fieldId, fieldLabelId } = this.props;
 
     if (!field.name) {
       return null;
@@ -62,9 +60,7 @@ export class MetaformMemoFieldComponent extends React.Component<Props, State> {
           name={ field.name }
           title={ field.title }
           required={ field.required }
-          readOnly={ formReadOnly || field.readonly }
           onChange={ this.handleMemoInputChange }
-          onFocus={ onFocus }
           style={{ width: 300, height: 50 }}
         />
       </FormControl>

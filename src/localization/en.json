@@ -140,7 +140,8 @@
     "image": "Image",
     "unknownFieldType": "Unknown field type",
     "formEditorInfo": "Editing is not working yet",
-    "formMainHeader": "Form main header"
+    "formMainHeader": "Form main header",
+    "notYetSupported": "*Not yet supported"
   },
 
   "editableFields": {
