@@ -21,7 +21,7 @@ interface State {
 }
 
 /**
- * Component for Metaform memo field
+ * Component for Metaform editable memo field
  */
 export class MetaformMemoFieldComponent extends React.Component<Props, State> {
 

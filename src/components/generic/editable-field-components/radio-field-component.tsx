@@ -20,7 +20,7 @@ interface State {
 }
 
 /**
- * Component for radio field
+ * Component for Metaform editable radio field
  */
 export class MetaformRadioFieldComponent extends React.Component<Props, State> {
 

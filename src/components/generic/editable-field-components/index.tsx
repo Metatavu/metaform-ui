@@ -5,3 +5,4 @@ export { default as MetaformSubmitFieldComponent } from "./submit-field-componen
 export { default as MetaformNumberFieldComponent } from "./number-field-component";
 export { default as MetaformMemoFieldComponent } from "./memo-field-component";
 export { default as MetaformDateTimeFieldComponent } from "./datetime-field-component";
+export { default as MetaformSelectFieldComponent } from "./select-field-component";

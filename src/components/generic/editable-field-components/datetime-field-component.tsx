@@ -20,7 +20,7 @@ interface State {
 }
 
 /**
- * Component for Metaform text field
+ * Component for Metaform editable date time picker
  */
 export class MetaformDateTimeFieldComponent extends React.Component<Props, State> {
 

@@ -13,7 +13,7 @@ import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { setMetaform } from "../../actions/metaform";
-import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent, MetaformDateTimeFieldComponent } from "../generic/editable-field-components";
+import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent, MetaformDateTimeFieldComponent, MetaformSelectFieldComponent } from "../generic/editable-field-components";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
@@ -415,6 +415,12 @@ export class FormEditScreen extends React.Component<Props, State> {
       case MetaformFieldType.DateTime:
         return (
           <MetaformDateTimeFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Select:
+        return (
+          <MetaformSelectFieldComponent
           field={ field }
           />
         );
