@@ -6,3 +6,4 @@ export { default as MetaformNumberFieldComponent } from "./number-field-componen
 export { default as MetaformMemoFieldComponent } from "./memo-field-component";
 export { default as MetaformDateTimeFieldComponent } from "./datetime-field-component";
 export { default as MetaformSelectFieldComponent } from "./select-field-component";
+export { default as MetaformaAutocompleteFieldComponent } from "./autocomplete-field-component";

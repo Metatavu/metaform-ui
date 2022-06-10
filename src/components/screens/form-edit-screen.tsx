@@ -22,6 +22,7 @@ import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 import ComponentTab from "../generic/editor-screen-tabs/component-tab"
 import { Alert } from "@material-ui/lab";
+import { MetaformAutocompleteFieldComponent } from "../generic/editable-field-components/autocomplete-field-component";
 
 /**
  * Component props
@@ -421,6 +422,12 @@ export class FormEditScreen extends React.Component<Props, State> {
       case MetaformFieldType.Select:
         return (
           <MetaformSelectFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Autocomplete:
+        return (
+          <MetaformAutocompleteFieldComponent
           field={ field }
           />
         );
