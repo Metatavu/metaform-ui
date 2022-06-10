@@ -16,7 +16,6 @@ interface Props {
  * Component state
  */
 interface State {
-  
 }
 
 /**
