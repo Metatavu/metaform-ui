@@ -5,5 +5,12 @@ export { default as MetaformSubmitFieldComponent } from "./submit-field-componen
 export { default as MetaformNumberFieldComponent } from "./number-field-component";
 export { default as MetaformMemoFieldComponent } from "./memo-field-component";
 export { default as MetaformDateTimeFieldComponent } from "./datetime-field-component";
-export { default as MetaformSelectFieldComponent } from "./select-field-component";
-export { default as MetaformaAutocompleteFieldComponent } from "./autocomplete-field-component";
+export { default as MetaformBooleanFieldComponent } from "./boolean-field-component";
+export { default as MetaformaTableFieldComponent } from "./table-field-component";
+export { default as MetaformaEmailFieldComponent } from "./email-field-component";
+export { default as MetaformFilesFieldComponent } from "./files-field-component";
+export { default as MetaformaSliderFieldComponent } from "./slider-field-component";
+export { default as MetaformaUrlFieldComponent } from "./url-field-component";
+export { default as MetaformHiddenFieldComponent } from "./hidden-field-component";
+export { default as MetaformaChecklistFieldComponent } from "./checklist-field-component";
+export { default as MetaformaSelectFieldComponent } from "./select-field-component";

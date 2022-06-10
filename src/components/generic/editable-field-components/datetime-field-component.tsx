@@ -51,7 +51,7 @@ export class MetaformDateTimeFieldComponent extends React.Component<Props, State
 
     return (
       <Typography variant="body1">
-        { field.title } { strings.formEditScreen.notYetSupported }
+        { field.title } { field.type + " " + strings.formEditScreen.notYetSupported }
       </Typography>
     )
   }
