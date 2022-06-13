@@ -99,6 +99,12 @@ export default createStyles({
     textAlign: "center",
   },
 
+  sectionHeader: {
+    marginBottom: 20,
+    width: "100%",
+    textAlign: "center",
+  },
+
   fields: {
     borderRadius: "5px",
     boxShadow: "2px 2px #ccc",

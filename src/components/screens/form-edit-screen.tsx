@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import { ReduxActions, ReduxState } from "../../store";
 import styles from "../../styles/form-edit-screen";
 import { History } from "history";
-import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Box, InputLabel, OutlinedInput, FormControl, Drawer, Toolbar, Paper, Tabs, Tab, Typography, Button, TextField } from "@material-ui/core";
 import { KeycloakInstance } from "keycloak-js";
 import { AccessToken, EditorNavigationLinks } from "../../types";
 import Api from "../../api/api";
@@ -13,7 +13,7 @@ import strings from "../../localization/strings";
 import Config from "../../config";
 import AdminLayoutV2 from "../layouts/admin-layout-v2";
 import { setMetaform } from "../../actions/metaform";
-import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent } from "../generic/editable-field-components";
+import { MetaformTextFieldComponent, MetaformHtmlComponent, MetaformRadioFieldComponent, MetaformSubmitFieldComponent, MetaformNumberFieldComponent, MetaformMemoFieldComponent, MetaformDateTimeFieldComponent, MetaformHiddenFieldComponent, MetaformFilesFieldComponent } from "../generic/editable-field-components";
 import { DragDropContext, Draggable, Droppable, DroppableProvided, DraggableLocation, DropResult, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot, ResponderProvided, DragStart } from 'react-beautiful-dnd';
 import classNames from "classnames";
 import MetaformUtils from "../../utils/metaform";
@@ -21,6 +21,16 @@ import AddIcon from "@material-ui/icons/Add";
 import FieldDragHandle from "../generic/drag-handle/field-drag-handle";
 import SectionDragHandle from "../generic/drag-handle/section-drag-handle";
 import ComponentTab from "../generic/editor-screen-tabs/component-tab"
+import { Alert } from "@material-ui/lab";
+import { MetaformAutocompleteFieldComponent } from "../generic/editable-field-components/autocomplete-field-component";
+import { MetaformDateFieldComponent } from "../generic/editable-field-components/date-field-component";
+import { MetaformBooleanFieldComponent } from "../generic/editable-field-components/boolean-field-component";
+import { MetaformSelectFieldComponent } from "../generic/editable-field-components/select-field-component";
+import { MetaformChecklistFieldComponent } from "../generic/editable-field-components/checklist-field-component";
+import { MetaformEmailFieldComponent } from "../generic/editable-field-components/email-field-component";
+import { MetaformSliderFieldComponent } from "../generic/editable-field-components/slider-field-component";
+import { MetaformTableFieldComponent } from "../generic/editable-field-components/table-field-component";
+import { MetaformUrlFieldComponent } from "../generic/editable-field-components/url-field-component";
 
 /**
  * Component props
@@ -38,7 +48,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
-  error?: string | Error | Response;
+  error?: string | Error | Response | unknown;
   value: string;
   readOnly: boolean;
   isLoading: boolean;
@@ -169,7 +179,7 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <div className={ classes.formEditor } ref={ this.editorRef }>
-        { this.renderMainHeader() }
+        { this.renderMainTitle() }
         <Droppable droppableId={ "sectionList" } isDropDisabled={ !draggingSection }>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div ref={ provided.innerRef } style={{ width: "100%" }}>
@@ -194,9 +204,9 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Renders main header
+   * Renders form title
    */
-  private renderMainHeader = () => {
+  private renderMainTitle = () => {
     const { classes, metaform } = this.props;
 
     if (!metaform) {
@@ -205,13 +215,41 @@ export class FormEditScreen extends React.Component<Props, State> {
 
     return (
       <FormControl variant="outlined" className={ classes.mainHeader }>
-        <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainHeader }</InputLabel>
+        <InputLabel htmlFor="mainHeaderField">{ strings.formEditScreen.formMainTitle }</InputLabel>
         <OutlinedInput
-          label={ strings.formEditScreen.formMainHeader }
+          label={ strings.formEditScreen.formMainTitle }
           id="mainHeaderField"
-          color="secondary"
+          color="primary"
           value={ metaform.title }
-          onChange={ this.handleInputTitleChange }
+          onChange={ this.handleFormTitleChange }
+        />
+      </FormControl>
+    );
+  }
+
+  /**
+   * Renders section title
+   * 
+   * @param section Metaform section
+   * @param sectionIndex section index
+   * @returns section title if it exists
+   */
+  private renderSectionTitle = (section: MetaformSection, sectionIndex: number) => {
+    const { classes } = this.props;
+
+    if (!section || !section.title) {
+      return;
+    }
+
+    return (
+      <FormControl variant="outlined" className={ classes.sectionHeader }>
+        <TextField
+          variant="outlined"
+          label={ strings.formEditScreen.formSectionTitle }
+          id="sectionHeaderField"
+          color="primary"
+          value={ section.title }
+          onChange={ this.handleSectionTitleChange(sectionIndex) }
         />
       </FormControl>
     );
@@ -257,6 +295,7 @@ export class FormEditScreen extends React.Component<Props, State> {
                       }
                   >
                     <div ref={ provided.innerRef } >
+                      { this.renderSectionTitle(section, sectionIndex) }
                       { (section.fields && section.fields.length > 0) ?
                         section.fields.map((field, index) => this.renderFormField(field, sectionIndex, index)) :
                         <Typography>
@@ -321,7 +360,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   * @param fieldIndex field index
   */
   private renderInput = (field: MetaformField, sectionIndex: number, fieldIndex: number) => {
-    // Task add all the component
+    // Task: finish unsupported components
     const { metaform } = this.props;
 
     if (!metaform) {
@@ -373,11 +412,94 @@ export class FormEditScreen extends React.Component<Props, State> {
             onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
           />
         );
+      case MetaformFieldType.Memo:
+        return (
+          <MetaformMemoFieldComponent
+            fieldLabelId={ this.getFieldLabelId(field) }
+            fieldId={ this.getFieldId(field) }
+            field={ field }
+            onFieldUpdate={ this.onFieldUpdate(sectionIndex, fieldIndex) }
+          />
+        );
+      case MetaformFieldType.DateTime:
+        return (
+          <MetaformDateTimeFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Select:
+        return (
+          <MetaformSelectFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Autocomplete:
+        return (
+          <MetaformAutocompleteFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Date:
+        return (
+          <MetaformDateFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Boolean:
+        return (
+          <MetaformBooleanFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Checklist:
+        return (
+          <MetaformChecklistFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Email:
+        return (
+          <MetaformEmailFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Hidden:
+        return (
+          <MetaformHiddenFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Table:
+        return (
+          <MetaformTableFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Url:
+        return (
+          <MetaformUrlFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Slider:
+        return (
+          <MetaformSliderFieldComponent
+          field={ field }
+          />
+        );
+      case MetaformFieldType.Files:
+        return (
+          <MetaformFilesFieldComponent
+          field={ field }
+          />
+        );
       default:
         return (
-          <div style={{ color: "red" }}> 
-            `${ strings.formEditScreen.unknownFieldType }: ${ field.type }` 
-          </div>
+          <> 
+            <Alert severity="error">
+              { strings.formEditScreen.unknownFieldType }: { field.type } 
+            </Alert>
+          </>
         );
     }
   }
@@ -728,13 +850,46 @@ export class FormEditScreen extends React.Component<Props, State> {
    * 
    * @param event new main header value
    */
-  private handleInputTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private handleFormTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { metaform, onSetMetaform } = this.props;
 
     onSetMetaform({
       ...metaform, 
       title: event.target.value
     } as Metaform);
+  }
+
+  /**
+   * Event handler for section title update
+   * 
+   * @param sectionIndex  section index
+   * @param event new section title value
+   */
+  private handleSectionTitleChange = (sectionIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { metaform, onSetMetaform } = this.props;
+    const { target } = event;
+
+    if (!metaform) {
+      return;
+    }
+
+    const updatedMetaform = {
+      ...metaform
+    } as Metaform;
+
+    if (!updatedMetaform?.sections || !updatedMetaform.sections[sectionIndex]) {
+      return;
+    }
+
+    const section = updatedMetaform.sections[sectionIndex];
+
+    if (!section) {
+      return;
+    }
+
+    section.title = target.value;
+
+    onSetMetaform(updatedMetaform);
   }
 
   /**

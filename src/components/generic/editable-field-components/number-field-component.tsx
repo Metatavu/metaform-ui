@@ -21,7 +21,7 @@ interface State {
 }
 
 /**
- * Component for Metaform number field
+ * Component for Metaform editable number field
  */
 export class MetaformNumberFieldComponent extends React.Component<Props, State> {
 

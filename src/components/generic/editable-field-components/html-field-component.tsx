@@ -20,7 +20,7 @@ interface State {
 }
 
 /**
- * Component for Metaform memo field
+ * Component for Metaform editable html field
  */
 export class MetaformHtmlComponent extends React.Component<Props, State> {
 
