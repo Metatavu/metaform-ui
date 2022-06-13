@@ -1,4 +1,4 @@
-import { FormControl, Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import strings from "../../../localization/strings";
 
@@ -15,7 +15,7 @@ interface State {
 }
 
 /**
- * Component for Metaform html addable
+ * Component for Metaform addable html addable
  */
 export class MetaformHtmlAddable extends React.Component<Props, State> {
 
@@ -35,11 +35,18 @@ export class MetaformHtmlAddable extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => (
-    <FormControl variant="outlined">
-      <Typography>
-        { `"${strings.addableComponent.html}"` }
+    <Box
+      sx={{
+        width: 100,
+        height: 100,
+        bgcolor: "#ccc",
+        textAlign: "center"
+      }}
+    >
+      <Typography variant="body1">
+        { strings.addableComponent.html }
       </Typography>
-    </FormControl>
+    </Box>
   );
 }
 

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import strings from "../../../localization/strings";
 
@@ -15,7 +15,7 @@ interface State {
 }
 
 /**
- * Component for Metaform number field
+ * Component for Metaform addable number field
  */
 export class MetaformNumberFieldAddable extends React.Component<Props, State> {
 
@@ -35,26 +35,20 @@ export class MetaformNumberFieldAddable extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => (        
-    <FormControl>
-      <FormLabel>{ strings.addableComponent.label }</FormLabel>
-      <TextField
-        variant="standard"
-        value=""
-        placeholder={ `"${strings.addableComponent.number}"` }
-        onChange={ this.onChange }
-      />
-    </FormControl>
+    <Box
+      sx={{
+        width: 100,
+        height: 100,
+        bgcolor: "#ccc",
+        textAlign: "center"
+      }}
+    >
+      <Typography variant="body1">
+        { strings.addableComponent.number }
+      </Typography>
+    </Box>
   );
 
-  /**
-   * On change event handler
-   * 
-   * @param event event 
-   */
-  private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  }
 }
 
 export default MetaformNumberFieldAddable;

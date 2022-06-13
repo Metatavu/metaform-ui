@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, FormLabel, Radio } from "@material-ui/core";
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, Typography } from "@material-ui/core";
 import React from "react";
 import strings from "../../../localization/strings";
 
@@ -15,7 +15,7 @@ interface State {
 }
 
 /**
- * Component for radio field
+ * Component for Metaform addable radio field
  */
 export class MetaformRadioFieldAddable extends React.Component<Props, State> {
 
@@ -35,15 +35,18 @@ export class MetaformRadioFieldAddable extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => (
-    <FormControl component="fieldset">
-      <FormLabel component="legend">
-        { strings.addableComponent.label }
-      </FormLabel>
-      <FormControlLabel 
-        control={ <Radio checked color="primary"/> } 
-        label={ `"${strings.addableComponent.radio}"` } 
-      />
-    </FormControl>
+    <Box
+      sx={{
+        width: 100,
+        height: 100,
+        bgcolor: "#ccc",
+        textAlign: "center"
+      }}
+    >
+      <Typography variant="body1">
+        { strings.addableComponent.radio }
+      </Typography>
+    </Box>
   );
 }
 

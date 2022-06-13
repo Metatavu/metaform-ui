@@ -648,7 +648,7 @@ export class FormEditScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Event handler for field add
+   * Event handler for adding new field from the list
    * 
    * @param fieldType metaform field type
    * @param droppableSource droppable source

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField, WithStyles, withStyles } from "@material-ui/core";
+import { Box, Typography, WithStyles, withStyles } from "@material-ui/core";
 import React from "react";
 import strings from "../../../localization/strings";
 import styles from "../../../styles/generics/editable-field-components/metaform-text-field-component"
@@ -36,28 +36,20 @@ export class MetaformTextFieldAddable extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => (
-    <FormControl>
-      <FormLabel component="legend">
-        { strings.addableComponent.label }
-      </FormLabel>
-      <TextField
-        value=""
-        onChange={ this.onChange } 
-        variant="standard"
-        placeholder={ `"${strings.addableComponent.text}"` }
-      />
-    </FormControl>
+    <Box
+      sx={{
+        width: 100,
+        height: 100,
+        bgcolor: "#ccc",
+        textAlign: "center"
+      }}
+    >
+      <Typography variant="body1">
+        { strings.addableComponent.text }
+      </Typography>
+    </Box>
   );
 
-  /**
-   * On change event handler
-   * 
-   * @param event event 
-   */
-  private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  }
 }
 
 export default withStyles(styles)(MetaformTextFieldAddable);

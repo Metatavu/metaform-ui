@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel } from "@material-ui/core";
+import { Box, Button, FormControl, FormLabel, Typography } from "@material-ui/core";
 import React from "react";
 import strings from "../../../localization/strings";
 
@@ -15,7 +15,7 @@ interface State {
 }
 
 /**
- * Component for Metaform submit field
+ * Component for Metaform addable submit field
  */
 export class MetaformSubmitFieldAddable extends React.Component<Props, State> {
 
@@ -35,17 +35,18 @@ export class MetaformSubmitFieldAddable extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => (
-    <FormControl>
-      <FormLabel>
-        { strings.addableComponent.label }
-      </FormLabel>
-      <Button
-        variant="contained"
-        color="primary"
-      >
-        { `"${strings.addableComponent.submit}"` }
-      </Button>
-    </FormControl>
+    <Box
+      sx={{
+        width: 100,
+        height: 100,
+        bgcolor: "#ccc",
+        textAlign: "center"
+      }}
+    >
+      <Typography variant="body1">
+        { strings.addableComponent.submit }
+      </Typography>
+    </Box>
   );
 }
 

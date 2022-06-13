@@ -4,6 +4,7 @@ import theme from "../../theme";
 export default createStyles({
 
   singleDraggableComponent: {
+    width: 50,
     marginBottom: theme.spacing(2),
     "&.clone": {
       "&+ div": {

@@ -153,15 +153,15 @@
 
   "addableComponent" : {
     "label": "label",
-    "html": "html",
-    "text": "text",
-    "radio": "radio",
-    "select": "select",
-    "number": "number",
-    "memo": "memo",
-    "checkList": "checkList",
-    "submit": "submit",
-    "dateTime": "dateTime",
-    "autocomplete": "autocomplete"
+    "html": "Teksti",
+    "text": "Tekstisyöte",
+    "radio": "Valintanappi",
+    "select": "Alasvetovalikko",
+    "number": "Numerovalitsin",
+    "memo": "Tekstikenttä",
+    "checkList": "Valintaruutu",
+    "submit": "Lähetä",
+    "dateTime": "Päivämäärä",
+    "autocomplete": "Täydentävä tekstisyöte"
   }
 }
