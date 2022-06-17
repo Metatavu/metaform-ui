@@ -5,7 +5,7 @@ import { AnonymousLoginConfig, LoginMode } from "../types";
 /**
  * Validates that environment variables are in place and have correct form
  */
- const env = cleanEnv(process.env, {
+const env = cleanEnv(process.env, {
   REACT_APP_KEYCLOAK_REALM: str(),
   REACT_APP_FORM_ID: str(),
   REACT_APP_REPLY_MODE: str({ default: "CUMULATIVE", choices: ["UPDATE", "REVISION", "CUMULATIVE"]}),
@@ -16,7 +16,9 @@ import { AnonymousLoginConfig, LoginMode } from "../types";
   REACT_APP_KEYCLOAK_USER_IDPHINT: str({ default: undefined }),
   REACT_APP_KEYCLOAK_ADMIN_IDPHINT: str({ default: undefined }),
   REACT_APP_CORS_PROXY: str(),
-  REACT_APP_API_BASE_PATH: url()
+  REACT_APP_API_BASE_PATH: url(),
+  REACT_APP_SENTRY_DSN: url({ default: undefined }),
+  REACT_APP_SENTRY_ENVIRONMENT: str({ default: "production" })
 });
 
 /**
@@ -107,8 +109,26 @@ export default class Config {
    * 
    * @returns address for CORS proxy service
    */
-  public static getCorsProxy(): String {
+  public static getCorsProxy(): string {
     return env.REACT_APP_CORS_PROXY;
+  }
+
+  /**
+   * Returns sentry dsn
+   * 
+   * @returns sentry dsn
+   */
+  public static getSentryDsn(): string {
+    return env.REACT_APP_SENTRY_DSN;
+  }
+
+  /**
+   * Returns sentry environment
+   * 
+   * @returns sentry environment
+   */
+  public static getSentryEnvironment(): string {
+    return env.REACT_APP_SENTRY_ENVIRONMENT;
   }
 
 }
