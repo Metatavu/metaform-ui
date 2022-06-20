@@ -888,6 +888,7 @@ export class FormScreen extends React.Component<Props, State> {
         saving: false,
         error: e
       });
+      Utils.handleError(e);
     };
   }
 
