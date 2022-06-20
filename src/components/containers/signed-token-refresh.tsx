@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import * as Sentry from "@sentry/react";
 import { connect } from "react-redux";
 import { ReduxState, ReduxActions } from "../../store";
 import { signedLogin } from "../../actions/auth";
@@ -77,6 +77,7 @@ class SignedTokenRefresh extends React.Component<Props, State> {
 
       this.timer = setInterval(this.refreshAccessToken, 1000 * 60);
     } catch (error) {
+      Sentry.captureException(error);
       this.setState({ error: error });
     }
   }
@@ -128,10 +129,12 @@ class SignedTokenRefresh extends React.Component<Props, State> {
           const signedToken = await this.buildToken(this.keycloak);
           this.props.onSignedLogin(this.keycloak, signedToken);
         } catch (error) {
+          Sentry.captureException(error);
           this.setState({ error: error });
         }
       }
     } catch (error) {
+      Sentry.captureException(error);
       this.setState({ error: error });
     }
   }
