@@ -5,7 +5,6 @@ import styles from "../../../styles/generics/editor-screen-tabs/component-tab";
 import classNames from "classnames";
 import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from "react-beautiful-dnd";
 import { MetaformFieldType } from "../../../generated/client";
-import strings from "../../../localization/strings";
 import { MetaformHtmlAddable, MetaformNumberFieldAddable, MetaformRadioFieldAddable, MetaformSubmitFieldAddable, MetaformTextFieldAddable } from "../editable-field-addables";
 
 /**

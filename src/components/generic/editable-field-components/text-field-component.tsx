@@ -23,7 +23,7 @@ interface State {
 }
 
 /**
- * Component for Metaform text field
+ * Component for Metaform editable text field
  */
 export class MetaformTextFieldComponent extends React.Component<Props, State> {
 

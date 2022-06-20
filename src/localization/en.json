@@ -83,7 +83,9 @@
     "form": "Form",
     "preview": "Preview",
     "json": "JSON",
-    "metaformNavigation": "Metaform-UI navigation"
+    "metaformNavigation": "Metaform-UI navigation",
+    "save": "Save",
+    "saving": "Saving form"
   },
   
   "emailDialog": {
@@ -138,7 +140,9 @@
     "image": "Image",
     "unknownFieldType": "Unknown field type",
     "formEditorInfo": "Editing is not working yet",
-    "formMainHeader": "Form main header"
+    "formMainTitle": "Form main header",
+    "formSectionTitle": "Section header",
+    "notYetSupported": "*Not yet supported"
   },
 
   "editableFields": {

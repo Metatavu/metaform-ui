@@ -2,6 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app';
 import * as serviceWorker from './serviceWorker';
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+import config from "./config";
+
+const sentryDsn = config.getSentryDsn();
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    tracesSampleRate: 1.0,
+    release: "1.0.0",
+    environment: config.getSentryEnvironment(),
+    integrations: [new BrowserTracing()]
+  });
+}
 
 ReactDOM.render(
   <React.StrictMode>

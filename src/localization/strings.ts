@@ -90,6 +90,8 @@ export interface IStrings extends LocalizedStringsMethods {
     preview: string;
     json: string;
     metaformNavigation: string;
+    save: string;
+    saving: string;
   },
 
   emailDialog: {
@@ -144,7 +146,9 @@ export interface IStrings extends LocalizedStringsMethods {
     image: string;
     unknownFieldType: string;
     formEditorInfo: string;
-    formMainHeader: string;
+    formMainTitle: string;
+    formSectionTitle: string;
+    notYetSupported: string;
   },
 
   editableFields: {

@@ -19,7 +19,7 @@ interface State {
 }
 
 /**
- * Component for Metaform submit field
+ * Component for Metaform editable submit field
  */
 export class MetaformSubmitFieldComponent extends React.Component<Props, State> {
 
