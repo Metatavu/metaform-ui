@@ -9,6 +9,8 @@ import { AccessToken } from "../../types";
 import ErrorDialog from "../generic/error-dialog";
 import Config from "../../config";
 
+const REFRESH_INTERVAL_SECONDS = 5;
+
 /**
  * Component props
  */
@@ -59,25 +61,44 @@ class AnonymousTokenRefresh extends React.Component<Props, State> {
   public componentDidMount = async () => {
     this.timer = setInterval(async () => {
       this.refreshLogin();
-    }, 1000 * 60);
+    }, REFRESH_INTERVAL_SECONDS * 1000);
 
     this.refreshLogin();
   }
 
   private refreshLogin = async () => {
-    if (!this.props.anonymousToken) {
+    try {
+      if (!this.props.anonymousToken) {
+        const accessToken = await this.login();
+  
+        if (accessToken) {
+          this.props.onAnonymousLogin(accessToken);
+        }
+  
+        return;
+      }
+  
+      if (!this.tokenNeedsRefreshing(this.props.anonymousToken)) {
+        return;
+      }
+  
+      if (this.canTokenRefresh(this.props.anonymousToken)) {
+        const accessToken = await this.refreshToken(this.props.anonymousToken);
+        if (accessToken) {
+          this.props.onAnonymousLogin(accessToken);
+        }
+  
+        return;
+      }
+
       const accessToken = await this.login();
 
       if (accessToken) {
         this.props.onAnonymousLogin(accessToken);
       }
-    } else {
-      if (!this.isTokenValid(this.props.anonymousToken)) {
-        const accessToken = await this.refreshToken(this.props.anonymousToken);
-        if (accessToken) {
-          this.props.onAnonymousLogin(accessToken);
-        }
-      }
+
+    } catch (error) {
+      console.log("RefreshLogin " + error)
     }
   }
 
@@ -151,33 +172,35 @@ class AnonymousTokenRefresh extends React.Component<Props, State> {
   }
 
   /**
-   * Returns true if token is valid, false otherwise
+   * Returns true if token needs refreshing, false otherwise
    * 
    * @param token Access token 
    * @param slackSeconds seconds to use as slack
    */
-  private isTokenValid = (token: AccessToken, slackSeconds?: number) => {
-    const slack = slackSeconds || 5;
-    const expires = moment(token.created)
+  private tokenNeedsRefreshing = (token: AccessToken, slackSeconds?: number) => {
+    const slack = slackSeconds || REFRESH_INTERVAL_SECONDS + 10;
+    const tokenExpirationTimeWithSlack = moment(token.created)
       .add(token.expires_in, "seconds")
-      .subtract(slack);
+      .subtract(slack, "seconds");;
 
-    return expires.isAfter(moment());
+    const currentTime = moment();
+
+    return currentTime.isSameOrAfter(tokenExpirationTimeWithSlack);
   }
 
   /**
    * Returns true if token can be refreshed using refresh token, false otherwise
    * 
    * @param token Access token
-   * @param slackSeconds seconds to use as slack
    */
-  private canTokenRefresh = (token: AccessToken, slackSeconds?: number) => {
-    const slack = slackSeconds || 5;
-    const expires = moment(token.created)
+  private canTokenRefresh = (token: AccessToken) => {
+    const tokenExpirationTimeWithSlack = moment(token.created)
       .add(token.refresh_expires_in, "seconds")
-      .subtract(slack);
+      .subtract(5, "seconds");
 
-    return expires.isAfter(moment());
+    const currentTime = moment();
+
+    return currentTime.isBefore(tokenExpirationTimeWithSlack);
   }
 
   /**
@@ -196,7 +219,7 @@ class AnonymousTokenRefresh extends React.Component<Props, State> {
       refresh_token: tokenData.refresh_token,
       refresh_expires_in: tokenData.refresh_expires_in,
       userId: decodedToken.sub,
-      realmRoles: decodedToken.realm_access?.roles || []
+      realmRoles: decodedToken.realm_access?.roles || []
     };
   }
 }

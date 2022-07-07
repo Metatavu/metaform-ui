@@ -24,6 +24,7 @@ import Mail from "../../mail/mail";
 import ConfirmDialog from "../generic/confirm-dialog";
 import { FileFieldValue, ValidationErrors } from "metaform-react/dist/types";
 import Utils from "../../utils";
+import moment from "moment";
 
 const AUTOSAVE_COOLDOWN = 500;
 
@@ -61,6 +62,7 @@ interface State {
   metaform?: Metaform;
   formValues: Dictionary<FieldValue>;
   redirectTo?: string;
+  accessTokenNotValid?: boolean;
 }
 
 /**
@@ -69,6 +71,7 @@ interface State {
 export class FormScreen extends React.Component<Props, State> {
 
   private formValueChangeTimeout: any = null;
+  private timer?: any;
 
   /**
    * Constructor
@@ -91,7 +94,8 @@ export class FormScreen extends React.Component<Props, State> {
       replyDeleteConfirmVisible: false,
       draftId: null,
       ownerKey: null,
-      formValues: {}
+      formValues: {},
+      accessTokenNotValid: true
     };
   }
 
@@ -102,6 +106,13 @@ export class FormScreen extends React.Component<Props, State> {
     const { location, signedToken } = this.props;
 
     const accessToken = this.getAccessToken();
+
+    this.timer = setInterval(async () => {
+      this.isTokenInvalid(accessToken);
+    }, 1000); 
+
+    this.isTokenInvalid(accessToken);
+
     const query = new URLSearchParams(location.search);
 
     const draftId = query.get("draft");
@@ -179,6 +190,15 @@ export class FormScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Component will unmount life cycle event
+   */
+  public componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  /**
    * Component render method
    */
   public render = () => {
@@ -215,7 +235,7 @@ export class FormScreen extends React.Component<Props, State> {
    * Renders the form
    */
   private renderForm = () => {
-    const { metaform } = this.state;
+    const { metaform, accessTokenNotValid } = this.state;
 
     if (!metaform) {
       return null
@@ -233,8 +253,27 @@ export class FormScreen extends React.Component<Props, State> {
         setFieldValue={ this.setFieldValue }
         onSubmit={ this.onSubmit }
         onValidationErrorsChange={ this.onValidationErrorsChange }
+        accessTokenNotValid={ accessTokenNotValid }
       />
     );
+  }
+
+  /**
+   * Checks if token is invalid and sets result in state
+   * This state is used in metaformSubmitField to define is button is disabled
+   * 
+   * @param token Access token
+   */
+  private isTokenInvalid = (token: AccessToken) => {
+    const tokenExpirationTimeWithSlack = moment(token.created)
+      .add(token.refresh_expires_in, "seconds")
+      .subtract(5, "seconds");
+
+    const currentTime = moment();
+    const accessTokenNotValid = currentTime.isAfter(tokenExpirationTimeWithSlack);
+    this.setState({
+      accessTokenNotValid: accessTokenNotValid
+    })
   }
 
     /**

@@ -29,6 +29,7 @@ interface Props extends WithStyles<typeof styles> {
   setFieldValue: (fieldName: string, fieldValue: FieldValue) => void;
   onSubmit: (source: Metaform) => void;
   onValidationErrorsChange?: (validationErrors: ValidationErrors) => void;
+  accessTokenNotValid?: boolean;
 }
 
 /**
@@ -59,7 +60,7 @@ export class Form extends React.Component<Props, State> {
    * Component render method
    */
   public render = () => {
-    const { classes, metaform, onValidationErrorsChange } = this.props;
+    const { classes, metaform, onValidationErrorsChange, accessTokenNotValid } = this.props;
 
     return (
       <div className={ classes.formContainer }>
@@ -68,6 +69,7 @@ export class Form extends React.Component<Props, State> {
           form={ metaform } 
           contexts={ this.props.contexts }
           formReadOnly={ false }
+          accessTokenNotValid={ accessTokenNotValid }
           getFieldValue={ this.props.getFieldValue }
           setFieldValue={ this.props.setFieldValue }
           datePicker={ this.renderDatePicker }
