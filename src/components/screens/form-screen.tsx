@@ -105,13 +105,11 @@ export class FormScreen extends React.Component<Props, State> {
   public componentDidMount = async () => {
     const { location, signedToken } = this.props;
 
-    const accessToken = this.getAccessToken();
-
     this.timer = setInterval(async () => {
-      this.isTokenInvalid(accessToken);
+      this.isTokenInvalid();
     }, 1000); 
 
-    this.isTokenInvalid(accessToken);
+    this.isTokenInvalid();
 
     const query = new URLSearchParams(location.search);
 
@@ -127,7 +125,7 @@ export class FormScreen extends React.Component<Props, State> {
         draftId: draftId
       });
 
-      const metaformsApi = Api.getMetaformsApi(accessToken);
+      const metaformsApi = Api.getMetaformsApi(this.getAccessToken());
 
       const metaform = await metaformsApi.findMetaform({
         metaformId: metaformId,
@@ -262,9 +260,9 @@ export class FormScreen extends React.Component<Props, State> {
    * Checks if token is invalid and sets result in state
    * This state is used in metaformSubmitField to define is button is disabled
    * 
-   * @param token Access token
    */
-  private isTokenInvalid = (token: AccessToken) => {
+  private isTokenInvalid = () => {
+    const token = this.getAccessToken();
     const tokenExpirationTimeWithSlack = moment(token.created)
       .add(token.refresh_expires_in, "seconds")
       .subtract(5, "seconds");
